@@ -8,6 +8,6 @@ public class FoodOrderingAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FoodOrderingAppApplication.class, args);
+		System.out.println("Xin chao cac ban");
 	}
-
 }
