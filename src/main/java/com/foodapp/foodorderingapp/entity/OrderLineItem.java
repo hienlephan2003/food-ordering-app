@@ -4,26 +4,33 @@ import lombok.*;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
+
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order_items")
+@Table(name = "order-line-items")
 @Entity
-public class OrderItem {
+public class OrderLineItem {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_ID")
     private Order order;
 
-    private UUID productId;
-    private BigDecimal price;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderLineItem")
+    private List<OrderLineItemGroupOption> orderLineItemGroupOptions;
+
+    @ManyToOne
+    @JoinColumn(name = "DISH_ID")
+    private Dish dish;
+    
     private Integer quantity;
     private BigDecimal subTotal;
 
@@ -31,7 +38,7 @@ public class OrderItem {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderItem that = (OrderItem) o;
+        OrderLineItem that = (OrderLineItem) o;
         return id.equals(that.id) && order.equals(that.order);
     }
 

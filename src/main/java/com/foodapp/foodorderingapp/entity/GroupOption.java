@@ -3,7 +3,7 @@ package com.foodapp.foodorderingapp.entity;
 import lombok.*;
 
 import java.util.List;
-import java.util.UUID;
+
 
 import jakarta.persistence.*;
 
@@ -15,14 +15,20 @@ import jakarta.persistence.*;
 @Entity
 public class GroupOption {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL )
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESTAURANT_ID")
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "groupOption", cascade = CascadeType.ALL)
-    private List<OptionItem> optionItems;
-    
+    private List<GroupOptionItem> optionItems;
+
+    @OneToMany(mappedBy = "groupOption")
+    private List<OrderLineItemGroupOption> orderLineItemGroupOptions;
+
     private String name;
+    private int minimum;
+    private int maximum;
 }

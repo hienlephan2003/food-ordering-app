@@ -1,24 +1,23 @@
 package com.foodapp.foodorderingapp.entity;
 
 import java.util.Objects;
-import java.util.UUID;
+
 import lombok.*;
 
 import jakarta.persistence.*;
 
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order_address")
+@Table(name = "address")
 @Entity
 public class Address {
     @Id
-    private UUID id;
+    private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")

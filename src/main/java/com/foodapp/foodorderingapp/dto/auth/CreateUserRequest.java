@@ -1,8 +1,8 @@
-package com.foodapp.foodorderingapp.dto.user;
+package com.foodapp.foodorderingapp.dto.auth;
 
 import lombok.*;
 
-import java.util.UUID;
+
 
 @Data
 @Builder

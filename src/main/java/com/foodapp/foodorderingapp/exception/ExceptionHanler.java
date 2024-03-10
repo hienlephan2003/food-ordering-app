@@ -22,4 +22,15 @@ public class ExceptionHanler {
                 .message("Unexpected error!")
                 .build();
     }
+
+    @ResponseBody
+    @ExceptionHandler(value = {UserExistException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handleUserExistException(UserExistException exception){
+        log.error(exception.getMessage(), exception);
+        return ErrorDTO.builder()
+                .code(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(exception.getMessage())
+                .build();
+    }
 }

@@ -3,7 +3,7 @@ package com.foodapp.foodorderingapp.entity;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.UUID;
+
 
 import jakarta.persistence.*;
 
@@ -12,14 +12,16 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @Table(name = "group-option-items")
 @Entity
-public class OptionItem {
+public class GroupOptionItem {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL )
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_OPTION_ID")
     private GroupOption groupOption;
     
     private String name;
     private BigDecimal price;
+    private String imageUrl;
 }

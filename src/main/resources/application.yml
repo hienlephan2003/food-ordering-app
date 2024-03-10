@@ -3,6 +3,6 @@ spring:
     url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=PKNIIlnjsflcBOhm
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 server:
   port: 8080

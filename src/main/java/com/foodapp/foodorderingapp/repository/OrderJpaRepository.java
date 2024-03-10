@@ -5,10 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import com.foodapp.foodorderingapp.entity.Order;
 
-import java.util.UUID;
+
 
 import org.springframework.data.jpa.repository.JpaRepository;;
 @Repository
-public interface OrderJpaRepository extends JpaRepository<Order, UUID> {
+public interface OrderJpaRepository extends JpaRepository<Order, Long> {
     
 }

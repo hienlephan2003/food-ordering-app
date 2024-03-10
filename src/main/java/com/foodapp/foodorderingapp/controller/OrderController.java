@@ -5,6 +5,7 @@ import com.foodapp.foodorderingapp.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +17,8 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody OrderRequest orderRequest){
-        orderService.createNewOrder(orderRequest);
+    public ResponseEntity createProduct(@RequestBody OrderRequest orderRequest){
+        // orderService.createNewOrder(orderRequest);
+        return ResponseEntity.ok("Success");
     }
 }

@@ -1,8 +1,13 @@
 package com.foodapp.foodorderingapp.service;
 
-import com.foodapp.foodorderingapp.dto.user.CreateUserRequest;
+import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
+import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
+import com.foodapp.foodorderingapp.dto.auth.response.SignInResponse;
 import com.foodapp.foodorderingapp.entity.User;
+import com.foodapp.foodorderingapp.exception.AuthException;
+import com.foodapp.foodorderingapp.exception.UserExistException;
 
 public interface UserService {
-    User createNewUser(CreateUserRequest createUserRequest);
+    User createNewUser(CreateUserRequest createUserRequest) throws UserExistException;
+    SignInResponse signIn(SignInRequest signInRequest) throws AuthException;
 }

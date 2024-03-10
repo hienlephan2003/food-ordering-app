@@ -3,8 +3,9 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
+
 
 @Data
 @Builder
@@ -14,15 +15,23 @@ import java.util.UUID;
 @Entity
 public class Dish {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RESTAURANT_ID")
+    private Restaurant restaurant;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
     
-    private String imageUrl;
     private String name;
+    private BigDecimal price;
     private String description;
+    private String imageUrl;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,3 +46,4 @@ public class Dish {
     }
 
 }
+

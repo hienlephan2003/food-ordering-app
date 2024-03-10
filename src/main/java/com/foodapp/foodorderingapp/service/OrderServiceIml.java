@@ -2,7 +2,7 @@ package com.foodapp.foodorderingapp.service;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.UUID;
+
 
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
 import com.foodapp.foodorderingapp.entity.Order;
@@ -18,12 +18,14 @@ public class OrderServiceIml implements OrderService {
 
     @Override
     public Order createNewOrder(OrderRequest orderRequest) {
-        Order order = Order.builder().id(UUID.randomUUID())
-                .price(BigDecimal.valueOf(12)).
-                orderStatus(OrderStatus.PENDING)
-                .customerId(orderRequest.getUserId())
-                .build();
-        return orderJpaRepository.save(order);
+        // User user = 
+        // Order order = Order.builder().id(Long.randomLong())
+        //         .price(BigDecimal.valueOf(12)).
+        //         orderStatus(OrderStatus.PENDING)
+        //         .user()
+        //         .build();
+        // return orderJpaRepository.save(order);
+        return null;
     }
 
     @Override

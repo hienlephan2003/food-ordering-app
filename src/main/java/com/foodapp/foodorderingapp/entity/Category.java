@@ -4,7 +4,9 @@ import lombok.*;
 import jakarta.persistence.*;
 
 import java.util.Objects;
-import java.util.UUID;
+
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,15 +15,19 @@ import java.util.UUID;
 @Entity
 public class Category {
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "RESTAURANT_ID")
     private Restaurant restaurant;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    private List<Dish> dishes;
+
     private String name;
     private Integer dishQuantity;
-    
+    private boolean status;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -34,5 +40,4 @@ public class Category {
     public int hashCode() {
         return Objects.hash(id, restaurant);
     }
-
 }
