@@ -6,8 +6,13 @@ import com.foodapp.foodorderingapp.dto.auth.response.SignInResponse;
 import com.foodapp.foodorderingapp.entity.User;
 import com.foodapp.foodorderingapp.exception.AuthException;
 import com.foodapp.foodorderingapp.exception.UserExistException;
+import com.foodapp.foodorderingapp.exception.UserNotFoundException;
+
+import java.util.Optional;
 
 public interface UserService {
     User createNewUser(CreateUserRequest createUserRequest) throws UserExistException;
     SignInResponse signIn(SignInRequest signInRequest) throws AuthException;
+
+    User getUserByUsername(String username) throws UserNotFoundException;
 }

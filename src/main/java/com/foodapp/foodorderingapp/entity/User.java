@@ -2,8 +2,10 @@ package com.foodapp.foodorderingapp.entity;
 
 
 
+import java.util.List;
 import java.util.Objects;
 
+import com.foodapp.foodorderingapp.enumeration.UserRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +28,7 @@ public class User {
     private String password;
     private String fullname;
     private String phoneNumber;
+    private List<UserRole> roles;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,5 +41,6 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 
 }

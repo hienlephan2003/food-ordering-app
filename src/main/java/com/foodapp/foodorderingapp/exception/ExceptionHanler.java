@@ -19,7 +19,7 @@ public class ExceptionHanler {
         log.error(exception.getMessage(), exception);
         return ErrorDTO.builder()
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                .message("Unexpected error!")
+                .message(exception.getMessage())
                 .build();
     }
 
@@ -33,4 +33,16 @@ public class ExceptionHanler {
                 .message(exception.getMessage())
                 .build();
     }
+
+    @ResponseBody
+    @ExceptionHandler(value = {UserNotFoundException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handleUserNotFoundException (UserNotFoundException exception){
+        log.error(exception.getMessage(), exception);
+        return ErrorDTO.builder()
+                .code(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(exception.getMessage())
+                .build();
+    }
+
 }
