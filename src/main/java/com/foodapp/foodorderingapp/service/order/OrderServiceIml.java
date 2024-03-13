@@ -1,12 +1,10 @@
-package com.foodapp.foodorderingapp.service;
+package com.foodapp.foodorderingapp.service.order;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
 import com.foodapp.foodorderingapp.entity.Order;
-import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 import com.foodapp.foodorderingapp.repository.OrderJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

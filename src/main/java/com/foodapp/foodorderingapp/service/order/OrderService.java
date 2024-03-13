@@ -1,4 +1,4 @@
-package com.foodapp.foodorderingapp.service;
+package com.foodapp.foodorderingapp.service.order;
 
 import java.util.Optional;
 

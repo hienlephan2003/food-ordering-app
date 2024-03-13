@@ -24,13 +24,15 @@ import lombok.*;
 public class UserPrinciple implements UserDetails {
     String username;
     String password;
+    long userId;
     List<GrantedAuthority> authorities;
 
     public UserPrinciple(User user){
         this.username = user.getUsername();
         this.password = user.getPassword();
-        this.authorities = user.getRoles() != null ? user.getRoles().stream()
-                .map(item -> new SimpleGrantedAuthority(item.name()))
+        this.userId = user.getId();
+        this.authorities = user.getRoleList() != null ? user.getRoleList().stream()
+                .map(item -> new SimpleGrantedAuthority(item.getName()))
                 .collect(Collectors.toList()) : new ArrayList<>();
     }
 

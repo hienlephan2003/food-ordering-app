@@ -1,4 +1,4 @@
-package com.foodapp.foodorderingapp.service;
+package com.foodapp.foodorderingapp.service.user;
 
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;

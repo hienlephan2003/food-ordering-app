@@ -25,10 +25,6 @@ public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
     @Value("${foodapp.app.jwtSecret}")
     private String jwtSecret;
-    public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSignKey()).build()
-                .parseClaimsJws(token).getBody().getSubject();
-    }
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(getSignKey()).build().parse(authToken);
@@ -56,7 +52,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 14))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

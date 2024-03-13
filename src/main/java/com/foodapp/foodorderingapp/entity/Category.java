@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "categories")
 @Entity
 public class Category {
@@ -27,7 +28,7 @@ public class Category {
 
     private String name;
     private Integer dishQuantity;
-    private boolean status;
+    private boolean isActive;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

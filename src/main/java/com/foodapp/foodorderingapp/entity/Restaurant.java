@@ -1,4 +1,5 @@
 package com.foodapp.foodorderingapp.entity;
+import com.foodapp.foodorderingapp.enumeration.RestaurantStatus;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -21,8 +22,14 @@ public class Restaurant {
     private String coverImageUrl;
     private String name;
     private String mainDish;
+    @Enumerated(EnumType.STRING)
+    private RestaurantStatus status;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Category> categories;
+    @ManyToOne
+    @JoinColumn(name = "OWNER_ID")
+    private User owner;
+
 
         @Override
     public boolean equals(Object o) {

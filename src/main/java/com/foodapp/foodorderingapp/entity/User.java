@@ -5,12 +5,9 @@ package com.foodapp.foodorderingapp.entity;
 import java.util.List;
 import java.util.Objects;
 
-import com.foodapp.foodorderingapp.enumeration.UserRole;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 
 import lombok.*;
 
@@ -25,10 +22,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+
+    @JsonIgnore
     private String password;
+
     private String fullname;
+
+    @Column(unique = true, nullable = false)
+    @JsonProperty("phone_number")
     private String phoneNumber;
-    private List<UserRole> roles;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roleList;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
