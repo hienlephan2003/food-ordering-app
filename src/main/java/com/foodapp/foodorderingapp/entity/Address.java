@@ -17,16 +17,14 @@ import jakarta.persistence.JoinColumn;
 @Entity
 public class Address {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    private String street;
-    private String ward;
-    private String district;
-    private String province;
+    private String address;
 
     @Override
     public boolean equals(Object o) {

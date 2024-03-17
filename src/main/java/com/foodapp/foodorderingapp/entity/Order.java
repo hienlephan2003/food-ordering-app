@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -18,7 +19,7 @@ import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 @AllArgsConstructor
 @Table(name = "orders")
 @Entity
-public class Order {
+public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,10 +30,12 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESTAURANT_ID")
+    @JsonBackReference
     private Restaurant restaurant;
 
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "default $}")
     private OrderStatus orderStatus;
 
     private String failureMessages;
@@ -57,5 +60,11 @@ public class Order {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    protected void onCreate() {
+        super.onCreate();
+        System.out.println("heheehee");
     }
 }

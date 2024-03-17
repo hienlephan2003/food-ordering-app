@@ -13,36 +13,36 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order_line_item_options")
+@Table(name = "cart_item_options")
 @Entity
-public class OrderLineItem_OptionItem {
+public class CartItem_OptionItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORDER_LINE_ITEM_GROUP_OPTION_ID")
-    @JsonBackReference
-    private OrderLineItem_GroupOption orderLineItem_GroupOption;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_OPTION_ITEM_ID")
+    @JoinColumn(name = "CART_ITEM_GROUP_OPTION_ID")
+    @JsonBackReference
+    private CartItem_GroupOption cartItem_groupOption;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "OPTION_ITEM_ID")
     @JsonBackReference
     private OptionItem optionItem;
-    
+
     private int quantity;
     private BigDecimal price;
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderLineItem_OptionItem that = (OrderLineItem_OptionItem) o;
-        return id.equals(that.id) && optionItem.equals(that.optionItem) && orderLineItem_GroupOption.equals(orderLineItem_GroupOption);
+        return id.equals(that.getId()) && optionItem.equals(that.getOptionItem()) && cartItem_groupOption.equals(cartItem_groupOption);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderLineItem_GroupOption, optionItem);
+        return Objects.hash(id, cartItem_groupOption, optionItem);
     }
 }

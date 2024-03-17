@@ -3,6 +3,7 @@ package com.foodapp.foodorderingapp.controller;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.Dish_GroupOptionRequest;
 import com.foodapp.foodorderingapp.entity.Dish;
+import com.foodapp.foodorderingapp.entity.Dish_GroupOption;
 import com.foodapp.foodorderingapp.security.UserPrinciple;
 import com.foodapp.foodorderingapp.service.dish.DishService;
 import jakarta.validation.Valid;
@@ -19,10 +20,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DishController {
     private final DishService dishService;
-    @GetMapping("list/{id}")
-    public ResponseEntity<List<Dish>> getAllDishs(@PathVariable long id){
+    @GetMapping("/list/{id}")
+    public ResponseEntity<List<Dish>> getDishByCategoryId(@PathVariable long id){
         return ResponseEntity.ok(dishService.getDishesByCategory(id));
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Dish> getDishById(@PathVariable long id) throws Exception {
+        return ResponseEntity.ok(dishService.getDishById(id));
+    }
+
     @PostMapping
     public ResponseEntity<Dish> createDish(@Valid @RequestBody DishRequest dishRequest) {
         return ResponseEntity.ok(dishService.addDish(dishRequest));
@@ -36,15 +42,14 @@ public class DishController {
         dishService.deleteDish(dishId);
         return ResponseEntity.ok(true);
     }
-//    @PostMapping("/group_options")
-//    public ResponseEntity<Dish_GroupOption> addGroupOptionToDish(@RequestBody Dish_GroupOptionRequest dish_groupOptionRequest) throws Exception {
-//        return ResponseEntity.ok( dishService.addGroupOptionToDish(dish_groupOptionRequest.getDishId(), dish_groupOptionRequest.getGroupOptionId()));
-//    }
+    @PostMapping("/group_options")
+    public ResponseEntity<Dish_GroupOption> addGroupOptionToDish(@RequestBody Dish_GroupOptionRequest dish_groupOptionRequest) throws Exception {
+        return ResponseEntity.ok( dishService.addGroupOptionToDish(dish_groupOptionRequest.getDishId(), dish_groupOptionRequest.getGroupOptionId()));
+    }
     private void checkUserPermission(long userId){
         UserPrinciple userInfo = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(userInfo.getUserId() !=  userId){
             throw new IllegalArgumentException("User doesn't have permission");
         }
     }
-
 }

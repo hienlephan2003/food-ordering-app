@@ -11,4 +11,5 @@ public interface GroupOptionService {
     GroupOption updateGroupOption(long id, GroupOptionRequest groupOptionRequest);
     GroupOption deleteGroupOption(long id);
     List<GroupOption> getGroupOptionsByRestaurantId(long restaurantId);
+    List<GroupOption> getGroupOptionsOfDish(long dishId);
 }

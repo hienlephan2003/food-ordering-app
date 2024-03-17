@@ -33,14 +33,13 @@ public class UserServiceImpl implements UserService {
             User newUser = User.builder()
                     .fullname(createUserRequest.getFullname())
                     .password(passwordEncoder.encode( createUserRequest.getPassword()))
-                    .username(createUserRequest.getFullname())
+                    .username(createUserRequest.getUsername())
                     .phoneNumber(createUserRequest.getPhoneNumber())
                     .build();
             UserRole userRole = UserRole.builder().role(roleJpaRepository.findByName("ROLE_USER")).user(newUser).build();
             List<UserRole> userRoleList = new ArrayList<>();
             userRoleList.add(userRole);
             newUser.setRoles(userRoleList);
-
             return  userJpaRepository.save(newUser);
         }
         else throw new UserExistException("User exists!");

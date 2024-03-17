@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -22,6 +23,7 @@ public class OrderLineItem {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_ID")
+    @JsonBackReference
     private Order order;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderLineItem")

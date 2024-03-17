@@ -21,6 +21,10 @@ public class GroupOptionController {
     public ResponseEntity<List<GroupOption>> getAllGroupOptions(@PathVariable long id){
         return ResponseEntity.ok(groupOptionService.getGroupOptionsByRestaurantId(id));
     }
+    @GetMapping("dish/{id}")
+    public ResponseEntity<List<GroupOption>> getGroupOptionOfDish(@PathVariable("id") long dishId){
+        return ResponseEntity.ok(groupOptionService.getGroupOptionsOfDish(dishId));
+    }
     @PostMapping
     public ResponseEntity<GroupOption> createGroupOption(@Valid @RequestBody GroupOptionRequest groupOptionRequest) {
         return ResponseEntity.ok(groupOptionService.addGroupOption(groupOptionRequest));
@@ -34,6 +38,7 @@ public class GroupOptionController {
         groupOptionService.deleteGroupOption(groupOptionId);
         return ResponseEntity.ok(true);
     }
+
     private void checkUserPermission(long userId){
         UserPrinciple userInfo = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(userInfo.getUserId() !=  userId){
