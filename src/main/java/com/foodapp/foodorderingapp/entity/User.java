@@ -31,14 +31,8 @@ public class User {
     @Column(unique = true, nullable = false)
     @JsonProperty("phone_number")
     private String phoneNumber;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roleList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    List<UserRole> roles;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,6 +45,4 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-
 }

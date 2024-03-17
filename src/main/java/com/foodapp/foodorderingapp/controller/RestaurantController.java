@@ -26,7 +26,6 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.getAllRestaurants());
     }
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest) {
         checkUserPermission(restaurantRequest.getOwnerId());
         return ResponseEntity.ok(restaurantService.createRestaurant(restaurantRequest));

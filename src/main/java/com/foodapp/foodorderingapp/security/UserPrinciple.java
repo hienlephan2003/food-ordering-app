@@ -31,8 +31,8 @@ public class UserPrinciple implements UserDetails {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.userId = user.getId();
-        this.authorities = user.getRoleList() != null ? user.getRoleList().stream()
-                .map(item -> new SimpleGrantedAuthority(item.getName()))
+        this.authorities = user.getRoles() != null ? user.getRoles().stream()
+                .map(item -> new SimpleGrantedAuthority(item.getRole().getName()))
                 .collect(Collectors.toList()) : new ArrayList<>();
     }
 

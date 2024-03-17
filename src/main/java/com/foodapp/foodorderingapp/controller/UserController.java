@@ -3,7 +3,7 @@ package com.foodapp.foodorderingapp.controller;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
 import com.foodapp.foodorderingapp.entity.User;
-import com.foodapp.foodorderingapp.exception.UserNotFoundException;
+import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.security.JwtService;
 import com.foodapp.foodorderingapp.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class UserController {
 
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public  ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInRequest signInRequest) throws UserNotFoundException {
+    public  ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInRequest signInRequest) throws DataNotFoundException {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getUsername(), signInRequest.getPassword()));
         System.out.println("sign in fire" + authentication);
         if (authentication.isAuthenticated()) {
@@ -49,7 +49,7 @@ public class UserController {
                     .body(responseBody);
         }
         else {
-            throw new UserNotFoundException("invalid user request !");
+            throw new DataNotFoundException("invalid user request !");
         }
     }
 }

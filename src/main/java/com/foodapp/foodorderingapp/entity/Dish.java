@@ -1,9 +1,14 @@
 package com.foodapp.foodorderingapp.entity;
+import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.DialectOverride;
+import org.hibernate.boot.model.internal.XMLContext;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -26,12 +31,15 @@ public class Dish {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
-    
     private String name;
     private BigDecimal price;
     private String description;
     private String imageUrl;
-
+    @Enumerated(EnumType.STRING)
+    private DishStatus status;
+    @ManyToOne
+    @JoinColumn(name = "dish_type_id")
+    private DishType dishType;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

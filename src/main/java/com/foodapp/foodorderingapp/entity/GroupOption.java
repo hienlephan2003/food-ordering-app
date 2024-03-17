@@ -23,12 +23,10 @@ public class GroupOption {
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "groupOption", cascade = CascadeType.ALL)
-    private List<GroupOptionItem> optionItems;
-
-    @OneToMany(mappedBy = "groupOption")
-    private List<OrderLineItemGroupOption> orderLineItemGroupOptions;
+    private List<OptionItem> optionItems;
 
     private String name;
     private int minimum;
     private int maximum;
+    private boolean isOptional;
 }

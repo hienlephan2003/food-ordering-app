@@ -24,7 +24,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "order_line_item_group_options")
 @Entity
-public class OrderLineItemGroupOption {
+public class OrderLineItem_GroupOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,15 +37,15 @@ public class OrderLineItemGroupOption {
     @JoinColumn(name = "GROUP_OPTION_ID")
     private GroupOption groupOption;
 
-    @OneToMany(mappedBy = "orderLineItemGroupOption", fetch = FetchType.LAZY)
-    List<OrderLineItemOption> orderLineItemOptions;
+    @OneToMany(mappedBy = "orderLineItem_GroupOption", fetch = FetchType.LAZY)
+    List<OrderLineItem_OptionItem> orderLineItemOptions;
 
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderLineItemGroupOption that = (OrderLineItemGroupOption) o;
+        OrderLineItem_GroupOption that = (OrderLineItem_GroupOption) o;
         return id.equals(that.id);
     }
 

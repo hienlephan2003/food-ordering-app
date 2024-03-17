@@ -25,7 +25,7 @@ public class OrderLineItem {
     private Order order;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderLineItem")
-    private List<OrderLineItemGroupOption> orderLineItemGroupOptions;
+    private List<OrderLineItem_GroupOption> orderLineItemGroupOptions;
 
     @ManyToOne
     @JoinColumn(name = "DISH_ID")

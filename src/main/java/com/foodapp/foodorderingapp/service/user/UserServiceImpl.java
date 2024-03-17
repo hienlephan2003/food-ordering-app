@@ -3,15 +3,21 @@ package com.foodapp.foodorderingapp.service.user;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
 import com.foodapp.foodorderingapp.dto.auth.response.SignInResponse;
+import com.foodapp.foodorderingapp.entity.Role;
 import com.foodapp.foodorderingapp.entity.User;
+import com.foodapp.foodorderingapp.entity.UserRole;
 import com.foodapp.foodorderingapp.exception.AuthException;
+import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.exception.UserExistException;
-import com.foodapp.foodorderingapp.exception.UserNotFoundException;
+import com.foodapp.foodorderingapp.repository.RoleJpaRepository;
 import com.foodapp.foodorderingapp.repository.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -19,6 +25,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserJpaRepository userJpaRepository;
+    private final RoleJpaRepository roleJpaRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
     public User createNewUser(CreateUserRequest createUserRequest) throws UserExistException {
@@ -29,6 +36,11 @@ public class UserServiceImpl implements UserService {
                     .username(createUserRequest.getFullname())
                     .phoneNumber(createUserRequest.getPhoneNumber())
                     .build();
+            UserRole userRole = UserRole.builder().role(roleJpaRepository.findByName("ROLE_USER")).user(newUser).build();
+            List<UserRole> userRoleList = new ArrayList<>();
+            userRoleList.add(userRole);
+            newUser.setRoles(userRoleList);
+
             return  userJpaRepository.save(newUser);
         }
         else throw new UserExistException("User exists!");
@@ -53,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public User getUserByUsername(String username){
         Optional<User> user = Optional.ofNullable(userJpaRepository.findUserByUsername(username));
         if(user.isEmpty()){
-            throw new UserNotFoundException("Not found user with "+ username);
+            throw new DataNotFoundException("Not found user with "+ username);
         }
         return user.get();
     }

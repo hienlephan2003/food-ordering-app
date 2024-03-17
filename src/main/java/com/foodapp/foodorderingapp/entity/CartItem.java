@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data 
 @Entity
-@Table(name = "cart-items")
+@Table(name = "cart_items")
 public class CartItem {
     @Id
     private Long id;

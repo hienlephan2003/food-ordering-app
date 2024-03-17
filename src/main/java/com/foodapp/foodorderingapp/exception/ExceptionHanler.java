@@ -73,9 +73,9 @@ public class ExceptionHanler {
     }
 
     @ResponseBody
-    @ExceptionHandler(value = {UserNotFoundException.class})
+    @ExceptionHandler(value = {DataNotFoundException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDTO handleUserNotFoundException (UserNotFoundException exception){
+    public ErrorDTO handleUserNotFoundException (DataNotFoundException exception){
         log.error(exception.getMessage(), exception);
         return ErrorDTO.builder()
                 .code(HttpStatus.BAD_REQUEST.getReasonPhrase())
