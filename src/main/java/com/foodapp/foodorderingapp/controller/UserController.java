@@ -1,7 +1,9 @@
 package com.foodapp.foodorderingapp.controller;
 
+import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
+import com.foodapp.foodorderingapp.entity.Address;
 import com.foodapp.foodorderingapp.entity.User;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.security.JwtService;
@@ -15,8 +17,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class UserController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> signUp(@RequestBody CreateUserRequest createUserRequest){
@@ -32,6 +37,7 @@ public class UserController {
         User user = userService.createNewUser(createUserRequest);
         return ResponseEntity.ok(user);
     }
+
 
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.ACCEPTED)

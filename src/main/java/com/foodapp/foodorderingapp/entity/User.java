@@ -2,9 +2,9 @@ package com.foodapp.foodorderingapp.entity;
 
 
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -33,6 +33,13 @@ public class User {
     private String phoneNumber;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<UserRole> roles;
+    @JsonBackReference
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_address",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    Set<Address> addresses = new HashSet<>();
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
