@@ -1,4 +1,5 @@
 package com.foodapp.foodorderingapp.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import lombok.*;
 
@@ -25,20 +26,23 @@ public class Dish {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESTAURANT_ID")
+    @JsonBackReference
     private Restaurant restaurant;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID")
+    @JsonBackReference
     private Category category;
     private String name;
     private BigDecimal price;
-    private String description;
+                                                                            private String description;
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private DishStatus status;
     @ManyToOne
     @JoinColumn(name = "dish_type_id")
+    @JsonBackReference
     private DishType dishType;
     @Override
     public boolean equals(Object o) {

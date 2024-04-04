@@ -1,11 +1,14 @@
 package com.foodapp.foodorderingapp.service.category;
 
+import com.foodapp.foodorderingapp.dto.category.AddDish;
 import com.foodapp.foodorderingapp.dto.category.CategoryRequest;
 import com.foodapp.foodorderingapp.entity.Category;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.repository.CategoryJpaRepository;
+import com.foodapp.foodorderingapp.repository.DishJpaRepository;
 import com.foodapp.foodorderingapp.repository.RestaurantJpaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -20,6 +23,8 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService{
     private final CategoryJpaRepository categoryJpaRepository;
     private final RestaurantJpaRepository restaurantJpaRepository;
+    private final DishJpaRepository dishJpaRepository;
+
     @Override
     @Transactional
     public Category createCategory(CategoryRequest categoryRequest) {
@@ -35,6 +40,11 @@ public class CategoryServiceImpl implements CategoryService{
                 .isActive(true)
                 .build();
         return categoryJpaRepository.save(newCategory);
+    }
+
+    @Override
+    public List<Category> getAll() {
+        return categoryJpaRepository.findAll();
     }
 
     @Override
@@ -75,5 +85,13 @@ public class CategoryServiceImpl implements CategoryService{
             categoryJpaRepository.deleteById(id);
             return  category;
         }
+    }
+
+    @Override
+    public Category addDish(AddDish request) {
+        Category category = categoryJpaRepository.findById(request.getCategoryId()).orElseThrow(()-> new EntityNotFoundException("not found category"));
+        Dish dish = dishJpaRepository.findById(request.getDishId()).orElseThrow(()-> new EntityNotFoundException("not found dish"));
+        category.getDishes().add(dish);
+        return categoryJpaRepository.save(category);
     }
 }

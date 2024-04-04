@@ -27,9 +27,7 @@ public class Category {
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "category")
-    @JsonBackReference
     private List<Dish> dishes;
-
     private String name;
     private Integer dishQuantity;
     private boolean isActive;

@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
+import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.dto.dish.Dish_GroupOptionRequest;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.security.UserPrinciple;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +38,16 @@ public class DishController {
         dishService.deleteDish(dishId);
         return ResponseEntity.ok(true);
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<DishSearch>> search(@RequestParam String keyword) throws Exception {
+        if(keyword.isEmpty()) return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(dishService.search(keyword));
+    }
+    @GetMapping
+    public ResponseEntity<List<Dish>> findAll() throws Exception {
+        return ResponseEntity.ok(dishService.findAll());
+    }
+
 //    @PostMapping("/group_options")
 //    public ResponseEntity<Dish_GroupOption> addGroupOptionToDish(@RequestBody Dish_GroupOptionRequest dish_groupOptionRequest) throws Exception {
 //        return ResponseEntity.ok( dishService.addGroupOptionToDish(dish_groupOptionRequest.getDishId(), dish_groupOptionRequest.getGroupOptionId()));
@@ -46,5 +58,6 @@ public class DishController {
             throw new IllegalArgumentException("User doesn't have permission");
         }
     }
+
 
 }

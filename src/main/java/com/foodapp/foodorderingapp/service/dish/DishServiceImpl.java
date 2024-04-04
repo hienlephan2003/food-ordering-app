@@ -1,12 +1,14 @@
 package com.foodapp.foodorderingapp.service.dish;
 
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
+import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -114,5 +116,17 @@ public class DishServiceImpl implements DishService{
                         new IllegalArgumentException(
                                 "Cannot find category with id: "+ categoryId));
         return dishJpaRepository.findDishesByCategory(existingCategory);
+    }
+
+    @Override
+    public List<DishSearch> search(String keyword) {
+        return dishJpaRepository.search(keyword);
+    }
+
+    @Override
+    public List<Dish> findAll() {
+        List<Dish> dishes = dishJpaRepository.findAll();
+        Hibernate.initialize(dishes);
+        return dishes;
     }
 }
