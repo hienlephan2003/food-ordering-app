@@ -1,8 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=ioZjNyXnmvbYf6xH
+    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=OwMGJxA5OU4VXv7C
   jpa:
     hibernate:
       ddl-auto: update
+
 server:
-  port: 8080
+  port: 8086

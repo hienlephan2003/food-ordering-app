@@ -27,11 +27,8 @@ public class Dish_GroupOptionId implements Serializable {
         return groupOption.getId().equals(dish_groupOptionId.groupOption.getId()) &&
                 dish.getId().equals(dish_groupOptionId.dish.getId());
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(groupOption, dish);
     }
-
-
 }

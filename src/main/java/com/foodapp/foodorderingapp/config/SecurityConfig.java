@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.config;
 
 import com.foodapp.foodorderingapp.security.JwtAuthFilter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
                     .requestMatchers("api/auth/*").permitAll()
+                    .requestMatchers("/ms-food-ordering").permitAll()
                     .anyRequest().authenticated();
         }).csrf(AbstractHttpConfigurer::disable);
         return http.build();
