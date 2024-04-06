@@ -2,13 +2,16 @@ package com.foodapp.foodorderingapp.service.dishType;
 
 import java.util.List;
 
+import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
+import com.foodapp.foodorderingapp.entity.Dish;
 import org.springframework.stereotype.Service;
 
 import com.foodapp.foodorderingapp.entity.DishType;
 import com.foodapp.foodorderingapp.repository.DishTypeJpaRepository;
 
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DishTypeServicelmpl implements DishTypeService {
@@ -16,7 +19,28 @@ public class DishTypeServicelmpl implements DishTypeService {
     @Override
     public List<DishType> getAllDishTypes() {
         List<DishType> dishTypes = dishTypeJpaRepository.findAll();
-       return dishTypes;
+           return dishTypes;
     }
-    
+
+    @Override
+    public DishType getOne(long id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public DishType create(DishTypeCreate dishTypeCreate) {
+        DishType dishType = DishType.builder().name(dishTypeCreate.getName()).build();
+        return dishTypeJpaRepository.save(dishType);
+    }
+
+    @Override
+    public DishType update(long id, DishTypeCreate dishTypeCreate) throws Exception {
+        return null;
+    }
+
+    @Override
+    public DishType delete(long id) throws Exception {
+        return null;
+    }
+
 }

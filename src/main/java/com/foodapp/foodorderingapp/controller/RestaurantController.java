@@ -1,6 +1,9 @@
 package com.foodapp.foodorderingapp.controller;
 
+import com.foodapp.foodorderingapp.dto.restaurant.AddCategory;
 import com.foodapp.foodorderingapp.dto.restaurant.RestaurantRequest;
+import com.foodapp.foodorderingapp.dto.restaurant.RestaurantSearch;
+import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.entity.User;
 import com.foodapp.foodorderingapp.enumeration.RestaurantStatus;
@@ -13,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,10 +24,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RestaurantController {
     private final RestaurantService restaurantService;
+    @GetMapping("/search")
+    public ResponseEntity<List<RestaurantSearch >> search(@RequestParam String keyword) throws Exception {
+        if(keyword.isEmpty()) return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(restaurantService.search(keyword));
+    }
     @GetMapping
     public ResponseEntity<List<Restaurant>> getAllRestaurants(
     ){
         return ResponseEntity.ok(restaurantService.getAllRestaurants());
+    }
+    @PostMapping("/addCategory")
+    public ResponseEntity<Restaurant> addCategory(@RequestBody AddCategory restaurantRequest) {
+
+        return ResponseEntity.ok(restaurantService.addCategory(restaurantRequest));
     }
     @PostMapping
     public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest) {

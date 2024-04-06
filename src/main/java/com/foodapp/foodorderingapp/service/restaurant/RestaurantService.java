@@ -1,6 +1,8 @@
 package com.foodapp.foodorderingapp.service.restaurant;
 
+import com.foodapp.foodorderingapp.dto.restaurant.AddCategory;
 import com.foodapp.foodorderingapp.dto.restaurant.RestaurantRequest;
+import com.foodapp.foodorderingapp.dto.restaurant.RestaurantSearch;
 import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.enumeration.RestaurantStatus;
 
@@ -10,7 +12,8 @@ public interface RestaurantService {
     Restaurant createRestaurant(RestaurantRequest restaurant);
     Restaurant getRestaurantById(long id) throws IllegalArgumentException;
     List<Restaurant> getAllRestaurants() throws IllegalArgumentException;
-
+    Restaurant addCategory(AddCategory request);
     Restaurant updateRestaurant(long restaurantId, RestaurantRequest createRestaurantRequest);
     Restaurant changeStatus(long id, RestaurantStatus status) throws Exception;
+    List<RestaurantSearch> search(String keyword);
 }

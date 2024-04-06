@@ -36,12 +36,13 @@ public class Dish {
     private Category category;
     private String name;
     private BigDecimal price;
-    private String description;
+                                                                            private String description;
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private DishStatus status;
     @ManyToOne
     @JoinColumn(name = "dish_type_id")
+    @JsonBackReference
     private DishType dishType;
     @Override
     public boolean equals(Object o) {
