@@ -36,12 +36,11 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     @Override
     public User createNewUser(CreateUserRequest createUserRequest) throws UserExistException {
-        if(!userJpaRepository.existsUserByPhoneNumber(createUserRequest.getPhoneNumber())){
+        if(!userJpaRepository.existsUserByUsername(createUserRequest.getUsername())){
             User newUser = User.builder()
                     .fullname(createUserRequest.getFullname())
                     .password(passwordEncoder.encode( createUserRequest.getPassword()))
                     .username(createUserRequest.getUsername())
-                    .phoneNumber(createUserRequest.getPhoneNumber())
                     .build();
             UserRole userRole = UserRole.builder().role(roleJpaRepository.findByName("ROLE_USER")).user(newUser).build();
             List<UserRole> userRoleList = new ArrayList<>();

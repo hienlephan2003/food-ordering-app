@@ -1,14 +1,14 @@
 package com.foodapp.foodorderingapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.foodapp.foodorderingapp.utils.JsonListConverter;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.TimeZone;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Data
 @AllArgsConstructor
@@ -24,8 +24,10 @@ public class Message {
     private Long id;
     private String message;
     private ZonedDateTime sendAt;
-    @Column(columnDefinition = "json")
-    private String media;
+    @ElementCollection
+    @CollectionTable(name = "media", joinColumns = @JoinColumn(name = "message_id"))
+    @Column(name = "url")
+    private List<String> media;
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;

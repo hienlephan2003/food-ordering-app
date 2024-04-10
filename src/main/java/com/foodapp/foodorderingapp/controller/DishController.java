@@ -1,8 +1,10 @@
 package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
+import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.dto.dish.Dish_GroupOptionRequest;
 import com.foodapp.foodorderingapp.entity.Dish;
+import com.foodapp.foodorderingapp.entity.Dish_GroupOption;
 import com.foodapp.foodorderingapp.security.UserPrinciple;
 import com.foodapp.foodorderingapp.service.dish.DishService;
 import jakarta.validation.Valid;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

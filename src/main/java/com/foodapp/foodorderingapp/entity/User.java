@@ -21,6 +21,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String username;
 
     @JsonIgnore
@@ -28,9 +29,6 @@ public class User {
 
     private String fullname;
 
-    @Column(unique = true, nullable = false)
-    @JsonProperty("phone_number")
-    private String phoneNumber;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<UserRole> roles;
     @JsonBackReference
