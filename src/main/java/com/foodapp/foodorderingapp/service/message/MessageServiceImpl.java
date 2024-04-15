@@ -60,16 +60,12 @@ public class MessageServiceImpl implements MessageService {
         messageMapper.updateMessage(request, msg);
         messageJpaRepository.save(msg);
     }
-
     @Override
     public void deleteById(Long id) {
         messageJpaRepository.deleteById(id);
     }
-
-
     @Override
     public Page<Message> getMessages(int offset, int limit, long chatId){
-        return messageJpaRepository.findMessageByChatId(PageRequest.of(offset, limit), chatId);
+        return messageJpaRepository.findMessageByChatIdOrderBySendAtDesc(PageRequest.of(offset/limit, limit), chatId);
     }
-
 }
