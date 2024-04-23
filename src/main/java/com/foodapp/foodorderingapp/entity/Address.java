@@ -9,13 +9,15 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
-@Table(name = "address")
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Builder
-@Setter
+import jakarta.persistence.JoinColumn;
+
 @Getter
+@Setter
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "address")
 @Entity
 public class Address {
     @Id

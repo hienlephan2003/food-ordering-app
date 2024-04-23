@@ -23,7 +23,7 @@ public class DishServiceImpl implements DishService{
     private final DishJpaRepository dishJpaRepository;
     private final DishTypeJpaRepository dishTypeJpaRepository;
     private final GroupOptionJpaRepository groupOptionJpaRepository;
-//    private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
+    private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
     @Override
     public Dish getDishById(long dishId) throws Exception {
         Optional<Dish> dish = dishJpaRepository.findById(dishId);
@@ -94,19 +94,20 @@ public class DishServiceImpl implements DishService{
         return dish;
     }
 
-//    @Override
-//    public Dish_GroupOption addGroupOptionToDish(long dishId, long groupOptionId) throws Exception {
-//        Dish dish = getDishById(dishId);
-//        GroupOption groupOption = groupOptionJpaRepository.findById(groupOptionId).orElseThrow(()->
-//         new DataNotFoundException("Not found group optin with id" + groupOptionId));
-//        Dish_GroupOption dish_groupOption = Dish_GroupOption.builder()
-//                .dish_groupOptionId(Dish_GroupOptionId.builder()
-//                        .dish(dish)
-//                        .groupOption(groupOption)
-//                        .build())
-//                .build();
-//        return dish_groupOptionJpaRepository.save(dish_groupOption);
-//    }
+    @Override
+    public Dish_GroupOption addGroupOptionToDish(long dishId, long groupOptionId) throws Exception {
+        Dish dish = getDishById(dishId);
+        GroupOption groupOption = groupOptionJpaRepository.findById(groupOptionId).orElseThrow(()->
+         new DataNotFoundException("Not found group optin with id" + groupOptionId));
+        Dish_GroupOptionId dish_groupOptionId = Dish_GroupOptionId.builder()
+                .dish(dish)
+                .groupOption(groupOption)
+                .build();
+        Dish_GroupOption dish_groupOption = Dish_GroupOption.builder()
+                .dish_groupOptionId(dish_groupOptionId)
+                .build();
+        return dish_groupOptionJpaRepository.save(dish_groupOption);
+    }
 
     @Override
     public List<Dish> getDishesByCategory(long categoryId) {
@@ -114,7 +115,7 @@ public class DishServiceImpl implements DishService{
                 .findById(categoryId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "Cannot find category with id: "+ categoryId));
+                                "Cannot find category with id: "+ String.valueOf(categoryId)));
         return dishJpaRepository.findDishesByCategory(existingCategory);
     }
 

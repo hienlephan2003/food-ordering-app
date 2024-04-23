@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class GroupOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESTAURANT_ID")
+    @JsonBackReference
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "groupOption", cascade = CascadeType.ALL)

@@ -25,26 +25,26 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order_line_item_group_options")
+@Table(name = "cart_item_group_options")
 @Entity
 @Builder
-public class OrderLineItem_GroupOption {
+public class CartItem_GroupOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ORDER_LINE_ITEM_ID")
+    @JoinColumn(name = "CART_ITEM_ID")
     @JsonBackReference
-    private OrderLineItem orderLineItem;
+    private CartItem cartItem;
 
     @ManyToOne
     @JoinColumn(name = "GROUP_OPTION_ID")
     @JsonBackReference
     private GroupOption groupOption;
 
-    @OneToMany(mappedBy = "orderLineItem_GroupOption", fetch = FetchType.LAZY)
-    List<OrderLineItem_OptionItem> orderLineItemOptions;
+    @OneToMany(mappedBy = "cartItem_groupOption", fetch = FetchType.LAZY)
+    List<CartItem_OptionItem> cartItemOptions;
 
     private BigDecimal groupOptionSubtotal;
 
@@ -52,8 +52,8 @@ public class OrderLineItem_GroupOption {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderLineItem_GroupOption that = (OrderLineItem_GroupOption) o;
-        return id.equals(that.id);
+        CartItem_GroupOption that = (CartItem_GroupOption) o;
+        return id.equals(that.getId());
     }
 
     @Override

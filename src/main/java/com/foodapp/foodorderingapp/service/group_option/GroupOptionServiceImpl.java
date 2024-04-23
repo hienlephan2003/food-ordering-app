@@ -7,6 +7,7 @@ import com.foodapp.foodorderingapp.entity.GroupOption;
 import com.foodapp.foodorderingapp.entity.OptionItem;
 import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.repository.CategoryJpaRepository;
+import com.foodapp.foodorderingapp.repository.Dish_GroupOptionJpaRepository;
 import com.foodapp.foodorderingapp.repository.GroupOptionJpaRepository;
 import com.foodapp.foodorderingapp.repository.RestaurantJpaRepository;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class GroupOptionServiceImpl implements GroupOptionService {
     private final CategoryJpaRepository categoryJpaRepository;
     private final RestaurantJpaRepository restaurantJpaRepository;
     private final GroupOptionJpaRepository groupOptionJpaRepository;
+    private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
     @Override
     public GroupOption addGroupOption(GroupOptionRequest groupOptionRequest) {
         Restaurant existingRestaurant = restaurantJpaRepository
@@ -61,5 +63,12 @@ public class GroupOptionServiceImpl implements GroupOptionService {
     @Override
     public List<GroupOption> getGroupOptionsByRestaurantId(long restaurantId) {
         return null;
+    }
+
+    @Override
+    public List<GroupOption> getGroupOptionsOfDish(long dishId) {
+        return dish_groupOptionJpaRepository.findByDishId(dishId).stream()
+                .map(item -> item.getDish_groupOptionId().getGroupOption())
+                .toList();
     }
 }
