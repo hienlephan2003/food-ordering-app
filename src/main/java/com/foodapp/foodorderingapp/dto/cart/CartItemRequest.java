@@ -15,6 +15,8 @@ import java.util.List;
 public class CartItemRequest {
     @JsonProperty("dish_id")
     private Long dishId;
+    @JsonProperty("user_id")
+    private Long userId;
     @JsonProperty("item_group_options")
     List<CartItem_GroupOptionRequest> cartItemGroupOptionRequests;
     private BigDecimal total;

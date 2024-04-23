@@ -27,10 +27,7 @@ public class User {
     private String password;
 
     private String fullname;
-
-    @Column(unique = true, nullable = false)
-    @JsonProperty("phone_number")
-    private String phoneNumber;
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<UserRole> roles;
     @JsonBackReference

@@ -27,7 +27,6 @@ public class CartItem_OptionItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OPTION_ITEM_ID")
-    @JsonBackReference
     private OptionItem optionItem;
 
     private int quantity;

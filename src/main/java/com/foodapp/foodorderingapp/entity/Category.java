@@ -21,12 +21,12 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "RESTAURANT_ID")
     @JsonBackReference
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Dish> dishes;
     private String name;
     private Integer dishQuantity;
