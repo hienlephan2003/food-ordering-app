@@ -24,6 +24,7 @@ public class Restaurant {
     private String coverImageUrl;
     private String name;
     private String mainDish;
+    private String address;
     @Enumerated(EnumType.STRING)
     private RestaurantStatus status;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

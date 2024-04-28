@@ -20,14 +20,15 @@ import jakarta.persistence.*;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private long id;
+    private Long id;
     @JsonBackReference
     @ManyToMany(cascade = CascadeType.ALL,mappedBy = "addresses", fetch = FetchType.LAZY)
     Set<User> users = new HashSet<>();
     private String address;
-//    private String street;
     private int wardCode;
     private int districtCode;
     private int provinceCode;
+
+
+
 }
