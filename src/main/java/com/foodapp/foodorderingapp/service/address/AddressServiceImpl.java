@@ -27,7 +27,12 @@ public class AddressServiceImpl implements AddressService {
                 new EntityNotFoundException(
                         "Cannot find user with id: "+ createAddress.getUserId()));
 
-        Address address = Address.builder().address(createAddress.getAddress()).build();
+        Address address = Address.builder()
+                .address(createAddress.getAddress())
+                .provinceCode(createAddress.getProvinceCode())
+                .districtCode(createAddress.getDistrictCode())
+                .wardCode(createAddress.getWardCode())
+                .build();
         user.getAddresses().add(address);
         userJpaRepository.save(user);
         return address;

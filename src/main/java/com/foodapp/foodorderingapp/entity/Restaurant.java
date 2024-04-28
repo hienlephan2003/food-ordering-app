@@ -19,6 +19,8 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String imageUrl;
+    private String menuImageUrl;
+    private String photoUrls;
     private String coverImageUrl;
     private String name;
     private String mainDish;
@@ -29,7 +31,9 @@ public class Restaurant {
     @ManyToOne
     @JoinColumn(name = "OWNER_ID")
     private User owner;
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Address address;
+    private String description;
 
     @Override
     public boolean equals(Object o) {

@@ -32,6 +32,13 @@ public class RestaurantServiceImpl implements RestaurantService{
     public Restaurant createRestaurant(RestaurantRequest restaurantRequest) {
         Optional<User> user = userJpaRepository.findById(restaurantRequest.getOwnerId());
         if(user.isEmpty()) throw new IllegalArgumentException("Not found user");
+        Address address = Address.builder()
+                .provinceCode(restaurantRequest.getCreateAddress().getProvinceCode())
+                .districtCode(restaurantRequest.getCreateAddress().getDistrictCode())
+                .wardCode(restaurantRequest.getCreateAddress().getWardCode())
+                .address(restaurantRequest.getCreateAddress().getAddress())
+                .build();
+
         Restaurant restaurant = Restaurant.builder().name(restaurantRequest.getName())
                 .imageUrl(restaurantRequest.getImageUrl())
                 .name(restaurantRequest.getName())
@@ -39,6 +46,10 @@ public class RestaurantServiceImpl implements RestaurantService{
                 .mainDish(restaurantRequest.getMainDish())
                 .owner(user.get())
                 .status(RestaurantStatus.CREATED)
+                .address(address)
+                .description(restaurantRequest.getDescription())
+                .menuImageUrl(restaurantRequest.getMenuImageUrl())
+                .photoUrls(restaurantRequest.getPhotoUrls())
                 .categories(new ArrayList<>()).build();
         return restaurantJpaRepository.save(restaurant);
     }

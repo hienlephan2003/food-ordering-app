@@ -57,6 +57,7 @@ public class DishServiceImpl implements DishService{
                 .restaurant(existingRestaurant)
                 .category(existingCategory)
                 .dishType(dishType)
+                .status(DishStatus.ACTIVE)
                 .build();
         return dishJpaRepository.save(newDish);
     }

@@ -25,8 +25,4 @@ public class DishTypeController {
     public ResponseEntity<DishType> create(@Valid  @RequestBody DishTypeCreate dishTypeCreate) {
         return ResponseEntity.ok(dishTypeService.create(dishTypeCreate));
     }
-
-
-    
-    
 }

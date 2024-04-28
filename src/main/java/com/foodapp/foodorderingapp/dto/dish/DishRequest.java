@@ -19,21 +19,16 @@ import java.math.BigDecimal;
 @Builder
 @Getter
 public class DishRequest {
-    @JsonProperty("dish_id")
     private long dishId;
     private String name;
     @DecimalMin(value = "0",message = "Price must be greater than 0")
     private BigDecimal price;
     private String description;
-    @JsonProperty("image_url")
     private String imageUrl;
-    @JsonProperty("restaurant_id")
     @NotNull()
     private long restaurantId;
-    @JsonProperty("category_id")
     @NotNull()
     private long categoryId;
     @NotNull
-    @JsonProperty("dish_type_id")
     private long dishTypeId;
 }

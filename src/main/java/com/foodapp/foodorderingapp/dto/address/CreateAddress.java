@@ -11,4 +11,7 @@ import lombok.*;
 public class CreateAddress {
     private long userId;
     private String address;
+    private int provinceCode;
+    private int districtCode;
+    private int wardCode;
 }

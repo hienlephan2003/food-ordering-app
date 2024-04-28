@@ -41,23 +41,15 @@ public class RestaurantController {
     }
     @PostMapping
     public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest) {
-        checkUserPermission(restaurantRequest.getOwnerId());
         return ResponseEntity.ok(restaurantService.createRestaurant(restaurantRequest));
     }
     @PutMapping
     public ResponseEntity<Restaurant> updateRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest){
-        checkUserPermission(restaurantRequest.getOwnerId());
         return ResponseEntity.ok(restaurantService.updateRestaurant(restaurantRequest.getRestaurantId(), restaurantRequest));
     }
     @DeleteMapping
     public ResponseEntity<Boolean> deleteRestaurant(@RequestBody long restaurantId) throws Exception {
         restaurantService.changeStatus(restaurantId, RestaurantStatus.DELETED);
         return ResponseEntity.ok(true);
-    }
-    private void checkUserPermission(long userId){
-        UserPrinciple userInfo = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(userInfo.getUserId() !=  userId){
-            throw new IllegalArgumentException("User doesn't have permission");
-        }
     }
 }

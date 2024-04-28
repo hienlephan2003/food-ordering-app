@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.dto.restaurant;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -14,16 +15,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class RestaurantRequest {
-    @JsonProperty("restaurant_id")
     private long restaurantId;
-    @JsonProperty("image_url")
+    private String menuImageUrl;
+    private String photoUrls;
     private String imageUrl;
-    @JsonProperty("cover_image_url")
     private String coverImageUrl;
     @NotEmpty
     private String name;
-    @JsonProperty("main_dish")
     private String mainDish;
-    @JsonProperty("owner_id")
     private long ownerId;
+    private String address;
+    @JsonProperty("addressRequest")
+    private CreateAddress createAddress;
+    private String description;
 }

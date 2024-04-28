@@ -36,7 +36,7 @@ public class Dish {
     private Category category;
     private String name;
     private BigDecimal price;
-                                                                            private String description;
+    private String description;
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private DishStatus status;

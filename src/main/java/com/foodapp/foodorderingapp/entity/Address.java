@@ -27,10 +27,7 @@ public class Address {
     Set<User> users = new HashSet<>();
     private String address;
 //    private String street;
-//    private String ward;
-//    private String district;
-//    private String province;
-
-
-
+    private int wardCode;
+    private int districtCode;
+    private int provinceCode;
 }
