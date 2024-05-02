@@ -43,10 +43,7 @@ import com.foodapp.foodorderingapp.enumeration.OrderStatus;
         private String failureMessages;
         private BigDecimal price;
 
-
-        @ManyToOne
-        @JoinColumn(name = "ADDRESS_ID")
-        private Address address;
+        private String address;
 
         @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<OrderLineItem> items;

@@ -34,4 +34,10 @@ public class AddressController {
         return ResponseEntity.ok(addressService.getAddresses(userId));
     }
 
+    public
+    @GetMapping("/{id}")
+    ResponseEntity<Address> getById( @PathVariable Long id){
+        return ResponseEntity.ok(addressService.findById(id));
+    }
+
 }
