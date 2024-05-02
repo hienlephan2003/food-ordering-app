@@ -93,13 +93,12 @@ public class OrderServiceIml implements OrderService {
     public Order createNewOrder(OrderRequest orderRequest) {
         UserPrinciple currentUser = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
-                Address address = addressJpaRepository.findById(orderRequest.getAddressId()).orElseThrow(() -> new DataNotFoundException("not found address"));
         Order order = Order.builder()
                 .user(userJpaRepository.findById(currentUser.getUserId())
                         .orElseThrow(() -> new DataNotFoundException("Not found user")))
                 .orderStatus(orderRequest.getOrderStatus())
                 .deliveryStatus(DeliveryStatus.PENDING)
-                .address(address)
+                .address(orderRequest.getAddress())
                 .build();
 
         Order orderData = orderJpaRepository.save(order);

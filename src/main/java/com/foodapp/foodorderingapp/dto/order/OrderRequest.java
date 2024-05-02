@@ -16,8 +16,8 @@ import java.util.List;
 public class OrderRequest {
     @JsonProperty("total_price")
     private BigDecimal totalPrice;
-    @JsonProperty("address_id")
-    private Long addressId;
+    @JsonProperty("address")
+    private String address;
     @JsonProperty("order_items")
     List<OrderLineItemRequest> orderItemRequests;
     private OrderStatus orderStatus;

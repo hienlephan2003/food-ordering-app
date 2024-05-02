@@ -3,6 +3,7 @@ package com.foodapp.foodorderingapp.service.address;
 import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import com.foodapp.foodorderingapp.entity.Address;
 import com.foodapp.foodorderingapp.entity.User;
+import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.repository.AddressJpaRepository;
 import com.foodapp.foodorderingapp.repository.UserJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,6 +45,10 @@ public class AddressServiceImpl implements AddressService {
         Hibernate.initialize(user.getAddresses());
         return user.getAddresses().stream().toList();
     }
+@Override
+public Address findById(Long id) {
+   return addressJpaRepository.findById(id).orElseThrow(()-> new DataNotFoundException("not found address"));
+}
 
 
 }

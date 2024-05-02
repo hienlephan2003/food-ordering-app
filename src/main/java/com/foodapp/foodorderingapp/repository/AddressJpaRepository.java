@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface AddressJpaRepository extends JpaRepository<Address, Long> {
     List<Address> findByUsers(User user);
+    Address findById(long id);
 
 }

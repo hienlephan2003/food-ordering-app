@@ -10,7 +10,8 @@ import java.util.List;
 public interface AddressService {
     Address addAddress(CreateAddress createAddress);
 
-   List<Address> getAddresses (Long userId);
+    List<Address> getAddresses(Long userId);
 
+    Address findById(Long id);
 
 }
