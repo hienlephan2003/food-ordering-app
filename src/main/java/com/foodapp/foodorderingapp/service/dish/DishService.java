@@ -16,4 +16,5 @@ public interface DishService {
     List<Dish> getDishesByCategory(long categoryId);
     List<DishSearch> search(String keyword);
     List<Dish> findAll();
+    List<Dish> findDishesByRestaurantId(long restaurantId);
 }

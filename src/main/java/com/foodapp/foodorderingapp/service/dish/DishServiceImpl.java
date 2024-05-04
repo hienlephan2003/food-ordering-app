@@ -131,4 +131,8 @@ public class DishServiceImpl implements DishService{
         Hibernate.initialize(dishes);
         return dishes;
     }
+    @Override
+    public List<Dish> findDishesByRestaurantId(long restaurantId) {
+        return dishJpaRepository.findDishesByRestaurantId(restaurantId);
+    }
 }

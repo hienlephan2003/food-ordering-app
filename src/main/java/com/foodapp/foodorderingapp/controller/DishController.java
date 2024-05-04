@@ -49,6 +49,10 @@ public class DishController {
         if(keyword.isEmpty()) return ResponseEntity.ok(new ArrayList<>());
         return ResponseEntity.ok(dishService.search(keyword));
     }
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<Dish>> getAllByRestaurantId(@PathVariable long restaurantId) throws Exception {
+        return ResponseEntity.ok(dishService.findDishesByRestaurantId(restaurantId));
+    }
     @GetMapping
     public ResponseEntity<List<Dish>> findAll() throws Exception {
         return ResponseEntity.ok(dishService.findAll());

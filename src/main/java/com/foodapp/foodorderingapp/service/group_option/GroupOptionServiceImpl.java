@@ -62,7 +62,7 @@ public class GroupOptionServiceImpl implements GroupOptionService {
 
     @Override
     public List<GroupOption> getGroupOptionsByRestaurantId(long restaurantId) {
-        return null;
+        return groupOptionJpaRepository.findGroupOptionByRestaurantId(restaurantId);
     }
 
     @Override

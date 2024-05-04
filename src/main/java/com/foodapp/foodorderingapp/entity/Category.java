@@ -26,7 +26,7 @@ public class Category {
     @JsonBackReference
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     private List<Dish> dishes;
     private String name;
     private Integer dishQuantity;

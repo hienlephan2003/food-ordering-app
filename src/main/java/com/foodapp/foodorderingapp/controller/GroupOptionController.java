@@ -25,6 +25,10 @@ public class GroupOptionController {
     public ResponseEntity<List<GroupOption>> getGroupOptionOfDish(@PathVariable("id") long dishId){
         return ResponseEntity.ok(groupOptionService.getGroupOptionsOfDish(dishId));
     }
+    @GetMapping("restaurant/{id}")
+    public ResponseEntity<List<GroupOption>> getGroupOptionOfRestaurant(@PathVariable("id") long resId){
+        return ResponseEntity.ok(groupOptionService.getGroupOptionsByRestaurantId(resId));
+    }
     @PostMapping
     public ResponseEntity<GroupOption> createGroupOption(@Valid @RequestBody GroupOptionRequest groupOptionRequest) {
         return ResponseEntity.ok(groupOptionService.addGroupOption(groupOptionRequest));

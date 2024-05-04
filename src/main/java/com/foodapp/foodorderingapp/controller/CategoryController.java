@@ -21,9 +21,14 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class CategoryController {
     private final CategoryService categoryService;
+
     @GetMapping
     public ResponseEntity<List<Category>> getAll() {
         return ResponseEntity.ok(categoryService.getAll());
+    }
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<Category>> getCategoriesByRestaurantId(@PathVariable long restaurantId) {
+        return ResponseEntity.ok(categoryService.getAllCategories(restaurantId));
     }
     @PostMapping("/addDish")
     public ResponseEntity<Category> addDish(@Valid @RequestBody AddDish request) {

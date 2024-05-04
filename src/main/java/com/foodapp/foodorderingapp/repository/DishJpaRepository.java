@@ -12,4 +12,5 @@ public interface DishJpaRepository extends JpaRepository<Dish, Long> {
     List<Dish> findDishesByCategory(Category category);
     @Query("select new com.foodapp.foodorderingapp.dto.dish.DishSearch(d.id, d.name) from Dish d where d.name LIKE %?1%")
     List<DishSearch> search(String keyword);
+    List<Dish> findDishesByRestaurantId(long restaurantId);
 }
