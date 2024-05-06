@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.service.dishType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
@@ -11,6 +12,7 @@ import com.foodapp.foodorderingapp.repository.DishTypeJpaRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import com.github.javafaker.Faker;
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,6 +43,18 @@ public class DishTypeServicelmpl implements DishTypeService {
     @Override
     public DishType delete(long id) throws Exception {
         return null;
+    }
+
+    @Override
+    public List<DishType> seed() {
+        List<DishType> dishTypes = new ArrayList<>();
+        Faker faker = new Faker();
+       for(int i = 0; i < 9; i ++) {
+        DishType dishType = DishType.builder().name(faker.food().ingredient()).build();
+        dishTypes.add(dishType);
+         dishTypeJpaRepository.save(dishType);
+       }
+       return  dishTypes;
     }
 
 }

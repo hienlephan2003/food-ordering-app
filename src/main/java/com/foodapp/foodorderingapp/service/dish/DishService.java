@@ -17,4 +17,5 @@ public interface DishService {
     List<DishSearch> search(String keyword);
     List<Dish> findAll();
     List<Dish> findDishesByRestaurantId(long restaurantId);
+    boolean addDishType(long id);
 }

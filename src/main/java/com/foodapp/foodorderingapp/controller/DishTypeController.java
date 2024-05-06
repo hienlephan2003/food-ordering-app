@@ -21,6 +21,11 @@ public class DishTypeController {
         List<DishType> dishTypes = dishTypeService.getAllDishTypes();
         return ResponseEntity.ok(dishTypes);
     }
+    @PostMapping("seed")
+    public ResponseEntity<List<DishType>> seed() {
+        return ResponseEntity.ok(dishTypeService.seed());
+    }
+
     @PostMapping()
     public ResponseEntity<DishType> create(@Valid  @RequestBody DishTypeCreate dishTypeCreate) {
         return ResponseEntity.ok(dishTypeService.create(dishTypeCreate));

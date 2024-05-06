@@ -14,6 +14,9 @@ import com.foodapp.foodorderingapp.repository.UserJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,8 +63,14 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() throws IllegalArgumentException {
-        return restaurantJpaRepository.findAll();
+    public List<Restaurant> getAllRestaurants(Integer pageNo, Integer pageSize) throws IllegalArgumentException {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<Restaurant> pagedResult = restaurantJpaRepository.findAll(paging);
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<Restaurant>();
+        }
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.List;
 public interface RestaurantService {
     Restaurant createRestaurant(RestaurantRequest restaurant);
     Restaurant getRestaurantById(long id) throws IllegalArgumentException;
-    List<Restaurant> getAllRestaurants() throws IllegalArgumentException;
+    List<Restaurant> getAllRestaurants(Integer pageNo, Integer pageSize) throws IllegalArgumentException;
     Restaurant addCategory(AddCategory request);
     Restaurant updateRestaurant(long restaurantId, RestaurantRequest createRestaurantRequest);
     Restaurant changeStatus(long id, RestaurantStatus status) throws Exception;

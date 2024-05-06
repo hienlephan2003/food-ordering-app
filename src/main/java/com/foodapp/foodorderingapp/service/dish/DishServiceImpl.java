@@ -10,7 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
-
+import java.util.Random;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -135,4 +135,24 @@ public class DishServiceImpl implements DishService{
     public List<Dish> findDishesByRestaurantId(long restaurantId) {
         return dishJpaRepository.findDishesByRestaurantId(restaurantId);
     }
+
+    @Override
+    public boolean addDishType(long id) {
+       List<Dish> dishs = dishJpaRepository.findAll();
+       Category category = categoryJpaRepository.findById(id).orElseThrow(() -> new DataNotFoundException("not found category"));
+       dishs.stream().forEach((dish) -> {
+        if(dish.getCategory()==null) {   
+        Random random = new Random();
+          Restaurant restaurant = restaurantJpaRepository.findById(Long.valueOf(random.nextInt(110) + 7)).orElseThrow(() -> new DataNotFoundException("not found category"));
+          DishType dishType = dishTypeJpaRepository.findById(Long.valueOf(random.nextInt(9) + 11)).orElseThrow(() -> new DataNotFoundException("not found category"));
+          dish.setCategory(category);
+          dish.setRestaurant(restaurant);
+          dish.setDishType(dishType);
+          dishJpaRepository.save(dish);
+        }
+       });
+        return true;
+    }
+
+    
 }

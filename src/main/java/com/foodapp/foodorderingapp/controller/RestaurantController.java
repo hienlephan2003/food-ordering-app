@@ -24,29 +24,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RestaurantController {
     private final RestaurantService restaurantService;
+
     @GetMapping("/search")
-    public ResponseEntity<List<RestaurantSearch >> search(@RequestParam String keyword) throws Exception {
-        if(keyword.isEmpty()) return ResponseEntity.ok(new ArrayList<>());
+    public ResponseEntity<List<RestaurantSearch>> search(@RequestParam String keyword) throws Exception {
+        if (keyword.isEmpty())
+            return ResponseEntity.ok(new ArrayList<>());
         return ResponseEntity.ok(restaurantService.search(keyword));
     }
-    @GetMapping
-    public ResponseEntity<List<Restaurant>> getAllRestaurants(
-    ){
-        return ResponseEntity.ok(restaurantService.getAllRestaurants());
+
+    @GetMapping()
+    public ResponseEntity<List<Restaurant>> getAllRestaurants(@RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        return ResponseEntity.ok(restaurantService.getAllRestaurants(pageNo, pageSize));
     }
+
     @PostMapping("/addCategory")
     public ResponseEntity<Restaurant> addCategory(@RequestBody AddCategory restaurantRequest) {
 
         return ResponseEntity.ok(restaurantService.addCategory(restaurantRequest));
     }
+
     @PostMapping
     public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest) {
         return ResponseEntity.ok(restaurantService.createRestaurant(restaurantRequest));
     }
+
     @PutMapping
-    public ResponseEntity<Restaurant> updateRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest){
-        return ResponseEntity.ok(restaurantService.updateRestaurant(restaurantRequest.getRestaurantId(), restaurantRequest));
+    public ResponseEntity<Restaurant> updateRestaurant(@Valid @RequestBody RestaurantRequest restaurantRequest) {
+        return ResponseEntity
+                .ok(restaurantService.updateRestaurant(restaurantRequest.getRestaurantId(), restaurantRequest));
     }
+
     @DeleteMapping
     public ResponseEntity<Boolean> deleteRestaurant(@RequestBody long restaurantId) throws Exception {
         restaurantService.changeStatus(restaurantId, RestaurantStatus.DELETED);

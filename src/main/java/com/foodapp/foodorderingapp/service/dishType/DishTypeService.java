@@ -11,6 +11,7 @@ public interface DishTypeService {
    
 //    Dish_GroupOption addGroupOptionToDish(long dishId, long optionId) throws Exception;
     List<DishType> getAllDishTypes();
+    List<DishType> seed();
     DishType getOne(long id) throws Exception;
     DishType create(DishTypeCreate dishTypeCreate);
    DishType update(long id, DishTypeCreate dishTypeCreate) throws Exception;

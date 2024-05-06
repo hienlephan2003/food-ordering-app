@@ -22,6 +22,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DishController {
     private final DishService dishService;
+    
+    @PostMapping("/updateDishType/{id}")
+    public ResponseEntity<Boolean> addDishType(@PathVariable long id)  {
+        return ResponseEntity.ok(dishService.addDishType(id));
+    }
     @GetMapping("/list/{id}")
     public ResponseEntity<List<Dish>> getDishByCategoryId(@PathVariable long id){
         return ResponseEntity.ok(dishService.getDishesByCategory(id));
@@ -57,6 +62,7 @@ public class DishController {
     public ResponseEntity<List<Dish>> findAll() throws Exception {
         return ResponseEntity.ok(dishService.findAll());
     }
+  
 
 //    @PostMapping("/group_options")
 //    public ResponseEntity<Dish_GroupOption> addGroupOptionToDish(@RequestBody Dish_GroupOptionRequest dish_groupOptionRequest) throws Exception {
