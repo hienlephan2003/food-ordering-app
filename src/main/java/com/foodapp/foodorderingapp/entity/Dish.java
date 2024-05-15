@@ -39,9 +39,8 @@ public class Dish {
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private DishStatus status;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_type_id")
-    @JsonBackReference
     private DishType dishType;
     @Override
     public boolean equals(Object o) {

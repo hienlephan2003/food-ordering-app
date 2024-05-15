@@ -18,10 +18,11 @@ public class DishTypeController {
     private final DishTypeService dishTypeService;
     @GetMapping()
     public ResponseEntity<List<DishType>> getAll() {
-        List<DishType> dishTypes = dishTypeService.getAllDishTypes();
-        return ResponseEntity.ok(dishTypes);
+        // List<DishType> dishTypes = dishTypeService.getAllDishTypes();
+        
+        return ResponseEntity.ok(dishTypeService.getAllDishTypes());
     }
-    @PostMapping("seed")
+    @PostMapping("/seed")
     public ResponseEntity<List<DishType>> seed() {
         return ResponseEntity.ok(dishTypeService.seed());
     }

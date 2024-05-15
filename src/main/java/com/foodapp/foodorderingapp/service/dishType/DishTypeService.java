@@ -8,8 +8,6 @@ import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.DishType;
 
 public interface DishTypeService {
-   
-//    Dish_GroupOption addGroupOptionToDish(long dishId, long optionId) throws Exception;
     List<DishType> getAllDishTypes();
     List<DishType> seed();
     DishType getOne(long id) throws Exception;

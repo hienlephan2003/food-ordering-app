@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Table(name = "dish_types")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +21,6 @@ public class DishType {
     private long id;
     private String name;
     @OneToMany(mappedBy = "dishType")
+    @JsonBackReference
     private List<Dish> dishes;
 }

@@ -31,6 +31,12 @@ public class DishController {
     public ResponseEntity<List<Dish>> getDishByCategoryId(@PathVariable long id){
         return ResponseEntity.ok(dishService.getDishesByCategory(id));
     }
+
+    @GetMapping("/recommend")
+    public ResponseEntity<List<Dish>> getRecommendedDishes(@RequestParam List<Long> ids) throws Exception {
+        return ResponseEntity.ok(dishService.getRecommendedDishes(ids));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Dish> getDishById(@PathVariable long id) throws Exception {
         return ResponseEntity.ok(dishService.getDishById(id));

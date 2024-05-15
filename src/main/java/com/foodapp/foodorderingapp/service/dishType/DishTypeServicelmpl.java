@@ -13,15 +13,18 @@ import com.foodapp.foodorderingapp.repository.DishTypeJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.github.javafaker.Faker;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DishTypeServicelmpl implements DishTypeService {
     private final DishTypeJpaRepository dishTypeJpaRepository;
+
     @Override
     public List<DishType> getAllDishTypes() {
         List<DishType> dishTypes = dishTypeJpaRepository.findAll();
-           return dishTypes;
+        
+        return dishTypes;
     }
 
     @Override
@@ -49,12 +52,12 @@ public class DishTypeServicelmpl implements DishTypeService {
     public List<DishType> seed() {
         List<DishType> dishTypes = new ArrayList<>();
         Faker faker = new Faker();
-       for(int i = 0; i < 9; i ++) {
-        DishType dishType = DishType.builder().name(faker.food().ingredient()).build();
-        dishTypes.add(dishType);
-         dishTypeJpaRepository.save(dishType);
-       }
-       return  dishTypes;
+        for (int i = 0; i < 9; i++) {
+            DishType dishType = DishType.builder().name(faker.food().ingredient()).build();
+            dishTypes.add(dishType);
+            dishTypeJpaRepository.save(dishType);
+        }
+        return dishTypes;
     }
 
 }
