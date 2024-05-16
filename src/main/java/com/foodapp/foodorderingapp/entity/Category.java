@@ -1,7 +1,9 @@
 package com.foodapp.foodorderingapp.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
 
 import java.util.Objects;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "categories")
 @Entity
 public class Category {
@@ -18,16 +21,16 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "RESTAURANT_ID")
+    @JsonBackReference
     private Restaurant restaurant;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     private List<Dish> dishes;
-
     private String name;
     private Integer dishQuantity;
-    private boolean status;
+    private boolean isActive;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

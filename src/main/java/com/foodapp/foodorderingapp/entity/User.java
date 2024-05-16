@@ -2,13 +2,12 @@ package com.foodapp.foodorderingapp.entity;
 
 
 
-import java.util.Objects;
+import java.util.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 
 import lombok.*;
 
@@ -23,9 +22,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+
+    @JsonIgnore
     private String password;
+
     private String fullname;
-    private String phoneNumber;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    List<UserRole> roles;
+    @JsonBackReference
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_address",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    Set<Address> addresses = new HashSet<>();
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,5 +49,4 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
 }
