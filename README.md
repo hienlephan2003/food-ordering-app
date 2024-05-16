@@ -9,7 +9,7 @@ This project is a food ordering application built using **Flutter** for the fron
 - **PostgreSQL**
 
 ## 🚀 Frontend GitHub Link
-- Explore the frontend repository [here](https://github.com/your-frontend-repo)
+- Explore the frontend repository https://github.com/vocongbinh/food_delivery_app
 
 ## ✨ Features
 - **Ordering System**: Users can browse and order food items online.
