@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
                     .requestMatchers("api/auth/*").permitAll()
+                    .requestMatchers("/v3/api-docs/**", "/v3/api-docs.yaml","/swagger-ui/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/ms-food-ordering").permitAll()
                     .anyRequest().authenticated();
         }).csrf(AbstractHttpConfigurer::disable);

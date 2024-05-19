@@ -3,6 +3,7 @@ package com.foodapp.foodorderingapp.service.user;
 import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
+import com.foodapp.foodorderingapp.dto.auth.UserResponse;
 import com.foodapp.foodorderingapp.dto.auth.response.SignInResponse;
 import com.foodapp.foodorderingapp.entity.Address;
 import com.foodapp.foodorderingapp.entity.Role;
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private final RoleJpaRepository roleJpaRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
-    public User createNewUser(CreateUserRequest createUserRequest) throws UserExistException {
+    public UserResponse createNewUser(CreateUserRequest createUserRequest) throws UserExistException {
         if(!userJpaRepository.existsUserByUsername(createUserRequest.getUsername())){
             User newUser = User.builder()
                     .fullname(createUserRequest.getFullname())
@@ -46,7 +47,11 @@ public class UserServiceImpl implements UserService {
             List<UserRole> userRoleList = new ArrayList<>();
             userRoleList.add(userRole);
             newUser.setRoles(userRoleList);
-            return  userJpaRepository.save(newUser);
+            User user =  userJpaRepository.save(newUser);
+            return UserResponse.builder()
+                    .fullname(user.getFullname())
+                    .username(user.getUsername()).build();
+//                    .role(user.getRoles().getFirst().getRole().getName()).build();
         }
         else throw new UserExistException("User exists!");
     }
@@ -54,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SignInResponse signIn(SignInRequest signInRequest) throws AuthException {
         try{
-            User user = userJpaRepository.findUserByUsername(signInRequest.getUsername());
+            User user = userJpaRepository.findUserByUsername(signInRequest.getUsername()).orElseThrow(()-> new DataNotFoundException("User is not exists"));
             if(user.getPassword().equals(signInRequest.getPassword())){
                 String token = " ";
                 return SignInResponse.builder().token(token).user(user).build();
@@ -68,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username){
-        Optional<User> user = Optional.ofNullable(userJpaRepository.findUserByUsername(username));
+        Optional<User> user = (userJpaRepository.findUserByUsername(username));
         if(user.isEmpty()){
             throw new DataNotFoundException("Not found user with "+ username);
         }

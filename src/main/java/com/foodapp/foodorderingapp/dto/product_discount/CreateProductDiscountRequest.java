@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.dto.product_discount;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.foodapp.foodorderingapp.enumeration.DiscountType;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,24 +17,18 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductDiscountRequest {
-    @JsonProperty("dish_id")
     private Long dishId;
-    @JsonProperty("discount_value")
+    private Long restaurantId;
+    private String name;
+    private String conditions;
     private double discountValue;
-    @JsonProperty("discount_unit")
+    private DiscountType discountType;
     private int discountUnit;
-    @JsonProperty("vaild_from")
     private Timestamp validFrom;
-    @JsonProperty("valid_to")
     private Timestamp validTo;
-    @JsonProperty("coupon_code")
     private String couponCode;
-    @JsonProperty("minimum_order_value")
     @Min(value = 0, message = "Minimum order value should be greater than 0")
     private BigDecimal minimumOrderValue;
-    @JsonProperty("maximum_discount_value")
     @Min(value = 0, message = "Maximum discount value should be greater than 0")
     private BigDecimal maximumDiscountValue;
-    @JsonProperty("is_redeem_allowed")
-    private boolean isRedeemAllowed;
 }
