@@ -9,12 +9,14 @@ import com.foodapp.foodorderingapp.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -120,7 +122,8 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<DishSearch> search(String keyword) {
-        return dishJpaRepository.search(keyword);
+        Pageable pageable = PageRequest.of(0, 5);
+        return dishJpaRepository.search(keyword, pageable);
     }
 
     @Override
