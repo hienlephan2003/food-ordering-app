@@ -1,4 +1,6 @@
 package com.foodapp.foodorderingapp.entity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.foodapp.foodorderingapp.enumeration.RestaurantStatus;
 import lombok.*;
 
@@ -14,6 +16,7 @@ import java.util.Objects;
 @Builder
 @Table(name = "restaurants")
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +35,14 @@ public class Restaurant {
     @JoinColumn(name = "OWNER_ID")
     private User owner;
     @ManyToOne(cascade = CascadeType.ALL)
-    private Address address;
+    private Address addressEntity;
     private String description;
-
+    private String address ;
+    private String  latitude ;
+    private String longitude ;
+    private String locationId ;
+    private Integer numReviews;
+    private String rating;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

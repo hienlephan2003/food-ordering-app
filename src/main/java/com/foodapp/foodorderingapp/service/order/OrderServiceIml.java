@@ -2,6 +2,7 @@ package com.foodapp.foodorderingapp.service.order;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -145,4 +146,9 @@ public class OrderServiceIml implements OrderService {
 public List<Order> getByUser(Long userId) {
         return orderJpaRepository.findByUser(userId);
 }
+
+@Override
+public List<Order> getByRestaurantAndOrderStatus (Long restaurantId, OrderStatus orderStatus) {
+        return orderJpaRepository.findOrdersByRestaurantIdAndOrderStatus(restaurantId, orderStatus);
+    }
 }

@@ -2,6 +2,7 @@ package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
 import com.foodapp.foodorderingapp.entity.Order;
+import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 import com.foodapp.foodorderingapp.service.order.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,11 @@ public class OrderController {
     private final OrderService orderService;
     @GetMapping("/user")
     public ResponseEntity<List<Order>> getMyOrder(@RequestParam Long userId){
-       return ResponseEntity.ok( orderService.getByUser(userId));
+        return ResponseEntity.ok( orderService.getByUser(userId));
+    }
+    @GetMapping("/restaurant")
+    public ResponseEntity<List<Order>> getOrderByRestaurantId(@RequestParam Long restaurantId, @RequestParam OrderStatus orderStatus){
+        return ResponseEntity.ok(orderService.getByRestaurantAndOrderStatus(restaurantId, orderStatus));
     }
     @PostMapping
     public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest orderRequest){
