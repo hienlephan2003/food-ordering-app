@@ -1,9 +1,11 @@
 package com.foodapp.foodorderingapp.service.dish;
 
+import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.Dish_GroupOption;
+import com.foodapp.foodorderingapp.entity.Restaurant;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public interface DishService {
     List<Dish> getDishesByCategory(long categoryId);
     List<DishSearch> search(String keyword);
     List<Dish> findAll();
-    List<Dish> findDishesByRestaurantId(long restaurantId);
+    List<DishByRestaurant> findDishesByRestaurant(long restaurantId);
     List<Dish> getRecommendedDishes(List<Long> ids);
     boolean addDishType(long id);
 }

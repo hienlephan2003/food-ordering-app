@@ -16,4 +16,6 @@ public interface RestaurantService {
     Restaurant updateRestaurant(long restaurantId, RestaurantRequest createRestaurantRequest);
     Restaurant changeStatus(long id, RestaurantStatus status) throws Exception;
     List<RestaurantSearch> search(String keyword);
+    List<Restaurant> getByOwnerId(long ownerId);
+
 }

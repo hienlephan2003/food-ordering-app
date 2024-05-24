@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.controller;
 
+import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.dto.dish.Dish_GroupOptionRequest;
@@ -61,8 +62,8 @@ public class DishController {
         return ResponseEntity.ok(dishService.search(keyword));
     }
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<Dish>> getAllByRestaurantId(@PathVariable long restaurantId) throws Exception {
-        return ResponseEntity.ok(dishService.findDishesByRestaurantId(restaurantId));
+    public ResponseEntity<List<DishByRestaurant>> getAllByRestaurantId(@PathVariable long restaurantId) throws Exception {
+        return ResponseEntity.ok(dishService.findDishesByRestaurant(restaurantId));
     }
     @GetMapping
     public ResponseEntity<List<Dish>> findAll() throws Exception {

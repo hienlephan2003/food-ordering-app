@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.service.dish;
 
+import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.entity.*;
@@ -12,6 +13,7 @@ import org.hibernate.Hibernate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,10 +134,29 @@ public class DishServiceImpl implements DishService {
         Hibernate.initialize(dishes);
         return dishes;
     }
+    private DishByRestaurant convertToDto(Dish dish) {
+        DishByRestaurant dto = new DishByRestaurant();
+        dto.setId(dish.getId());
+        dto.setName(dish.getName());
+        dto.setDescription(dish.getDescription());
+        dto.setPrice(dish.getPrice());
+        dto.setDishType(dish.getDishType());
+        dto.setImageUrl(dish.getImageUrl());
+        dto.setStatus(dish.getStatus());
 
+        // set other properties
+        return dto;
+    }
     @Override
-    public List<Dish> findDishesByRestaurantId(long restaurantId) {
-        return dishJpaRepository.findDishesByRestaurantId(restaurantId);
+    public List<DishByRestaurant> findDishesByRestaurant(long restaurantId) {
+        Restaurant restaurant = restaurantJpaRepository
+                .findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Cannot find restaurant with id: " + String.valueOf(restaurantId)));
+        List<Dish> dishes = dishJpaRepository.findDishesByRestaurant(restaurant);
+        return dishes.stream()
+        .map(this::convertToDto)
+        .collect(Collectors.toList());
     }
 
     @Override

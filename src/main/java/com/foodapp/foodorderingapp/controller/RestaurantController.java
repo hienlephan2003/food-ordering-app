@@ -35,6 +35,10 @@ public class RestaurantController {
     public ResponseEntity<Restaurant> getRestaurantById(@PathVariable long id) {
         return ResponseEntity.ok(restaurantService.getRestaurantById(id));
     }
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<List<Restaurant>> getByOwner(@PathVariable long id) {
+        return ResponseEntity.ok(restaurantService.getByOwnerId(id));
+    }
     @PostMapping("/addCategory")
     public ResponseEntity<Restaurant> addCategory(@RequestBody AddCategory restaurantRequest) {
 
