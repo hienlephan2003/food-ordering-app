@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.service.dish;
 
+import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.entity.*;
@@ -9,15 +10,15 @@ import com.foodapp.foodorderingapp.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -123,7 +124,8 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<DishSearch> search(String keyword) {
-        return dishJpaRepository.search(keyword);
+        Pageable pageable = PageRequest.of(0, 5);
+        return dishJpaRepository.search(keyword, pageable);
     }
 
     @Override
@@ -132,17 +134,29 @@ public class DishServiceImpl implements DishService {
         Hibernate.initialize(dishes);
         return dishes;
     }
+    private DishByRestaurant convertToDto(Dish dish) {
+        DishByRestaurant dto = new DishByRestaurant();
+        dto.setId(dish.getId());
+        dto.setName(dish.getName());
+        dto.setDescription(dish.getDescription());
+        dto.setPrice(dish.getPrice());
+        dto.setDishType(dish.getDishType());
+        dto.setImageUrl(dish.getImageUrl());
+        dto.setStatus(dish.getStatus());
 
+        // set other properties
+        return dto;
+    }
     @Override
-    public List<Dish> findDishesByRestaurantId(long restaurantId, int pageNo,int pageSize ) {
-        Pageable paging = PageRequest.of(pageNo, pageSize);
-        Page<Dish> pagedResult =  dishJpaRepository.findDishesByRestaurantId(restaurantId, paging);
-        if(pagedResult.hasContent()) {
-            System.out.println(pagedResult.getContent().size());
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<>();
-        }
+    public List<DishByRestaurant> findDishesByRestaurant(long restaurantId) {
+        Restaurant restaurant = restaurantJpaRepository
+                .findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Cannot find restaurant with id: " + String.valueOf(restaurantId)));
+        List<Dish> dishes = dishJpaRepository.findDishesByRestaurant(restaurant);
+        return dishes.stream()
+        .map(this::convertToDto)
+        .collect(Collectors.toList());
     }
 
     @Override

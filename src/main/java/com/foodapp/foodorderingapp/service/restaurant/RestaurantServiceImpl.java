@@ -101,7 +101,12 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     @Override
     public List<RestaurantSearch> search(String keyword) {
-        return restaurantJpaRepository.search(keyword);
+        Pageable pageable = PageRequest.of(0, 5);
+        return restaurantJpaRepository.search(keyword, pageable);
+    }
+    @Override
+    public List<Restaurant> getByOwnerId(long ownerId) {
+        return restaurantJpaRepository.findByOwnerId(ownerId);
     }
 
 }
