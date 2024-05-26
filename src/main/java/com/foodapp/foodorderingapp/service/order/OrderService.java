@@ -15,5 +15,5 @@ public interface OrderService {
     Optional<Order> findByTrackingId(String trackingId);
     List<Order> getByUser(Long userId);
     List<Order> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
-    
+    Order updateOrderStatus(Long orderId, OrderStatus orderStatus);
 }

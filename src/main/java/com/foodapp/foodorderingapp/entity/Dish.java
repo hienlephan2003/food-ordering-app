@@ -27,7 +27,7 @@ public class Dish {
 
     @ManyToOne()
     @JoinColumn(name = "RESTAURANT_ID")
-    @JsonIgnoreProperties("categories") 
+//    @JsonIgnoreProperties("categories")
     private Restaurant restaurant;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID")

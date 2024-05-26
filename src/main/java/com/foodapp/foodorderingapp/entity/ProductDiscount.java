@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.foodapp.foodorderingapp.enumeration.DiscountType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,4 +42,5 @@ public class ProductDiscount {
     private String couponCode;
     private BigDecimal minimumOrderValue;
     private BigDecimal maximumDiscountValue;
+    private DiscountType discountType;
 }

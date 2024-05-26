@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 @Component
 public class ProductDiscountMapper {
     public ProductDiscount toProductDiscount(CreateProductDiscountRequest productDiscountRequest, Restaurant restaurant, Dish dish) {
-        ProductDiscount productDiscount = ProductDiscount.builder()
+        return ProductDiscount.builder()
                 .dish(dish)
                 .restaurant(restaurant)
                 .name(productDiscountRequest.getName())
@@ -26,6 +26,5 @@ public class ProductDiscountMapper {
                 .minimumOrderValue(productDiscountRequest.getMinimumOrderValue())
                 .maximumDiscountValue(productDiscountRequest.getMaximumDiscountValue())
                 .build();
-        return productDiscount;
     }
 }

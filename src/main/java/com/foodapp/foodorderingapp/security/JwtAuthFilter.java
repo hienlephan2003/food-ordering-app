@@ -28,13 +28,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             username = jwtService.extractUsername(token);
-
-//            try{
-//
-//            }
-//            catch (Exception ignored){
-//                System.out.println("Error when extracting username from token");
-//            }
+            //try{
+            //
+            // }
+            //catch (Exception ignored){
+            //          System.out.println("Error when extracting username from token");
+            //}
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

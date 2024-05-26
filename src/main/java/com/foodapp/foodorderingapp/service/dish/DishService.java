@@ -16,7 +16,7 @@ public interface DishService {
     List<Dish> getDishesByCategory(long categoryId);
     List<DishSearch> search(String keyword);
     List<Dish> findAll();
-    List<Dish> findDishesByRestaurantId(long restaurantId);
+    List<Dish> findDishesByRestaurantId(long restaurantId, int pageNo,int pageSize);
     List<Dish> getRecommendedDishes(List<Long> ids);
     boolean addDishType(long id);
 }

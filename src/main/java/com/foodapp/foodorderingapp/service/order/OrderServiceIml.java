@@ -142,13 +142,20 @@ public class OrderServiceIml implements OrderService {
         throw new UnsupportedOperationException("Unimplemented method 'findByTrackingId'");
     }
 
-@Override
-public List<Order> getByUser(Long userId) {
-        return orderJpaRepository.findByUser(userId);
-}
+    @Override
+    public List<Order> getByUser(Long userId) {
+            return orderJpaRepository.findByUser(userId);
+    }
 
-@Override
-public List<Order> getByRestaurantAndOrderStatus (Long restaurantId, OrderStatus orderStatus) {
-        return orderJpaRepository.findOrdersByRestaurantIdAndOrderStatus(restaurantId, orderStatus);
+    @Override
+    public List<Order> getByRestaurantAndOrderStatus (Long restaurantId, OrderStatus orderStatus) {
+            return orderJpaRepository.findOrdersByRestaurantIdAndOrderStatus(restaurantId, orderStatus);
+    }
+
+    @Override
+    public Order updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+        Order order = orderJpaRepository.findById(orderId).orElseThrow(()-> new DataNotFoundException("Not found order"));
+        order.setOrderStatus(orderStatus);
+        return orderJpaRepository.save(order);
     }
 }

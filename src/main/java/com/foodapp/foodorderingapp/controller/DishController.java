@@ -61,8 +61,9 @@ public class DishController {
         return ResponseEntity.ok(dishService.search(keyword));
     }
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<Dish>> getAllByRestaurantId(@PathVariable long restaurantId) throws Exception {
-        return ResponseEntity.ok(dishService.findDishesByRestaurantId(restaurantId));
+    public ResponseEntity<List<Dish>> getAllByRestaurantId(@PathVariable long restaurantId, @RequestParam(defaultValue = "0") Integer pageNo,
+                                                           @RequestParam(defaultValue = "10") Integer pageSize) throws Exception {
+        return ResponseEntity.ok(dishService.findDishesByRestaurantId(restaurantId,pageNo, pageSize));
     }
     @GetMapping
     public ResponseEntity<List<Dish>> findAll() throws Exception {

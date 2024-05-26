@@ -9,6 +9,9 @@ import com.foodapp.foodorderingapp.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 import java.math.BigDecimal;
@@ -131,8 +134,15 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> findDishesByRestaurantId(long restaurantId) {
-        return dishJpaRepository.findDishesByRestaurantId(restaurantId);
+    public List<Dish> findDishesByRestaurantId(long restaurantId, int pageNo,int pageSize ) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<Dish> pagedResult =  dishJpaRepository.findDishesByRestaurantId(restaurantId, paging);
+        if(pagedResult.hasContent()) {
+            System.out.println(pagedResult.getContent().size());
+            return pagedResult.getContent();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
