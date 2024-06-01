@@ -38,6 +38,11 @@ public class UserController {
         UserResponse user = userService.createNewUser(createUserRequest);
         return ResponseEntity.ok(user);
     }
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest createUserRequest) throws DataNotFoundException {
+        User result = userService.updateUser(id, createUserRequest);
+        return ResponseEntity.ok(result);
+    }
 
 
     @PostMapping("/sign-in")

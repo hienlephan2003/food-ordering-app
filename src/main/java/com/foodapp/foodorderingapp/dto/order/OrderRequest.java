@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.dto.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.foodapp.foodorderingapp.entity.Voucher;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 
 import lombok.*;
@@ -21,4 +22,6 @@ public class OrderRequest {
     @JsonProperty("order_items")
     List<OrderLineItemRequest> orderItemRequests;
     private OrderStatus orderStatus;
+    @JsonProperty("voucher_ids")
+    private List<Long> voucherIds;
 }

@@ -27,6 +27,14 @@ public class User {
     private String password;
 
     private String fullname;
+    private Integer age;
+    private Integer weight;
+    private Integer height;
+    private String activity;
+    private Integer mealPerDay;
+    private String weightLoss;
+
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<UserRole> roles;

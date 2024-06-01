@@ -21,6 +21,7 @@ public class Voucher {
     private User user;
     @ManyToOne
     private ProductDiscount productDiscount;
+    @Enumerated(EnumType.STRING)
     private VoucherStatus status;
     private int remainingUsage;
     @OneToMany(mappedBy = "voucher")
