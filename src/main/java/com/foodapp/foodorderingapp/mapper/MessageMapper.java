@@ -18,7 +18,6 @@ public class MessageMapper {
         this.modelMapper = modelMapper;
     }
 
-
     public Message toMessage(CreateMessageRequest messageRequest, User sender, Chat chat){
         Message message = Message.builder()
                 .sendAt(ZonedDateTime.now())

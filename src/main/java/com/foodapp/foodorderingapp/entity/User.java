@@ -27,6 +27,7 @@ public class User {
     private String password;
 
     private String fullname;
+    private String avatarUrl;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<UserRole> roles;

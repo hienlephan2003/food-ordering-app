@@ -27,6 +27,7 @@ public class Dish {
 
     @ManyToOne()
     @JoinColumn(name = "RESTAURANT_ID")
+    @JsonBackReference
 //    @JsonIgnoreProperties("categories")
     private Restaurant restaurant;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -11,10 +11,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.foodapp.foodorderingapp.dto.order.OrderLineItemRequest;
 import com.foodapp.foodorderingapp.dto.order.OrderLineItem_GroupOptionRequest;
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
+import com.foodapp.foodorderingapp.dto.order.OrderResponse;
 import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.enumeration.DeliveryStatus;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
+import com.foodapp.foodorderingapp.mapper.OrderMapper;
 import com.foodapp.foodorderingapp.repository.*;
 import com.foodapp.foodorderingapp.security.UserPrinciple;
 
@@ -148,8 +150,8 @@ public class OrderServiceIml implements OrderService {
     }
 
     @Override
-    public List<Order> getByRestaurantAndOrderStatus (Long restaurantId, OrderStatus orderStatus) {
-            return orderJpaRepository.findOrdersByRestaurantIdAndOrderStatus(restaurantId, orderStatus);
+    public List<OrderResponse> getByRestaurantAndOrderStatus (Long restaurantId, OrderStatus orderStatus) {
+            return orderJpaRepository.findOrdersByRestaurantIdAndOrderStatus(restaurantId, orderStatus).stream().map(OrderMapper::toOrderResponse).toList();
     }
 
     @Override

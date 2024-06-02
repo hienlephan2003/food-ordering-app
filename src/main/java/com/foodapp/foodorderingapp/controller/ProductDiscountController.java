@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.product_discount.CreateProductDiscountRequest;
+import com.foodapp.foodorderingapp.dto.product_discount.DiscountResponse;
 import com.foodapp.foodorderingapp.dto.product_discount.UpdateProductDiscountRequest;
 import com.foodapp.foodorderingapp.entity.ProductDiscount;
 import com.foodapp.foodorderingapp.service.product_discount.ProductDiscountService;
@@ -17,19 +18,19 @@ import java.util.List;
 public class ProductDiscountController {
     private final ProductDiscountService productDiscountService;
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDiscount> getProductDiscount(@PathVariable Long id) {
+    public ResponseEntity<DiscountResponse> getProductDiscount(@PathVariable Long id) {
         return ResponseEntity.ok(productDiscountService.getProductDiscount(id));
     }
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<ProductDiscount>> getProductDiscountByRestaurant(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<DiscountResponse>> getProductDiscountByRestaurant(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(productDiscountService.getProductDiscountByRestaurant(restaurantId));
     }
     @PostMapping
-    public ResponseEntity<ProductDiscount> createProductDiscount(@Valid @RequestBody CreateProductDiscountRequest productDiscountRequest) {
+    public ResponseEntity<DiscountResponse> createProductDiscount(@Valid @RequestBody CreateProductDiscountRequest productDiscountRequest) {
         return ResponseEntity.ok(productDiscountService.createProductDiscount(productDiscountRequest));
     }
     @PutMapping
-    public ResponseEntity<ProductDiscount> updateProductDiscount(@Valid @RequestBody UpdateProductDiscountRequest productDiscountRequest){
+    public ResponseEntity<DiscountResponse> updateProductDiscount(@Valid @RequestBody UpdateProductDiscountRequest productDiscountRequest){
         return ResponseEntity.ok(productDiscountService.updateProductDiscount(productDiscountRequest));
     }
 }

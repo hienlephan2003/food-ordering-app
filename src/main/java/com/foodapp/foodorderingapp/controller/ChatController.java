@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/api/chat/")
 public class ChatController {
     private final ChatService chatService;
 
@@ -24,7 +24,13 @@ public class ChatController {
         return ResponseEntity
                 .ok(chatService.getById(id));
     }
-
+    @GetMapping("user/{id}")
+    public ResponseEntity<?> getChatsByUserId(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity
+                .ok(chatService.getUserChat(id));
+    }
     @PostMapping()
     public ResponseEntity<?> createChat(
             @RequestBody @Valid ChatRequest chatRequest

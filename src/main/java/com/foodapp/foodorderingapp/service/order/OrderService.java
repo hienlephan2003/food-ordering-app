@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
+import com.foodapp.foodorderingapp.dto.order.OrderResponse;
 import com.foodapp.foodorderingapp.entity.Order;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 
@@ -14,6 +15,6 @@ public interface OrderService {
 
     Optional<Order> findByTrackingId(String trackingId);
     List<Order> getByUser(Long userId);
-    List<Order> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
+    List<OrderResponse> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
     Order updateOrderStatus(Long orderId, OrderStatus orderStatus);
 }

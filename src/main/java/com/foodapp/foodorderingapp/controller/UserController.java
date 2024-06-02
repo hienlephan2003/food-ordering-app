@@ -30,7 +30,11 @@ public class UserController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserByUserId(@PathVariable long id){
+        User user = userService.findById(id);
+        return ResponseEntity.ok(user);
+    }
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponse> signUp(@RequestBody CreateUserRequest createUserRequest){

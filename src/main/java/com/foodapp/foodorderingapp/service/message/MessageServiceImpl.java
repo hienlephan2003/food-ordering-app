@@ -16,6 +16,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class MessageServiceImpl implements MessageService {
     private final MessageJpaRepository messageJpaRepository;
@@ -37,7 +39,7 @@ public class MessageServiceImpl implements MessageService {
     public void sendToUser(Message message) {
         List<User> users = message.getChat().getUsers();
         for (User user : users) {
-            messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/message", message);
+            messagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/messages", message);
         }
     }
 
@@ -67,5 +69,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Page<Message> getMessages(int offset, int limit, long chatId){
         return messageJpaRepository.findMessageByChatIdOrderBySendAtDesc(PageRequest.of(offset/limit, limit), chatId);
+    }
+
+    @Override
+    public Optional<Message> getMessageById(long messageId) {
+        return messageJpaRepository.findById( messageId);
     }
 }

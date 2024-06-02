@@ -42,4 +42,9 @@ public class MessageController {
         System.out.println("Get messages");
         return ResponseEntity.ok( messageService.getMessages(offset, limit, chatId).getContent().stream().toList());
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Message> getMessages(@PathVariable long id) {
+        System.out.println("Get messages");
+        return ResponseEntity.ok( messageService.getMessageById(id).get());
+    }
 }
