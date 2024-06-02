@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.foodapp.foodorderingapp.enumeration.RestaurantStatus;
 import lombok.*;
@@ -31,6 +32,7 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     private RestaurantStatus status;
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("dishes") 
     private List<Category> categories;
     @OneToMany(mappedBy = "restaurant")
     @JsonBackReference()

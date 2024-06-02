@@ -2,6 +2,9 @@ package com.foodapp.foodorderingapp.service.dishType;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
+import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
 import com.foodapp.foodorderingapp.entity.Dish;
@@ -14,4 +17,5 @@ public interface DishTypeService {
     DishType create(DishTypeCreate dishTypeCreate);
    DishType update(long id, DishTypeCreate dishTypeCreate) throws Exception;
     DishType delete(long id) throws Exception;
+    List<DishByRestaurant> getDishes(long dishTypeId);
 }

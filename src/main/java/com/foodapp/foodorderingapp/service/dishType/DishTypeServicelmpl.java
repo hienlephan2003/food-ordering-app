@@ -2,7 +2,9 @@ package com.foodapp.foodorderingapp.service.dishType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
 import com.foodapp.foodorderingapp.entity.Dish;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,9 @@ public class DishTypeServicelmpl implements DishTypeService {
 
     @Override
     public List<DishType> getAllDishTypes() {
+
         List<DishType> dishTypes = dishTypeJpaRepository.findAll();
-        
+
         return dishTypes;
     }
 
@@ -58,6 +61,28 @@ public class DishTypeServicelmpl implements DishTypeService {
             dishTypeJpaRepository.save(dishType);
         }
         return dishTypes;
+    }
+    private DishByRestaurant convertToDto(Dish dish) {
+        DishByRestaurant dto = new DishByRestaurant();
+        dto.setId(dish.getId());
+        dto.setName(dish.getName());
+        dto.setDescription(dish.getDescription());
+        dto.setPrice(dish.getPrice());
+        dto.setDishType(dish.getDishType());
+        dto.setImageUrl(dish.getImageUrl());
+        dto.setStatus(dish.getStatus());
+
+        // set other properties
+        return dto;
+    }
+    @Override
+    public List<DishByRestaurant> getDishes(long
+     dishTypeId) {
+        DishType dishType = dishTypeJpaRepository.findById(dishTypeId).get();
+        return dishType.getDishes().stream()
+                .limit(5)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
 }

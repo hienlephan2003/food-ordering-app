@@ -48,6 +48,7 @@ import com.foodapp.foodorderingapp.enumeration.OrderStatus;
         @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<OrderLineItem> items;
 
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
