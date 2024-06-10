@@ -16,7 +16,7 @@ public interface OrderService {
     Optional<Order> findById(String orderId);
 
     Optional<Order> findByTrackingId(String trackingId);
-    List<Order> getByUser(Long userId);
+List<Order> getByUser(Long userId);
     List<Order> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
     List<Dish> getHotOrders(Long restaurantId);
     
