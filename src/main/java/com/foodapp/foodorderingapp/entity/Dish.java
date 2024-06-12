@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class Dish {
 
     @ManyToOne()
     @JoinColumn(name = "RESTAURANT_ID")
+    @JsonManagedReference
     @JsonIgnoreProperties("categories") 
     private Restaurant restaurant;
     @ManyToOne(fetch = FetchType.LAZY)
