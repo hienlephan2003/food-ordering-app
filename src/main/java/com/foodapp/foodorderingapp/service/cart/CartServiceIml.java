@@ -143,7 +143,14 @@ public class CartServiceIml implements CartService {
         int preQuantity = cartItem.getQuantity();
         BigDecimal total = cartItem.getTotal();
         cartItem.setQuantity(quantity);
-        cartItem.setTotal(total.multiply(BigDecimal.valueOf(quantity)).divide(BigDecimal.valueOf(preQuantity)));
+        if(quantity > 0) {
+            cartItem.setTotal(total.multiply(BigDecimal.valueOf(quantity)).divide(BigDecimal.valueOf(preQuantity)));
+
+        }
+        else {
+            cartJpaRepository.deleteById(id);
+            return null;
+        }
         return cartJpaRepository.save(cartItem);
     }
 

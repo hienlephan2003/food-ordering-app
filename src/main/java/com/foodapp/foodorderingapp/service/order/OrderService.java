@@ -1,9 +1,12 @@
 package com.foodapp.foodorderingapp.service.order;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Map.Entry;
 
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
+import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.dto.order.OrderResponse;
 import com.foodapp.foodorderingapp.entity.Order;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
@@ -17,4 +20,8 @@ public interface OrderService {
     List<Order> getByUser(Long userId);
     List<OrderResponse> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
     Order updateOrderStatus(Long orderId, OrderStatus orderStatus);
+List<Order> getByUser(Long userId);
+    List<Order> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
+    List<Dish> getHotOrders(Long restaurantId);
+
 }

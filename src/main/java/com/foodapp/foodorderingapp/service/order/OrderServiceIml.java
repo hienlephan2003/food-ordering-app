@@ -2,11 +2,14 @@ package com.foodapp.foodorderingapp.service.order;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import com.foodapp.foodorderingapp.dto.order.OrderLineItemRequest;
 import com.foodapp.foodorderingapp.dto.order.OrderLineItem_GroupOptionRequest;
@@ -39,6 +42,7 @@ public class OrderServiceIml implements OrderService {
         private final OrderLineItemJpaRepository orderLineItemJpaRepository;
         private final AddressJpaRepository addressJpaRepository;
         private final VoucherJpaRepository voucherJpaRepository;
+        private final RestaurantJpaRepository restaurantJpaRepository;
         private final VoucherApplicationJpaRepository voucherApplicationJpaRepository;
 
         private Pair<List<OrderLineItem_OptionItem>, BigDecimal> getItemOptions(
@@ -118,6 +122,7 @@ public class OrderServiceIml implements OrderService {
                                 .orderStatus(orderRequest.getOrderStatus())
                                 .deliveryStatus(DeliveryStatus.PENDING)
                                 .address(orderRequest.getAddress())
+
                                 .build();
 
                 Order orderData = orderJpaRepository.save(order);
@@ -210,4 +215,23 @@ public class OrderServiceIml implements OrderService {
         public List<Order> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus) {
                 return orderJpaRepository.findOrdersByRestaurantIdAndOrderStatus(restaurantId, orderStatus);
         }
+
+        @Override
+public List<Dish> getHotOrders(Long restaurantId) {
+    Restaurant restaurant = restaurantJpaRepository.findById(restaurantId)
+        .orElseThrow(() -> new DataNotFoundException(
+            "Not found restaurant with id " + restaurantId));
+    List<OrderLineItem> orderLineItems = orderLineItemJpaRepository.findAll();
+    Map<Dish, Long> dishCounts = orderLineItems.stream()
+        .filter(item -> item.getDish().getRestaurant().equals(restaurant))
+        .collect(Collectors.groupingBy(OrderLineItem::getDish, Collectors.counting()));
+
+   
+        List<Dish> sortedDishes = dishCounts.entrySet().stream()
+        .sorted(Map.Entry.<Dish, Long>comparingByValue().reversed())
+        .map(Map.Entry::getKey)
+        .collect(Collectors.toList());
+    
+    return sortedDishes;
+}
 }

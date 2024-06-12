@@ -181,13 +181,15 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> getRecommendedDishes(List<Long> ids) {
+    public List<DishByRestaurant> getRecommendedDishes(List<Long> ids) {
         List<Dish> dishes = new ArrayList<>();
         ids.forEach(id -> {
             Dish dish = dishJpaRepository.findById(id).orElseThrow(() -> new DataNotFoundException("not found dish"));
             dishes.add(dish);
         });
-        return dishes;
+        return dishes.stream()
+        .map(this::convertToDto)
+        .collect(Collectors.toList());
     }
 
 }
