@@ -33,8 +33,6 @@ public class User {
     private String activity;
     private Integer mealPerDay;
     private String weightLoss;
-
-
     private String avatarUrl;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

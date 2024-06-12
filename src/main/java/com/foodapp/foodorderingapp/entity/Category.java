@@ -38,7 +38,6 @@ public class Category {
         Category that = (Category) o;
         return id.equals(that.id) && restaurant.equals(that.restaurant);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, restaurant);

@@ -10,6 +10,7 @@ import com.foodapp.foodorderingapp.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.Random;
@@ -148,12 +149,13 @@ public class DishServiceImpl implements DishService {
         return dto;
     }
     @Override
-    public List<DishByRestaurant> findDishesByRestaurant(long restaurantId) {
+    public List<DishByRestaurant> findDishesByRestaurant(long restaurantId, int limit, int page) {
         Restaurant restaurant = restaurantJpaRepository
                 .findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Cannot find restaurant with id: " + String.valueOf(restaurantId)));
-        List<Dish> dishes = dishJpaRepository.findDishesByRestaurant(restaurant);
+        Pageable request = PageRequest.of(page, limit);
+        List<Dish> dishes = dishJpaRepository.findDishesByRestaurant(restaurant, request);
         return dishes.stream()
         .map(this::convertToDto)
         .collect(Collectors.toList());

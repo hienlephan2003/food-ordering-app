@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
+import com.foodapp.foodorderingapp.dto.order.OrderResponse;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.Order;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
@@ -34,8 +35,8 @@ public class OrderController {
     }
 
     @GetMapping("/restaurant")
-    public ResponseEntity<List<Order>> getOrderByRestaurantId(@RequestParam Long restaurantId,
-            @RequestParam OrderStatus orderStatus) {
+    public ResponseEntity<List<OrderResponse>> getOrderByRestaurantId(@RequestParam Long restaurantId,
+                                                                      @RequestParam OrderStatus orderStatus) {
         return ResponseEntity.ok(orderService.getByRestaurantAndOrderStatus(restaurantId, orderStatus));
     }
 

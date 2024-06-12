@@ -25,9 +25,7 @@ public class DishTypeServicelmpl implements DishTypeService {
     @Override
     public List<DishType> getAllDishTypes() {
 
-        List<DishType> dishTypes = dishTypeJpaRepository.findAll();
-
-        return dishTypes;
+        return dishTypeJpaRepository.findAll();
     }
 
     @Override
@@ -84,5 +82,4 @@ public class DishTypeServicelmpl implements DishTypeService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
 }

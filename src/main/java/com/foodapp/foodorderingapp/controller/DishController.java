@@ -10,6 +10,8 @@ import com.foodapp.foodorderingapp.security.UserPrinciple;
 import com.foodapp.foodorderingapp.service.dish.DishService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -62,8 +64,8 @@ public class DishController {
         return ResponseEntity.ok(dishService.search(keyword));
     }
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<DishByRestaurant>> getAllByRestaurantId(@PathVariable long restaurantId) throws Exception {
-        return ResponseEntity.ok(dishService.findDishesByRestaurant(restaurantId));
+    public ResponseEntity<List<DishByRestaurant>> getAllByRestaurantId(@PathVariable long restaurantId, @RequestParam(defaultValue = "10") Integer limit, @RequestParam(defaultValue = "0") int page) throws Exception {
+        return ResponseEntity.ok(dishService.findDishesByRestaurant(restaurantId, limit, page));
     }
     @GetMapping
     public ResponseEntity<List<Dish>> findAll() throws Exception {

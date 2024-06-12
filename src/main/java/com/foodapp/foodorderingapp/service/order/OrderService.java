@@ -20,8 +20,8 @@ public interface OrderService {
     List<Order> getByUser(Long userId);
     List<OrderResponse> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
     Order updateOrderStatus(Long orderId, OrderStatus orderStatus);
-List<Order> getByUser(Long userId);
-    List<Order> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
+//List<Order> getByUser(Long userId);
+//    List<Order> getByRestaurantAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
     List<Dish> getHotOrders(Long restaurantId);
 
 }

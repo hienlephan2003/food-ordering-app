@@ -52,5 +52,4 @@ public class CartItem_GroupOption {
     public int hashCode() {
         return Objects.hash(id);
     }
-
 }

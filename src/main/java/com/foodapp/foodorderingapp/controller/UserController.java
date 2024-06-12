@@ -47,15 +47,6 @@ public class UserController {
         User result = userService.updateUser(id, createUserRequest);
         return ResponseEntity.ok(result);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) throws DataNotFoundException {
-        User result = userService.findById(id);
-        return ResponseEntity.ok(result);
-    }
-
-
-
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public  ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInRequest signInRequest) throws DataNotFoundException {

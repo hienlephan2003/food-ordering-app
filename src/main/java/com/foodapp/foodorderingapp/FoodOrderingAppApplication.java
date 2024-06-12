@@ -14,7 +14,6 @@ public class FoodOrderingAppApplication {
 		SpringApplication.run(FoodOrderingAppApplication.class, args);
 		System.out.println("Xin chao cac ban");
 	}
-
 	@Bean
 	public CommandLineRunner initialData(RoleJpaRepository roleJpaRepository){
 		return args ->{

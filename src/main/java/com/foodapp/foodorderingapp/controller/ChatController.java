@@ -63,6 +63,4 @@ public class ChatController {
     ) {
         chatService.joinChat(userId, chatId);
     }
-
-
 }
