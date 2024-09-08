@@ -33,5 +33,4 @@ public class AddressController {
     ResponseEntity<Address> getById( @PathVariable Long id){
         return ResponseEntity.ok(addressService.findById(id));
     }
-
 }
