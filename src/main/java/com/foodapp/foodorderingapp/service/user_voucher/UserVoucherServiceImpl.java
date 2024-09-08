@@ -1,4 +1,4 @@
-package com.foodapp.foodorderingapp.service.uservoucher;
+package com.foodapp.foodorderingapp.service.user_voucher;
 
 import com.foodapp.foodorderingapp.dto.user_voucher.UserVoucherRequest;
 import com.foodapp.foodorderingapp.dto.user_voucher.UserVoucherResponse;
@@ -6,12 +6,9 @@ import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.enumeration.VoucherStatus;
 import com.foodapp.foodorderingapp.helper.UserHelper;
 import com.foodapp.foodorderingapp.repository.ProductDiscountJpaRepository;
-import com.foodapp.foodorderingapp.repository.UserJpaRepository;
 import com.foodapp.foodorderingapp.repository.VoucherApplicationJpaRepository;
 import com.foodapp.foodorderingapp.repository.VoucherJpaRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

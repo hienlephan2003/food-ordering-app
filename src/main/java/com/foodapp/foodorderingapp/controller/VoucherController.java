@@ -2,11 +2,9 @@ package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.user_voucher.UserVoucherRequest;
 import com.foodapp.foodorderingapp.dto.user_voucher.UserVoucherResponse;
-import com.foodapp.foodorderingapp.entity.User;
 import com.foodapp.foodorderingapp.entity.Voucher;
 import com.foodapp.foodorderingapp.enumeration.VoucherStatus;
-import com.foodapp.foodorderingapp.helper.UserHelper;
-import com.foodapp.foodorderingapp.service.uservoucher.UserVoucherService;
+import com.foodapp.foodorderingapp.service.user_voucher.UserVoucherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

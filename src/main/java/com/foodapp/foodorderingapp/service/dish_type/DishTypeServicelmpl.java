@@ -1,11 +1,11 @@
-package com.foodapp.foodorderingapp.service.dishType;
+package com.foodapp.foodorderingapp.service.dish_type;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
-import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeCreate;
 import com.foodapp.foodorderingapp.entity.Dish;
 import org.springframework.stereotype.Service;
 

@@ -1,13 +1,9 @@
-package com.foodapp.foodorderingapp.service.dishType;
+package com.foodapp.foodorderingapp.service.dish_type;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
-import com.foodapp.foodorderingapp.dto.dish.DishRequest;
-import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
-import com.foodapp.foodorderingapp.entity.Dish;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeCreate;
 import com.foodapp.foodorderingapp.entity.DishType;
 
 public interface DishTypeService {

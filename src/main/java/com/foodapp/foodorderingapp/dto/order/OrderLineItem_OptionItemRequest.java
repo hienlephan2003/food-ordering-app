@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class OrderLineItem_OptionItemRequest {
-    @JsonProperty("option_item_id")
     private long optionItemId;
     private int quantity;
 }

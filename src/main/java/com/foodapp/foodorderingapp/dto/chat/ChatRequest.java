@@ -11,8 +11,6 @@ import lombok.Setter;
 public class ChatRequest {
     @NotNull
     ChatType type;
-    @JsonProperty("first_user_id")
     Long firstUserId;
-    @JsonProperty("second_user_id")
     Long secondUserId;
 }

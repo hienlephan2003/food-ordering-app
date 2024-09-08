@@ -12,6 +12,5 @@ public class CategoryRequest {
     @NotEmpty(message = "Category's name cannot be empty")
     private String name;
     private boolean isActive;
-    @JsonProperty("restaurant_id")
     private Long restaurantId;
 }

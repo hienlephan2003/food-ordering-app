@@ -15,13 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequest {
-    @JsonProperty("total_price")
     private BigDecimal totalPrice;
-    @JsonProperty("address")
     private String address;
-    @JsonProperty("order_items")
     List<OrderLineItemRequest> orderItemRequests;
     private OrderStatus orderStatus;
-    @JsonProperty("voucher_ids")
     private List<Long> voucherIds;
 }

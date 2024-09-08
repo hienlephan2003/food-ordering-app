@@ -14,10 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrderLineItem_GroupOptionRequest {
-    @JsonProperty("group_option_id")
     private long groupOptionId;
-    @JsonProperty("item_options")
     List<OrderLineItem_OptionItemRequest> orderLineItem_optionItems;
-    @JsonProperty("sub_total_price")
     private BigDecimal subTotalPrice;
 }

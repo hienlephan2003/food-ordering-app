@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CartItem_OptionItemRequest {
-    @JsonProperty("option_item_id")
     private long optionItemId;
     private int quantity;
 }

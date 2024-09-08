@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;

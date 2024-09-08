@@ -12,10 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CartItem_GroupOptionRequest {
-    @JsonProperty("group_option_id")
     private long groupOptionId;
-    @JsonProperty("item_options")
     List<CartItem_OptionItemRequest> cartItem_optionItems;
-    @JsonProperty("sub_option_price")
     private BigDecimal subOptionPrice;
 }

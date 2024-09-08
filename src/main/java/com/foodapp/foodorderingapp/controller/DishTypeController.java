@@ -1,23 +1,19 @@
 package com.foodapp.foodorderingapp.controller;
 import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
-import com.foodapp.foodorderingapp.dto.dish.DishRequest;
-import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeCreate;
 import jakarta.validation.Valid;
 
-import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.DishType;
-import com.foodapp.foodorderingapp.service.dishType.DishTypeService;
+import com.foodapp.foodorderingapp.service.dish_type.DishTypeService;
 
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("/api/dishType")
+@RequestMapping("/api/dish_types")
 @RequiredArgsConstructor
 public class DishTypeController {
     private final DishTypeService dishTypeService;

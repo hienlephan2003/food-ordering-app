@@ -26,10 +26,10 @@ import java.util.Objects;
 public class DishController {
     private final DishService dishService;
     
-    @PostMapping("/updateDishType/{id}")
-    public ResponseEntity<Boolean> addDishType(@PathVariable long id)  {
-        return ResponseEntity.ok(dishService.addDishType(id));
-    }
+//    @PostMapping("/updateDishType/{id}")
+//    public ResponseEntity<Boolean> addDishType(@PathVariable long id)  {
+//        return ResponseEntity.ok(dishService.addDishType(id));
+//    }
     @GetMapping("/list/{id}")
     public ResponseEntity<List<Dish>> getDishByCategoryId(@PathVariable long id){
         return ResponseEntity.ok(dishService.getDishesByCategory(id));

@@ -13,18 +13,18 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/chat/")
+@RequestMapping("/api/chats")
 public class ChatController {
     private final ChatService chatService;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getChat(
             @PathVariable Long id
     ) {
         return ResponseEntity
                 .ok(chatService.getById(id));
     }
-    @GetMapping("user/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<?> getChatsByUserId(
             @PathVariable Long id
     ) {
@@ -39,14 +39,14 @@ public class ChatController {
                 .body(chatService.createChat(chatRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deleteChat(
             @PathVariable Long id
     ) {
         chatService.deleteById(id);
     }
 
-    @PutMapping("leave")
+    @PutMapping("/leave")
     @ResponseStatus(ACCEPTED)
     public void leaveChat(
             @RequestParam(value = "chatId") Long chatId,
@@ -55,7 +55,7 @@ public class ChatController {
         chatService.leaveChat(userId, chatId);
     }
 
-    @PutMapping("join")
+    @PutMapping("/join")
     @ResponseStatus(ACCEPTED)
     public void joinChat(
             @RequestParam(value = "chatId") Long chatId,

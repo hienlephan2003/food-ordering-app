@@ -12,9 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateMessageRequest {
     private String message;
-    @JsonProperty("sender_id")
     private Long senderId;
-    @JsonProperty("chat_id")
     private Long chatId;
 }
 

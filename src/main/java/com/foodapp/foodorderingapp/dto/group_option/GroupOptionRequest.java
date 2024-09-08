@@ -18,15 +18,12 @@ import java.util.List;
 public class GroupOptionRequest {
     private String name;
     private String description;
-    @JsonProperty("restaurant_id")
     @NotNull()
     private long restaurantId;
     @Min(0)
     private int minimum;
     @Min(0)
     private int maximum;
-    @JsonProperty("is_optional")
     private boolean isOptional;
-    @JsonProperty("option_items")
     List<OptionItemRequest> optionItemRequests;
 }

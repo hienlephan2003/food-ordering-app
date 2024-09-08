@@ -7,14 +7,14 @@ import com.foodapp.foodorderingapp.entity.DishType;
 import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class DishResponse {
     private Long id;
     private Long restaurantId;
