@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartService {
-    CartItem addItemToCart(CartItemRequest cartItemRequest);
+    CartItem upsertCartItem(CartItemRequest cartItemRequest);
     boolean removeFromCart(long cartId) throws Exception;
     List<CartItem> getCartsByDish(CartOfDishRequest request);
     List<CartItem> getCartByUser(Long userId);
-    List<CartItem> getCartByRestaurant(MyCartRestaurantRequest request);
+    List<CartItem> getCartByRestaurant(long restaurantId, long userId);
 
     CartItem updateCart(int quantity, long id);
     List<RestaurantCartResponse> getRestaurantOfCart(long userId);

@@ -1,6 +1,8 @@
 package com.foodapp.foodorderingapp.controller;
-import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
-import com.foodapp.foodorderingapp.dto.dish_type.DishTypeCreate;
+import com.foodapp.foodorderingapp.dto.dish.DishResponse;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeRequest;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeWithDishResponse;
+import com.foodapp.foodorderingapp.service.dish.DishService;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +19,13 @@ import org.springframework.http.ResponseEntity;
 @RequiredArgsConstructor
 public class DishTypeController {
     private final DishTypeService dishTypeService;
+    private final DishService dishService;
      @GetMapping("/dishes/{id}")
-    public ResponseEntity<List<DishByRestaurant>> getDishesByDishType(@PathVariable long id) {
-        return ResponseEntity.ok(dishTypeService.getDishes(id));
+    public ResponseEntity<List<DishResponse>> getDishesByDishType(@PathVariable long id, int limit, int page) {
+        return ResponseEntity.ok(dishService.getDishesByDishType(id, limit, page));
     }
     @GetMapping()
-    public ResponseEntity<List<DishType>> getAll() {
-        // List<DishType> dishTypes = dishTypeService.getAllDishTypes();
-        
+    public ResponseEntity<List<DishTypeWithDishResponse>> getAll() {
         return ResponseEntity.ok(dishTypeService.getAllDishTypes());
     }
    
@@ -34,7 +35,7 @@ public class DishTypeController {
     }
 
     @PostMapping()
-    public ResponseEntity<DishType> create(@Valid  @RequestBody DishTypeCreate dishTypeCreate) {
-        return ResponseEntity.ok(dishTypeService.create(dishTypeCreate));
+    public ResponseEntity<DishType> create(@Valid  @RequestBody DishTypeRequest dishTypeRequest) {
+        return ResponseEntity.ok(dishTypeService.create(dishTypeRequest));
     }
 }

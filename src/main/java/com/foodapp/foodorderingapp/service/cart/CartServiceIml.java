@@ -5,12 +5,15 @@ import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.repository.*;
 import com.foodapp.foodorderingapp.repository.CartJpaRepository;
+import com.foodapp.foodorderingapp.security.UserPrinciple;
+import com.foodapp.foodorderingapp.service.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.util.Pair;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -86,27 +89,28 @@ public class CartServiceIml implements CartService {
     }
 
     @Override
-    public CartItem addItemToCart(CartItemRequest itemRequest) {
+    public CartItem upsertCartItem(CartItemRequest itemRequest) {
         AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
         Dish dish = dishJpaRepository.findById(itemRequest.getDishId())
                 .orElseThrow(() -> new DataNotFoundException("Not found dish with id " + itemRequest.getDishId()));
-        User user = userJpaRepository.findById(itemRequest.getUserId())
-                .orElseThrow(() -> new DataNotFoundException("Not found user with id " + itemRequest.getUserId()));
-        CartItem item = CartItem
-                .builder()
-                .dish(dish)
-                .user(user)
-                .total(BigDecimal.ZERO)
-                .quantity(itemRequest.getQuantity())
-                .build();
-        CartItem cartItem = cartJpaRepository.save(item);
-        Pair<List<CartItem_GroupOption>, BigDecimal> res = getItemGroups(itemRequest, cartItem);
+        long userId = ((UserPrinciple)SecurityContextHolder.getContext().getAuthentication().getCredentials()).getUserId();
+        User user = userJpaRepository.findById(userId).get();
+        CartItem item = cartJpaRepository.findByUserAndDish(user, dish);
+        if(item == null) {
+            item = CartItem
+                    .builder()
+                    .dish(dish)
+                    .user(user)
+                    .total(BigDecimal.ZERO)
+                    .build();
+            item = cartJpaRepository.save(item);
+        }
+        Pair<List<CartItem_GroupOption>, BigDecimal> res = getItemGroups(itemRequest, item);
         BigDecimal subTotal = (res.getSecond().add(dish.getPrice()))
                 .multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
         totalPrice.updateAndGet(x -> x.add(subTotal));
-        cartItem.setTotal(totalPrice.get());
-
-        return cartJpaRepository.save(cartItem);
+        item.setTotal(totalPrice.get());
+        return cartJpaRepository.save(item);
     }
 
     @Override
@@ -132,8 +136,8 @@ public class CartServiceIml implements CartService {
     }
 
     @Override
-    public List<CartItem> getCartByRestaurant(MyCartRestaurantRequest request) {
-        return cartJpaRepository.findByRestaurant(request.getUserId(), request.getRestaurantId());
+    public List<CartItem> getCartByRestaurant(long restaurantId, long userId) {
+        return cartJpaRepository.findByRestaurant(userId, restaurantId);
     }
 
     @Override
@@ -145,7 +149,6 @@ public class CartServiceIml implements CartService {
         cartItem.setQuantity(quantity);
         if(quantity > 0) {
             cartItem.setTotal(total.multiply(BigDecimal.valueOf(quantity)).divide(BigDecimal.valueOf(preQuantity)));
-
         }
         else {
             cartJpaRepository.deleteById(id);
