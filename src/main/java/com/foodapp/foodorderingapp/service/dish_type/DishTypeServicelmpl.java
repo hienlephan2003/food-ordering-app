@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
+import com.foodapp.foodorderingapp.dto.dish.FeaturedDish;
 import com.foodapp.foodorderingapp.dto.dish_type.DishTypeCreate;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeOverview;
 import com.foodapp.foodorderingapp.entity.Dish;
+
+
 import org.springframework.stereotype.Service;
 
 import com.foodapp.foodorderingapp.entity.DishType;
@@ -26,6 +30,36 @@ public class DishTypeServicelmpl implements DishTypeService {
     public List<DishType> getAllDishTypes() {
 
         return dishTypeJpaRepository.findAll();
+    }
+
+    @Override
+    public List<DishTypeOverview> getAllDishTypesWithTopThreeDishes() {
+        
+        List<DishTypeOverview> dishTypes = dishTypeJpaRepository.findAll().stream()
+        .map(this::limitToTopThreeDishes)
+        .collect(Collectors.toList());
+        return dishTypes;
+    }
+
+    private DishTypeOverview limitToTopThreeDishes(DishType dishType) {
+        List<FeaturedDish> limitedDishes = dishType.getDishes().stream()
+        .limit(3)
+        .map(dish -> {
+            FeaturedDish newDish = new FeaturedDish();
+            newDish.setId(dish.getId());
+            newDish.setName(dish.getName());
+            newDish.setDescription(dish.getDescription());
+            newDish.setPrice(dish.getPrice());
+            newDish.setImageUrl(dish.getImageUrl());
+            return newDish;
+        })
+        .collect(Collectors.toList());
+        System.out.println(limitedDishes);
+        DishTypeOverview dishTypeOverview = new DishTypeOverview();
+        dishTypeOverview.setId(dishType.getId());
+        dishTypeOverview.setName(dishType.getName());
+        dishTypeOverview.setDishes(limitedDishes);
+        return dishTypeOverview;
     }
 
     @Override

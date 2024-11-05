@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface DishJpaRepository extends JpaRepository<Dish, Long> {
-    List<Dish> findDishesByCategory(Category category);
+    List<Dish> findDishesByCategory(Category category, Pageable pageable);
 
     @Query("select new com.foodapp.foodorderingapp.dto.dish.DishSearch(d.id, d.name) from Dish d where d.name LIKE %?1%")
     List<DishSearch> search(String keyword, Pageable pageable);

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=JSmuELCmfc8gXCJ2
+    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=m8B8GQI3nasr9d9j
   jpa:
     hibernate:
       ddl-auto: none

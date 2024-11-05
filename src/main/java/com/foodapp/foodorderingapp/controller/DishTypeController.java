@@ -1,6 +1,8 @@
 package com.foodapp.foodorderingapp.controller;
 import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dish_type.DishTypeCreate;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeOverview;
+
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,11 @@ public class DishTypeController {
     public ResponseEntity<List<DishByRestaurant>> getDishesByDishType(@PathVariable long id) {
         return ResponseEntity.ok(dishTypeService.getDishes(id));
     }
+    @GetMapping("/overview")
+    public ResponseEntity<List<DishTypeOverview>> getDishTypesOverview() {
+        
+        return ResponseEntity.ok(dishTypeService.getAllDishTypesWithTopThreeDishes());
+    }
     @GetMapping()
     public ResponseEntity<List<DishType>> getAll() {
         // List<DishType> dishTypes = dishTypeService.getAllDishTypes();
@@ -28,6 +35,7 @@ public class DishTypeController {
         return ResponseEntity.ok(dishTypeService.getAllDishTypes());
     }
    
+
     @PostMapping("/seed")
     public ResponseEntity<List<DishType>> seed() {
         return ResponseEntity.ok(dishTypeService.seed());

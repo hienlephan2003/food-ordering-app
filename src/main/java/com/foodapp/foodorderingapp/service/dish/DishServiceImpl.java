@@ -120,7 +120,8 @@ public class DishServiceImpl implements DishService {
                 .findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Cannot find category with id: " + String.valueOf(categoryId)));
-        return dishJpaRepository.findDishesByCategory(existingCategory);
+                        Pageable pageable = PageRequest.of(0, 10);
+        return dishJpaRepository.findDishesByCategory(existingCategory, pageable);
     }
 
     @Override
