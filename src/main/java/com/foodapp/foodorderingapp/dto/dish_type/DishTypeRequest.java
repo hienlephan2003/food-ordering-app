@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class DishTypeCreate {
+public class DishTypeRequest {
     private String name;
 }

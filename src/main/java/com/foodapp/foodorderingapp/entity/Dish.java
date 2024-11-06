@@ -1,8 +1,5 @@
 package com.foodapp.foodorderingapp.entity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import lombok.*;
 
@@ -17,11 +14,11 @@ import java.util.Objects;
 
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "dishes")
 @Entity
+@Builder
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +28,10 @@ public class Dish {
     @JoinColumn(name = "RESTAURANT_ID")
     @JsonManagedReference
     @JsonIgnoreProperties("categories")
+    @JsonIgnore
     private Restaurant restaurant;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne()
     @JoinColumn(name = "CATEGORY_ID")
     @JsonBackReference
     private Category category;
@@ -44,6 +43,7 @@ public class Dish {
     private DishStatus status;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dish_type_id")
+    @JsonIgnore
     private DishType dishType;
     @Override
     public boolean equals(Object o) {
@@ -57,6 +57,5 @@ public class Dish {
     public int hashCode() {
         return Objects.hash(id, category);
     }
-
 }
 

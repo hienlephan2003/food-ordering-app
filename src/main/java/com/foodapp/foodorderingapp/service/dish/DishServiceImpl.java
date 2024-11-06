@@ -1,7 +1,7 @@
 package com.foodapp.foodorderingapp.service.dish;
 
-import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
+import com.foodapp.foodorderingapp.dto.dish.DishResponse;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
@@ -10,12 +10,11 @@ import com.foodapp.foodorderingapp.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
-import org.springframework.data.domain.Page;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.Random;
+
 import java.util.stream.Collectors;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,12 +29,12 @@ public class DishServiceImpl implements DishService {
     private final DishTypeJpaRepository dishTypeJpaRepository;
     private final GroupOptionJpaRepository groupOptionJpaRepository;
     private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
-
+    private final ModelMapper modelMapper;
     @Override
-    public Dish getDishById(long dishId) throws Exception {
+    public DishResponse getDishById(long dishId) throws Exception {
         Optional<Dish> dish = dishJpaRepository.findById(dishId);
         if (dish.isPresent()) {
-            return dish.get();
+            return modelMapper.map(dish.get(), DishResponse.class);
         } else
             throw new DataNotFoundException("Can't not find dish with id" + dishId);
     }
@@ -70,38 +69,40 @@ public class DishServiceImpl implements DishService {
     @Override
     @Transactional
     public Dish updateDish(long id, DishRequest dishRequest) throws Exception {
-        Dish dish = getDishById(id);
-        if (dish != null) {
-            Category existingCategory = categoryJpaRepository
-                    .findById(dishRequest.getCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Cannot find category with id: " + dishRequest.getCategoryId()));
-            if (dishRequest.getName() != null && !dishRequest.getName().isEmpty()) {
-                dish.setName(dishRequest.getName());
-            }
-            if (dishRequest.getDescription() != null && !dishRequest.getDescription().isEmpty()) {
-                dish.setDescription(dishRequest.getDescription());
-            }
-            if (dishRequest.getImageUrl() != null && !dishRequest.getImageUrl().isEmpty()) {
-                dish.setImageUrl(dishRequest.getImageUrl());
-            }
-            dish.setPrice(dishRequest.getPrice());
-            return dish;
+        Dish dish = dishJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(
+                "Can't find dish with id: " + id
+        ));
+        categoryJpaRepository
+                .findById(dishRequest.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find category with id: " + dishRequest.getCategoryId()));
+        if (dishRequest.getName() != null && !dishRequest.getName().isEmpty()) {
+            dish.setName(dishRequest.getName());
         }
-        return null;
+        if (dishRequest.getDescription() != null && !dishRequest.getDescription().isEmpty()) {
+            dish.setDescription(dishRequest.getDescription());
+        }
+        if (dishRequest.getImageUrl() != null && !dishRequest.getImageUrl().isEmpty()) {
+            dish.setImageUrl(dishRequest.getImageUrl());
+        }
+        dish.setPrice(dishRequest.getPrice());
+        return dish;
     }
 
     @Override
     @Transactional
     public Dish deleteDish(long id) throws Exception {
-        Dish dish = getDishById(id);
+        Dish dish = dishJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(
+                "Can't find dish with id: " + id
+        ));
         dish.setStatus(DishStatus.DELETED);
         return dish;
     }
 
     @Override
-    public Dish_GroupOption addGroupOptionToDish(long dishId, long groupOptionId) throws Exception {
-        Dish dish = getDishById(dishId);
+    public Dish_GroupOption addGroupOptionToDish(long id, long groupOptionId) throws Exception {
+        Dish dish = dishJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(
+                "Can't find dish with id: " + id
+        ));
         GroupOption groupOption = groupOptionJpaRepository.findById(groupOptionId)
                 .orElseThrow(() -> new DataNotFoundException("Not found group optin with id" + groupOptionId));
         Dish_GroupOptionId dish_groupOptionId = Dish_GroupOptionId.builder()
@@ -115,13 +116,12 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> getDishesByCategory(long categoryId) {
+    public List<DishResponse> getDishesByCategory(long categoryId, int page, int limit) {
         Category existingCategory = categoryJpaRepository
                 .findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Cannot find category with id: " + String.valueOf(categoryId)));
-                        Pageable pageable = PageRequest.of(0, 10);
-        return dishJpaRepository.findDishesByCategory(existingCategory, pageable);
+        return dishJpaRepository.findDishesByCategory(existingCategory, PageRequest.of(page, limit));
     }
 
     @Override
@@ -136,21 +136,8 @@ public class DishServiceImpl implements DishService {
         Hibernate.initialize(dishes);
         return dishes;
     }
-    private DishByRestaurant convertToDto(Dish dish) {
-        DishByRestaurant dto = new DishByRestaurant();
-        dto.setId(dish.getId());
-        dto.setName(dish.getName());
-        dto.setDescription(dish.getDescription());
-        dto.setPrice(dish.getPrice());
-        dto.setDishType(dish.getDishType());
-        dto.setImageUrl(dish.getImageUrl());
-        dto.setStatus(dish.getStatus());
-
-        // set other properties
-        return dto;
-    }
     @Override
-    public List<DishByRestaurant> findDishesByRestaurant(long restaurantId, int limit, int page) {
+    public List<DishResponse> findDishesByRestaurant(long restaurantId, int limit, int page) {
         Restaurant restaurant = restaurantJpaRepository
                 .findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException(
@@ -158,41 +145,33 @@ public class DishServiceImpl implements DishService {
         Pageable request = PageRequest.of(page, limit);
         List<Dish> dishes = dishJpaRepository.findDishesByRestaurant(restaurant, request);
         return dishes.stream()
-        .map(this::convertToDto)
+        .map(item -> modelMapper.map(item, DishResponse.class))
         .collect(Collectors.toList());
     }
 
     @Override
-    public boolean addDishType(long id) {
-        List<Dish> dishs = dishJpaRepository.findAll();
-        Category category = categoryJpaRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("not found category"));
-        dishs.stream().forEach((dish) -> {
-            if (dish.getCategory() == null) {
-                Random random = new Random();
-                Restaurant restaurant = restaurantJpaRepository.findById(Long.valueOf(random.nextInt(110) + 7))
-                        .orElseThrow(() -> new DataNotFoundException("not found category"));
-                DishType dishType = dishTypeJpaRepository.findById(Long.valueOf(random.nextInt(9) + 11))
-                        .orElseThrow(() -> new DataNotFoundException("not found category"));
-                dish.setCategory(category);
-                dish.setRestaurant(restaurant);
-                dish.setDishType(dishType);
-                dishJpaRepository.save(dish);
-            }
-        });
-        return true;
+    public List<DishResponse> getDishesByDishType(long dishTypeId, int limit, int page) {
+        DishType dishType = dishTypeJpaRepository
+                .findById(dishTypeId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Cannot find restaurant with id: " + String.valueOf(dishTypeId)));
+        Pageable request = PageRequest.of(page, limit);
+        List<Dish> dishes = dishJpaRepository.findDishesByDishType(dishType, request);
+        return dishes.stream()
+                .map(item -> modelMapper.map(item, DishResponse.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<DishByRestaurant> getRecommendedDishes(List<Long> ids) {
+    public List<DishResponse> getRecommendedDishes(List<Long> ids) {
         List<Dish> dishes = new ArrayList<>();
         ids.forEach(id -> {
             Dish dish = dishJpaRepository.findById(id).orElseThrow(() -> new DataNotFoundException("not found dish"));
             dishes.add(dish);
         });
         return dishes.stream()
-        .map(this::convertToDto)
-        .collect(Collectors.toList());
+                .map(item -> modelMapper.map(item, DishResponse.class))
+                .collect(Collectors.toList());
     }
 
 }

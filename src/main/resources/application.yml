@@ -7,3 +7,6 @@ spring:
 server:
 #  address: 192.168.102.28
   port: 8086
+application:
+  app:
+    jwtSecrect: ${JWT_SECRET}

@@ -1,6 +1,8 @@
 package com.foodapp.foodorderingapp.dto.dish;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.foodapp.foodorderingapp.dto.category.CategoryResponse;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeResponse;
 import com.foodapp.foodorderingapp.entity.Category;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.DishType;
@@ -17,13 +19,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class DishResponse {
     private Long id;
-    private Long restaurantId;
-    private Long categoryId;
     private String name;
     private BigDecimal price;
     private String description;
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private DishStatus status;
-    private DishType dishType;
+    private CategoryResponse category;
+    private DishTypeResponse dishType;
 }

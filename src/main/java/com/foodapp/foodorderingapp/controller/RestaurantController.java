@@ -11,6 +11,7 @@ import com.foodapp.foodorderingapp.security.UserPrinciple;
 import com.foodapp.foodorderingapp.service.restaurant.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.core.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;

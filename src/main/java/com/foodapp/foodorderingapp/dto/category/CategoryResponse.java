@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CategoryResponse {
+    private long id;
     private String name;
     private boolean isActive;
-    private Long restaurantId;
 }

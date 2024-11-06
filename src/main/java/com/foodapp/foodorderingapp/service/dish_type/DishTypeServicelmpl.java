@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.foodapp.foodorderingapp.dto.dish.DishByRestaurant;
+import com.foodapp.foodorderingapp.dto.dish.DishResponse;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeRequest;
 import com.foodapp.foodorderingapp.dto.dish.FeaturedDish;
-import com.foodapp.foodorderingapp.dto.dish_type.DishTypeCreate;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeWithDishResponse;
 import com.foodapp.foodorderingapp.dto.dish_type.DishTypeOverview;
 import com.foodapp.foodorderingapp.entity.Dish;
-
-
+import com.foodapp.foodorderingapp.repository.DishJpaRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.foodapp.foodorderingapp.entity.DishType;
@@ -25,13 +27,22 @@ import com.github.javafaker.Faker;
 @RequiredArgsConstructor
 public class DishTypeServicelmpl implements DishTypeService {
     private final DishTypeJpaRepository dishTypeJpaRepository;
-
+    private final DishJpaRepository dishJpaRepository;
+    private final ModelMapper modelMapper;
     @Override
-    public List<DishType> getAllDishTypes() {
-
-        return dishTypeJpaRepository.findAll();
+    public List<DishTypeWithDishResponse> getAllDishTypes() {
+        return dishTypeJpaRepository.findAll().stream().map(item -> {
+            DishTypeWithDishResponse dishTypeResponse = new DishTypeWithDishResponse();
+            dishTypeResponse.setId(item.getId());
+            dishTypeResponse.setName(item.getName());
+            List<Dish> dishes = dishJpaRepository.findDishesByDishType(item, PageRequest.of(0, 5));
+            List<DishResponse> dishResponses = dishes.stream()
+                    .map(product -> modelMapper.map(product, DishResponse.class))
+                    .toList();
+            dishTypeResponse.setDishes(dishResponses);
+            return dishTypeResponse;
+        }).collect(Collectors.toList());
     }
-
     @Override
     public List<DishTypeOverview> getAllDishTypesWithTopThreeDishes() {
         
@@ -63,18 +74,13 @@ public class DishTypeServicelmpl implements DishTypeService {
     }
 
     @Override
-    public DishType getOne(long id) throws Exception {
-        return null;
-    }
-
-    @Override
-    public DishType create(DishTypeCreate dishTypeCreate) {
-        DishType dishType = DishType.builder().name(dishTypeCreate.getName()).build();
+    public DishType create(DishTypeRequest dishTypeRequest) {
+        DishType dishType = DishType.builder().name(dishTypeRequest.getName()).build();
         return dishTypeJpaRepository.save(dishType);
     }
 
     @Override
-    public DishType update(long id, DishTypeCreate dishTypeCreate) throws Exception {
+    public DishType update(long id, DishTypeRequest dishTypeRequest) throws Exception {
         return null;
     }
 
@@ -93,27 +99,5 @@ public class DishTypeServicelmpl implements DishTypeService {
             dishTypeJpaRepository.save(dishType);
         }
         return dishTypes;
-    }
-    private DishByRestaurant convertToDto(Dish dish) {
-        DishByRestaurant dto = new DishByRestaurant();
-        dto.setId(dish.getId());
-        dto.setName(dish.getName());
-        dto.setDescription(dish.getDescription());
-        dto.setPrice(dish.getPrice());
-        dto.setDishType(dish.getDishType());
-        dto.setImageUrl(dish.getImageUrl());
-        dto.setStatus(dish.getStatus());
-
-        // set other properties
-        return dto;
-    }
-    @Override
-    public List<DishByRestaurant> getDishes(long
-     dishTypeId) {
-        DishType dishType = dishTypeJpaRepository.findById(dishTypeId).get();
-        return dishType.getDishes().stream()
-                .limit(5)
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
     }
 }
