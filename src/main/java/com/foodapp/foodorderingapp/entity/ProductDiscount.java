@@ -34,6 +34,7 @@ public class ProductDiscount {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
     private String name;
+    private String description;
     private String conditions;
     private double discountValue;
     private int discountUnit;
@@ -46,4 +47,6 @@ public class ProductDiscount {
     private BigDecimal maximumDiscountValue;
     @Enumerated(EnumType.STRING)
     private DiscountType discountType;
+    private String image;
+    private int exchangeRate;
 }

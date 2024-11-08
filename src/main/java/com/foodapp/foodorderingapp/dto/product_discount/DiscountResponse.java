@@ -34,4 +34,7 @@ public class DiscountResponse {
     private BigDecimal minimumOrderValue;
     private BigDecimal maximumDiscountValue;
     private DiscountType discountType;
+    private String description;
+    private String image;
+    private int exchangeRate;
 }

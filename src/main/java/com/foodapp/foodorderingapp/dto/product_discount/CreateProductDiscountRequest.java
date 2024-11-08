@@ -31,4 +31,7 @@ public class CreateProductDiscountRequest {
     private BigDecimal minimumOrderValue;
     @Min(value = 0, message = "Maximum discount value should be greater than 0")
     private BigDecimal maximumDiscountValue;
+    private String description;
+    private String image;
+    private int exchangeRate;
 }

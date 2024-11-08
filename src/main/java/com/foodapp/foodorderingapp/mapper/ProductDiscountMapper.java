@@ -27,6 +27,9 @@ public class ProductDiscountMapper {
                 .couponCode(productDiscountRequest.getCouponCode())
                 .minimumOrderValue(productDiscountRequest.getMinimumOrderValue())
                 .maximumDiscountValue(productDiscountRequest.getMaximumDiscountValue())
+                .description(productDiscountRequest.getDescription())
+                .image(productDiscountRequest.getImage())
+                .exchangeRate(productDiscountRequest.getExchangeRate())
                 .build();
     }
     public DiscountResponse toDiscountResponse(ProductDiscount productDiscount){
@@ -45,6 +48,9 @@ public class ProductDiscountMapper {
                 .maxUsed(productDiscount.getMaxUsed())
                 .dishId(productDiscount.getDish().getId())
                 .dish(DishMapper.toDishResponse(productDiscount.getDish()))
+                .description(productDiscount.getDescription())
+                .image(productDiscount.getImage())
+                .exchangeRate(productDiscount.getExchangeRate())
                 .build();
     }
 }
