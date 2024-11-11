@@ -1,25 +1,23 @@
 package com.foodapp.foodorderingapp.entity;
 
-
-
+import com.foodapp.foodorderingapp.converter.CartOptionConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-@Data 
+@Data  // Includes @Getter, @Setter, @ToString, @EqualsAndHashCode, @RequiredArgsConstructor
 @Entity
-@Builder
-@AllArgsConstructor
+@Builder  // Enables the builder pattern for this entity
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
 @Table(name = "cart_items")
+
 public class CartItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,13 +30,15 @@ public class CartItem {
     @JoinColumn(name = "DISH_ID")
     private Dish dish;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cartItem", cascade = CascadeType.ALL)
-    private List<CartItem_GroupOption> cartItem_groupOptions;
-
     private Integer quantity;
     private BigDecimal total;
+
+    @Convert(converter = CartOptionConverter.class)
+    @Column(name = "options", length = 500)
+    private CartItem_GroupOptionList options;
+
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP) // Specify the temporal type if using java.util.Date
+    @Temporal(TemporalType.TIMESTAMP)  // Indicates that createdAt is a timestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date createdAt;
 }

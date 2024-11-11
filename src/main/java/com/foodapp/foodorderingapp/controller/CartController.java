@@ -1,10 +1,7 @@
 package com.foodapp.foodorderingapp.controller;
 
 
-import com.foodapp.foodorderingapp.dto.cart.CartItemRequest;
-import com.foodapp.foodorderingapp.dto.cart.CartOfDishRequest;
-import com.foodapp.foodorderingapp.dto.cart.MyCartRestaurantRequest;
-import com.foodapp.foodorderingapp.dto.cart.RestaurantCartResponse;
+import com.foodapp.foodorderingapp.dto.cart.*;
 import com.foodapp.foodorderingapp.dto.order.OrderRequest;
 import com.foodapp.foodorderingapp.entity.CartItem;
 import com.foodapp.foodorderingapp.entity.Order;
@@ -28,6 +25,7 @@ public class CartController {
     public ResponseEntity<CartItem> upsertCart(@Valid @RequestBody CartItemRequest cartItemRequest){
         return ResponseEntity.ok(cartService.upsertCartItem(cartItemRequest));
     }
+
     @GetMapping("/dish_user")
     public ResponseEntity<List<CartItem>> getByDishAndUser(@Valid @RequestBody CartOfDishRequest request){
 
@@ -39,8 +37,8 @@ public class CartController {
         return ResponseEntity.ok(cartService.getCartByRestaurant(id, userId));
     }
     @GetMapping("/user")
-    public ResponseEntity<List<CartItem>> getByDishAndUser(@RequestParam long userId){
-        return ResponseEntity.ok(cartService.getCartByUser(userId));
+    public ResponseEntity<List<CartItemResponse>> getByUser(){
+        return ResponseEntity.ok(cartService.getCartByUser());
     }
     @GetMapping("/restaurants")
     public ResponseEntity<List<RestaurantCartResponse>> getRestaurantOfCart(){

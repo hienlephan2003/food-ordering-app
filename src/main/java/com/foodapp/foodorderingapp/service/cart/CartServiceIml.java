@@ -1,19 +1,24 @@
 package com.foodapp.foodorderingapp.service.cart;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.foodapp.foodorderingapp.converter.CartOptionConverter;
 import com.foodapp.foodorderingapp.dto.cart.*;
+import com.foodapp.foodorderingapp.dto.dish.DishResponse;
 import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.repository.*;
 import com.foodapp.foodorderingapp.repository.CartJpaRepository;
 import com.foodapp.foodorderingapp.security.UserPrinciple;
-import com.foodapp.foodorderingapp.service.user.UserService;
+import com.foodapp.foodorderingapp.service.dish.DishService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -30,86 +34,96 @@ public class CartServiceIml implements CartService {
     private final GroupOptionJpaRepository groupOptionJpaRepository;
     private final DishJpaRepository dishJpaRepository;
     private final CartJpaRepository cartJpaRepository;
-    private final CartOptionItemJpaRepository cartOptionItemJpaRepository;
-    private final CartGroupOptionRepository cartGroupOptionRepository;
     private final UserJpaRepository userJpaRepository;
+    private final CartOptionConverter cartOptionConverter;
+    private final ModelMapper modelMapper;
+    private final DishService dishService;
 
-    private Pair<List<CartItem_OptionItem>, BigDecimal> getItemOptions(CartItem_GroupOptionRequest item_group,
-            GroupOption groupOption) {
-        AtomicReference<BigDecimal> subTotal = new AtomicReference<>(BigDecimal.ZERO);
-        List<CartItem_OptionItem> item_options = item_group.getCartItem_optionItems().stream().map(item_option -> {
-            OptionItem optionItem = optionItemJpaRepository.findById(item_option.getOptionItemId()).orElseThrow(
-                    () -> new DataNotFoundException("Not found option item with " + item_option.getOptionItemId()));
-            if (!Objects.equals(optionItem.getGroupOption().getId(), groupOption.getId())) {
-                throw new IllegalArgumentException("Option item not valid" + item_option.getOptionItemId());
-            }
-            BigDecimal price = optionItem.getPrice().multiply(BigDecimal.valueOf(item_option.getQuantity()));
-            subTotal.updateAndGet(v -> v.add(price));
-            return CartItem_OptionItem.builder()
-                    .optionItem(optionItem)
-                    .quantity(item_option.getQuantity())
-                    .price(price)
-                    .build();
-        }).toList();
+//    private Pair<List<CartItem_OptionItem>, BigDecimal> getItemOptions(CartItem_GroupOptionRequest item_group,
+//            GroupOption groupOption) {
+//        AtomicReference<BigDecimal> subTotal = new AtomicReference<>(BigDecimal.ZERO);
+//        List<CartItem_OptionItem> item_options = item_group.getCartItem_optionItems().stream().map(item_option -> {
+//            OptionItem optionItem = optionItemJpaRepository.findById(item_option.getOptionItemId()).orElseThrow(
+//                    () -> new DataNotFoundException("Not found option item with " + item_option.getOptionItemId()));
+//            if (!Objects.equals(optionItem.getGroupOption().getId(), groupOption.getId())) {
+//                throw new IllegalArgumentException("Option item not valid" + item_option.getOptionItemId());
+//            }
+//            BigDecimal price = optionItem.getPrice().multiply(BigDecimal.valueOf(item_option.getQuantity()));
+//            subTotal.updateAndGet(v -> v.add(price));
+//            return CartItem_OptionItem.builder()
+//                    .optionItem(optionItem)
+//                    .quantity(item_option.getQuantity())
+//                    .price(price)
+//                    .build();
+//        }).toList();
 
-        return Pair.of(item_options, subTotal.get());
-    }
+//        return Pair.of(item_options, subTotal.get());
+//    }
 
-    private Pair<List<CartItem_GroupOption>, BigDecimal> getItemGroups(CartItemRequest itemRequest, CartItem item) {
-        AtomicReference<BigDecimal> itemOptionPrice = new AtomicReference<>(BigDecimal.ZERO);
-        List<CartItem_GroupOption> item_groups = itemRequest.getCartItemGroupOptionRequests().stream()
-                .map(item_group -> {
-                    GroupOption groupOption = groupOptionJpaRepository.findById(item_group.getGroupOptionId())
-                            .orElseThrow(() -> new DataNotFoundException(
-                                    "Not found group option with " + item_group.getGroupOptionId()));
-                    Pair<List<CartItem_OptionItem>, BigDecimal> res = getItemOptions(item_group, groupOption);
-                    System.out.println(res.getSecond());
-                    itemOptionPrice.updateAndGet(x -> x.add(res.getSecond()));
-
-                    CartItem_GroupOption cartItemGroupOption = CartItem_GroupOption.builder()
-                            .groupOption(groupOption)
-                            .cartItemOptions(res.getFirst())
-                            .groupOptionSubtotal(res.getSecond())
-                            .cartItem(item)
-                            .build();
-                    CartItem_GroupOption binh = cartGroupOptionRepository.save(cartItemGroupOption);
-                    res.getFirst().stream().forEach(option_item -> {
-                        option_item.setCartItem_groupOption(binh);
-                        cartOptionItemJpaRepository.save(option_item);
-                    });
-
-                    return CartItem_GroupOption.builder()
-                            .groupOption(groupOption)
-                            .cartItemOptions(res.getFirst())
-                            .groupOptionSubtotal(res.getSecond())
-                            .build();
-                }).toList();
-        System.out.println(itemOptionPrice.get());
-        return Pair.of(item_groups, itemOptionPrice.get());
-    }
+//    private Pair<List<CartItem_GroupOptionList>, BigDecimal> getItemGroups(CartItemRequest itemRequest, CartItem item) {
+//        AtomicReference<BigDecimal> itemOptionPrice = new AtomicReference<>(BigDecimal.ZERO);
+//        List<CartItem_GroupOptionList> item_groups = itemRequest.getCartItemGroupOptionRequests().stream()
+//                .map(item_group -> {
+//                    GroupOption groupOption = groupOptionJpaRepository.findById(item_group.getGroupOptionId())
+//                            .orElseThrow(() -> new DataNotFoundException(
+//                                    "Not found group option with " + item_group.getGroupOptionId()));
+//                    Pair<List<CartItem_OptionItem>, BigDecimal> res = getItemOptions(item_group, groupOption);
+//                    System.out.println(res.getSecond());
+//                    itemOptionPrice.updateAndGet(x -> x.add(res.getSecond()));
+//
+//                    CartItem_GroupOptionList cartItemGroupOption = CartItem_GroupOptionList.builder()
+//                            .groupOption(groupOption)
+//                            .cartItemOptions(res.getFirst())
+//                            .groupOptionSubtotal(res.getSecond())
+//                            .cartItem(item)
+//                            .build();
+//                    CartItem_GroupOptionList binh = cartGroupOptionRepository.save(cartItemGroupOption);
+//                    res.getFirst().stream().forEach(option_item -> {
+//                        option_item.setCartItem_groupOption(binh);
+//                        cartOptionItemJpaRepository.save(option_item);
+//                    });
+//
+//                    return CartItem_GroupOptionList.builder()
+//                            .groupOption(groupOption)
+//                            .cartItemOptions(res.getFirst())
+//                            .groupOptionSubtotal(res.getSecond())
+//                            .build();
+//                }).toList();
+//        System.out.println(itemOptionPrice.get());
+//        return Pair.of(item_groups, itemOptionPrice.get());
+//    }
 
     @Override
     public CartItem upsertCartItem(CartItemRequest itemRequest) {
-        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
         Dish dish = dishJpaRepository.findById(itemRequest.getDishId())
                 .orElseThrow(() -> new DataNotFoundException("Not found dish with id " + itemRequest.getDishId()));
-        long userId = ((UserPrinciple)SecurityContextHolder.getContext().getAuthentication().getCredentials()).getUserId();
-        User user = userJpaRepository.findById(userId).get();
+        Long userId = ((UserPrinciple)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        User user = userJpaRepository.findById(userId).orElseThrow(
+                () -> new UsernameNotFoundException("Not found user")
+        );
         CartItem item = cartJpaRepository.findByUserAndDish(user, dish);
+        CartItem_GroupOptionList options = new CartItem_GroupOptionList();
+        options.setSelectedOptions(itemRequest.getCartItemGroupOptionRequests().stream().map((option) ->
+                CartItem_GroupOption.builder()
+                        .groupOptionId(option.getGroupOptionId())
+                        .selectedOptions(option.getSelectedOptions())
+                        .build()
+        ).toList());
+
         if(item == null) {
-            item = CartItem
-                    .builder()
-                    .dish(dish)
-                    .user(user)
-                    .total(BigDecimal.ZERO)
-                    .build();
+                 item = CartItem
+                        .builder()
+                        .dish(dish)
+                        .user(user)
+                        .options((options))
+                         .quantity(itemRequest.getQuantity())
+                        .build();
             item = cartJpaRepository.save(item);
         }
-        Pair<List<CartItem_GroupOption>, BigDecimal> res = getItemGroups(itemRequest, item);
-        BigDecimal subTotal = (res.getSecond().add(dish.getPrice()))
-                .multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
-        totalPrice.updateAndGet(x -> x.add(subTotal));
-        item.setTotal(totalPrice.get());
+        else{
+            item.setOptions((options));
+            item.setQuantity(itemRequest.getQuantity());
+        }
         return cartJpaRepository.save(item);
     }
 
@@ -131,8 +145,18 @@ public class CartServiceIml implements CartService {
     }
 
     @Override
-    public List<CartItem> getCartByUser(Long userId) {
-        return cartJpaRepository.findByUser(userId);
+    public List<CartItemResponse> getCartByUser() {
+        Long userId = ((UserPrinciple)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        User user = userJpaRepository.findById(userId).orElseThrow(
+                () -> new UsernameNotFoundException("Not found user")
+        );
+        List<CartItem> items = cartJpaRepository.findByUser(userId);
+        return items.stream().map(item -> {
+            CartItemResponse cartItemResponse = modelMapper.map(item, CartItemResponse.class);
+            DishResponse dish = dishService.getDishById(item.getDish().getId());
+            cartItemResponse.setDish(dish);
+            return cartItemResponse;
+        }).toList();
     }
 
     @Override

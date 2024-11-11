@@ -31,12 +31,18 @@ public class DishServiceImpl implements DishService {
     private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
     private final ModelMapper modelMapper;
     @Override
-    public DishResponse getDishById(long dishId) throws Exception {
-        Optional<Dish> dish = dishJpaRepository.findById(dishId);
-        if (dish.isPresent()) {
-            return modelMapper.map(dish.get(), DishResponse.class);
-        } else
-            throw new DataNotFoundException("Can't not find dish with id" + dishId);
+    public DishResponse getDishById(long dishId) {
+        Dish dish = dishJpaRepository.findById(dishId)
+                .orElseThrow(() ->  new DataNotFoundException("Can't not find dish with id" + dishId));
+        List<Dish_GroupOption> dishGroupOptions = dish_groupOptionJpaRepository.findByDishId(dishId);
+        List<GroupOption> groupOptions = dishGroupOptions.stream()
+                .map(dishGroupOption -> {
+                    return dishGroupOption.getDish_groupOptionId().getGroupOption();
+                })
+                .toList();
+        DishResponse dishResponse = modelMapper.map(dish, DishResponse.class);
+        dishResponse.setOptions(groupOptions);
+        return dishResponse;
     }
 
     @Override

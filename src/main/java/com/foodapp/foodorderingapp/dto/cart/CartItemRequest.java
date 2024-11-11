@@ -14,8 +14,6 @@ import java.util.List;
 
 public class CartItemRequest {
     private Long dishId;
-    private Long userId;
     List<CartItem_GroupOptionRequest> cartItemGroupOptionRequests;
-    private BigDecimal total;
     private int quantity;
 }
