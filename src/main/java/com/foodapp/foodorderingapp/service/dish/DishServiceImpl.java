@@ -3,6 +3,7 @@ package com.foodapp.foodorderingapp.service.dish;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishResponse;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
+import com.foodapp.foodorderingapp.dto.group_option.GroupOptionResponse;
 import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
@@ -34,10 +35,11 @@ public class DishServiceImpl implements DishService {
     public DishResponse getDishById(long dishId) {
         Dish dish = dishJpaRepository.findById(dishId)
                 .orElseThrow(() ->  new DataNotFoundException("Can't not find dish with id" + dishId));
+
         List<Dish_GroupOption> dishGroupOptions = dish_groupOptionJpaRepository.findByDishId(dishId);
-        List<GroupOption> groupOptions = dishGroupOptions.stream()
+        List<GroupOptionResponse> groupOptions = dishGroupOptions.stream()
                 .map(dishGroupOption -> {
-                    return dishGroupOption.getDish_groupOptionId().getGroupOption();
+                    return modelMapper.map( dishGroupOption.getDish_groupOptionId().getGroupOption(), GroupOptionResponse.class);
                 })
                 .toList();
         DishResponse dishResponse = modelMapper.map(dish, DishResponse.class);

@@ -94,7 +94,7 @@ public class CartServiceIml implements CartService {
 //    }
 
     @Override
-    public CartItem upsertCartItem(CartItemRequest itemRequest) {
+    public CartItemResponse upsertCartItem(CartItemRequest itemRequest) {
         Dish dish = dishJpaRepository.findById(itemRequest.getDishId())
                 .orElseThrow(() -> new DataNotFoundException("Not found dish with id " + itemRequest.getDishId()));
         Long userId = ((UserPrinciple)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
@@ -124,7 +124,12 @@ public class CartServiceIml implements CartService {
             item.setOptions((options));
             item.setQuantity(itemRequest.getQuantity());
         }
-        return cartJpaRepository.save(item);
+        CartItem cartItem = cartJpaRepository.save(item);
+        CartItemResponse cartItemResponse = modelMapper.map(cartItem, CartItemResponse.class);
+        DishResponse dishResponse = dishService.getDishById(cartItem.getDish().getId());
+        cartItemResponse.setDish(dishResponse);
+        return cartItemResponse;
+
     }
 
     @Override
@@ -140,8 +145,7 @@ public class CartServiceIml implements CartService {
 
     @Override
     public List<CartItem> getCartsByDish(CartOfDishRequest request) {
-        List<CartItem> cartItems = cartJpaRepository.findByDishAndUser(request.getDishId(), request.getUserId());
-        return cartItems;
+        return cartJpaRepository.findByDishAndUser(request.getDishId(), request.getUserId());
     }
 
     @Override
@@ -165,20 +169,16 @@ public class CartServiceIml implements CartService {
     }
 
     @Override
-    public CartItem updateCart(int quantity, long id) {
+    public CartItemResponse updateCart(int quantity, long id) {
         CartItem cartItem = cartJpaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not found cart"));
-        int preQuantity = cartItem.getQuantity();
-        BigDecimal total = cartItem.getTotal();
         cartItem.setQuantity(quantity);
-        if(quantity > 0) {
-            cartItem.setTotal(total.multiply(BigDecimal.valueOf(quantity)).divide(BigDecimal.valueOf(preQuantity)));
+        if(quantity == 0) {
+             cartJpaRepository.deleteById(id);
+             return modelMapper.map(cartItem, CartItemResponse.class);
+        }else{
+          return  modelMapper.map(cartJpaRepository.save(cartItem), CartItemResponse.class);
         }
-        else {
-            cartJpaRepository.deleteById(id);
-            return null;
-        }
-        return cartJpaRepository.save(cartItem);
     }
 
     @Override
