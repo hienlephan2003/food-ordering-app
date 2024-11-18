@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,10 +13,13 @@ import java.util.List;
 
 @Configuration
 class SwaggerConfig{
+    @Value("${application.app.devServer}")
+    private String devServerUrl;
+
     @Bean
     public OpenAPI openAPI() {
         Server devServer = new io.swagger.v3.oas.models.servers.Server();
-        devServer.setUrl("http://localhost:8086");
+        devServer.setUrl(devServerUrl);
         SecurityScheme securityScheme = new SecurityScheme()
                 .name("token")
                 .type(SecurityScheme.Type.APIKEY)
