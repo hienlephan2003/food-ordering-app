@@ -1,5 +1,12 @@
 package com.foodapp.foodorderingapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.foodapp.foodorderingapp.enumeration.DiscountType;
+
+import com.foodapp.foodorderingapp.enumeration.DiscountType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,20 +22,31 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProductDiscount {
     @Id
     @GeneratedValue
     private Long id;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "dish_id")
     private Dish dish;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+    private String name;
+    private String description;
+    private String conditions;
     private double discountValue;
     private int discountUnit;
+    private int maxUsed;
     private ZonedDateTime createdTime;
     private Timestamp validFrom;
     private Timestamp validTo;
     private String couponCode;
     private BigDecimal minimumOrderValue;
     private BigDecimal maximumDiscountValue;
-    private boolean isRedeemAllowed;
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType;
+    private String image;
+    private int exchangeRate;
 }

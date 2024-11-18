@@ -16,7 +16,7 @@ public class UserDetailsServiceIml implements UserDetailsService {
     private final UserJpaRepository userJpaRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = Optional.ofNullable(userJpaRepository.findUserByUsername(username));
+        Optional<User> user = (userJpaRepository.findUserByUsername(username));
         System.out.println("user" + user);
         if(user.isEmpty()) throw new UsernameNotFoundException("Not found user");
         else return new UserPrinciple(user.get());

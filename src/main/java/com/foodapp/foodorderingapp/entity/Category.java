@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -23,10 +24,10 @@ public class Category {
     
     @ManyToOne()
     @JoinColumn(name = "RESTAURANT_ID")
-    @JsonBackReference
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Dish> dishes;
     private String name;
     private Integer dishQuantity;
@@ -38,7 +39,6 @@ public class Category {
         Category that = (Category) o;
         return id.equals(that.id) && restaurant.equals(that.restaurant);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, restaurant);

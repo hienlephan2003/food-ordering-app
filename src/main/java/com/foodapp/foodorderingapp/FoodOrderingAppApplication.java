@@ -12,9 +12,8 @@ public class FoodOrderingAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FoodOrderingAppApplication.class, args);
-		System.out.println("Xin chao cac ban");
+		System.out.println("Application run on http://localhost:8086/swagger-ui/index.html");
 	}
-
 	@Bean
 	public CommandLineRunner initialData(RoleJpaRepository roleJpaRepository){
 		return args ->{

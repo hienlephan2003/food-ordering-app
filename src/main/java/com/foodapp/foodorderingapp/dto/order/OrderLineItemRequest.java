@@ -12,9 +12,7 @@ import java.util.List;
 @Builder
 
 public class OrderLineItemRequest {
-    @JsonProperty("dish_id")
     private Long dishId;
-    @JsonProperty("item_group_options")
     List<OrderLineItem_GroupOptionRequest> orderLineItemGroupOptionRequests;
     private int quantity;
 }

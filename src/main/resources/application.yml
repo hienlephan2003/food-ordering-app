@@ -1,10 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=ay9KwErWITkQVReW
+    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=hxSq51pwwUhhbOwK
   jpa:
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: none
 server:
-  address: 192.168.102.28
+#  address: 192.168.102.28
   port: 8086
+application:
+  app:
+    jwtSecrect: ${JWT_SECRET}

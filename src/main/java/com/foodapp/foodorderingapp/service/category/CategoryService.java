@@ -2,6 +2,7 @@ package com.foodapp.foodorderingapp.service.category;
 
 import com.foodapp.foodorderingapp.dto.category.AddDish;
 import com.foodapp.foodorderingapp.dto.category.CategoryRequest;
+import com.foodapp.foodorderingapp.dto.category.CategoryResponse;
 import com.foodapp.foodorderingapp.entity.Category;
 
 import java.util.List;

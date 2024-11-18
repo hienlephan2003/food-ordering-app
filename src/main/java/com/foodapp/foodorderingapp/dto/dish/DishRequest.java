@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 @Builder
 @Getter
 public class DishRequest {
-    private long dishId;
     private String name;
     @DecimalMin(value = "0",message = "Price must be greater than 0")
     private BigDecimal price;

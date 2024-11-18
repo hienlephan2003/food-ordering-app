@@ -1,14 +1,18 @@
-package com.foodapp.foodorderingapp.service.productdiscount;
+package com.foodapp.foodorderingapp.service.product_discount;
 
 import com.foodapp.foodorderingapp.dto.product_discount.CreateProductDiscountRequest;
+import com.foodapp.foodorderingapp.dto.product_discount.DiscountResponse;
 import com.foodapp.foodorderingapp.dto.product_discount.UpdateProductDiscountRequest;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.ProductDiscount;
+import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.helper.DishHelper;
 import com.foodapp.foodorderingapp.mapper.ProductDiscountMapper;
-import com.foodapp.foodorderingapp.repository.DishJpaRepository;
 import com.foodapp.foodorderingapp.repository.ProductDiscountJpaRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductDiscountServiceImpl implements ProductDiscountService{
@@ -23,14 +27,29 @@ public class ProductDiscountServiceImpl implements ProductDiscountService{
     }
 
     @Override
-    public ProductDiscount createProductDiscount(CreateProductDiscountRequest productDiscountRequest) {
+    public DiscountResponse createProductDiscount(CreateProductDiscountRequest productDiscountRequest) {
         Dish dish = dishHelper.findDishById(productDiscountRequest.getDishId()).orElseThrow(() -> new RuntimeException("Dish not found"));
-        ProductDiscount productDiscount = productDiscountMapper.toProductDiscount(productDiscountRequest);
+        Restaurant restaurant = dish.getRestaurant();
+        ProductDiscount productDiscount = productDiscountMapper.toProductDiscount(productDiscountRequest, restaurant, dish);
         productDiscount.setDish(dish);
-        return productDiscountJpaRepository.save(productDiscount);
+        return productDiscountMapper.toDiscountResponse( productDiscountJpaRepository.save(productDiscount));
     }
     @Override
-    public ProductDiscount updateProductDiscount(UpdateProductDiscountRequest productDiscountRequest) {
+    public DiscountResponse updateProductDiscount(UpdateProductDiscountRequest productDiscountRequest) {
         return null;
     }
+
+    @Override
+    public DiscountResponse getProductDiscount(Long id) {
+        return productDiscountMapper.toDiscountResponse( productDiscountJpaRepository.findById(id).orElseThrow(() -> new RuntimeException("Product discount not found")));
+    }
+
+    @Override
+    public List<DiscountResponse> getProductDiscountByRestaurant(Long restaurantId) {
+            return productDiscountJpaRepository.findByRestaurantId(restaurantId)
+                    .stream()
+                    .map(productDiscountMapper::toDiscountResponse)
+                    .collect(Collectors.toList());
+        }
+
 }

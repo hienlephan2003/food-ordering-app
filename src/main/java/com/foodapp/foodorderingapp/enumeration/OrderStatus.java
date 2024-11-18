@@ -1,5 +1,14 @@
 package com.foodapp.foodorderingapp.enumeration;
 
 public enum OrderStatus {
-    PENDING, PAID, FAILED, CANCELED, APPROVED
-}
+    //ban dau
+    PENDING,
+    //nha hang chuan bi
+    PROCESSING,
+    //huy don
+    CANCELED,
+    //giao hang
+    DELIVERING,
+    DELIVERED
+    //hoan thanh
+ }

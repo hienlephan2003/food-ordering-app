@@ -14,9 +14,9 @@ import com.foodapp.foodorderingapp.repository.UserJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class RestaurantServiceImpl implements RestaurantService{
                 .mainDish(restaurantRequest.getMainDish())
                 .owner(user.get())
                 .status(RestaurantStatus.CREATED)
-                .address(address)
+                .addressEntity(address)
                 .description(restaurantRequest.getDescription())
                 .menuImageUrl(restaurantRequest.getMenuImageUrl())
                 .photoUrls(restaurantRequest.getPhotoUrls())
@@ -101,7 +101,12 @@ public class RestaurantServiceImpl implements RestaurantService{
 
     @Override
     public List<RestaurantSearch> search(String keyword) {
-        return restaurantJpaRepository.search(keyword);
+        Pageable pageable = PageRequest.of(0, 5);
+        return restaurantJpaRepository.search(keyword, pageable);
+    }
+    @Override
+    public List<Restaurant> getByOwnerId(long ownerId) {
+        return restaurantJpaRepository.findByOwnerId(ownerId);
     }
 
 }

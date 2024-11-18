@@ -1,14 +1,15 @@
 package com.foodapp.foodorderingapp.controller;
 
-import com.foodapp.foodorderingapp.dto.dish.DishRequest;
-import com.foodapp.foodorderingapp.dto.dish.DishSearch;
-import com.foodapp.foodorderingapp.dto.dish.Dish_GroupOptionRequest;
+import com.foodapp.foodorderingapp.dto.dish.*;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.Dish_GroupOption;
 import com.foodapp.foodorderingapp.security.UserPrinciple;
 import com.foodapp.foodorderingapp.service.dish.DishService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -23,22 +24,18 @@ import java.util.Objects;
 public class DishController {
     private final DishService dishService;
     
-    @PostMapping("/updateDishType/{id}")
-    public ResponseEntity<Boolean> addDishType(@PathVariable long id)  {
-        return ResponseEntity.ok(dishService.addDishType(id));
-    }
-    @GetMapping("/list/{id}")
-    public ResponseEntity<List<Dish>> getDishByCategoryId(@PathVariable long id){
-        return ResponseEntity.ok(dishService.getDishesByCategory(id));
+    @GetMapping("category/{categoryId}")
+    public ResponseEntity<List<DishResponse>> getDishByCategoryId(@PathVariable long id){
+        return ResponseEntity.ok(dishService.getDishesByCategory(id, 0, 20));
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity<List<Dish>> getRecommendedDishes(@RequestParam List<Long> ids) throws Exception {
+    public ResponseEntity<List<DishResponse>> getRecommendedDishes(@RequestParam List<Long> ids) throws Exception {
         return ResponseEntity.ok(dishService.getRecommendedDishes(ids));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dish> getDishById(@PathVariable long id) throws Exception {
+    public ResponseEntity<DishResponse> getDishById(@PathVariable long id) throws Exception {
         return ResponseEntity.ok(dishService.getDishById(id));
     }
 
@@ -46,9 +43,9 @@ public class DishController {
     public ResponseEntity<Dish> createDish(@Valid @RequestBody DishRequest dishRequest) {
         return ResponseEntity.ok(dishService.addDish(dishRequest));
     }
-    @PutMapping
-    public ResponseEntity<Dish> updateDish(@Valid @RequestBody DishRequest dishRequest) throws Exception {
-        return ResponseEntity.ok(dishService.updateDish(dishRequest.getDishId(), dishRequest));
+    @PutMapping("/{id}")
+    public ResponseEntity<Dish> updateDish(@Valid @RequestBody DishRequest dishRequest, @PathVariable long id) throws Exception {
+        return ResponseEntity.ok(dishService.updateDish(id, dishRequest));
     }
     @DeleteMapping
     public ResponseEntity<Boolean> deleteDish(@RequestBody long dishId) throws Exception {
@@ -61,8 +58,8 @@ public class DishController {
         return ResponseEntity.ok(dishService.search(keyword));
     }
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<Dish>> getAllByRestaurantId(@PathVariable long restaurantId) throws Exception {
-        return ResponseEntity.ok(dishService.findDishesByRestaurantId(restaurantId));
+    public ResponseEntity<List<DishResponse>> getAllByRestaurantId(@PathVariable long restaurantId, @RequestParam(defaultValue = "10") Integer limit, @RequestParam(defaultValue = "0") int page) throws Exception {
+        return ResponseEntity.ok(dishService.findDishesByRestaurant(restaurantId, limit, page));
     }
     @GetMapping
     public ResponseEntity<List<Dish>> findAll() throws Exception {
@@ -78,12 +75,12 @@ public class DishController {
     public ResponseEntity<Dish_GroupOption> addGroupOptionToDish(@RequestBody Dish_GroupOptionRequest dish_groupOptionRequest) throws Exception {
         return ResponseEntity.ok( dishService.addGroupOptionToDish(dish_groupOptionRequest.getDishId(), dish_groupOptionRequest.getGroupOptionId()));
     }
-    private void checkUserPermission(long userId){
-        UserPrinciple userInfo = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(userInfo.getUserId() !=  userId){
-            throw new IllegalArgumentException("User doesn't have permission");
-        }
-    }
+//    private void checkUserPermission(long userId){
+//        UserPrinciple userInfo = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        if(userInfo.getUserId() !=  userId){
+//            throw new IllegalArgumentException("User doesn't have permission");
+//        }
+//    }
 
 
 }

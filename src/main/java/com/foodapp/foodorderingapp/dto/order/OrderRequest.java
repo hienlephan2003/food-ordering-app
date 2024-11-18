@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.dto.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.foodapp.foodorderingapp.entity.Voucher;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 
 import lombok.*;
@@ -14,11 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequest {
-    @JsonProperty("total_price")
-    private BigDecimal totalPrice;
-    @JsonProperty("address")
     private String address;
-    @JsonProperty("order_items")
-    List<OrderLineItemRequest> orderItemRequests;
+    List<Long> cartItemIds;
     private OrderStatus orderStatus;
+    private List<Long> voucherIds;
 }

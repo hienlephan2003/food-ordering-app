@@ -2,6 +2,7 @@ package com.foodapp.foodorderingapp.service.category;
 
 import com.foodapp.foodorderingapp.dto.category.AddDish;
 import com.foodapp.foodorderingapp.dto.category.CategoryRequest;
+import com.foodapp.foodorderingapp.dto.category.CategoryResponse;
 import com.foodapp.foodorderingapp.entity.Category;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.Restaurant;
@@ -55,11 +56,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public List<Category> getAllCategories(long restaurantId) {
-        Optional<Restaurant> restaurant = restaurantJpaRepository.findById(restaurantId);
-        if(restaurant.isEmpty()){
-            throw new IllegalArgumentException("Not found restaurant");
-        }
-        return categoryJpaRepository.findCategoriesByRestaurant(restaurant.get());
+         return categoryJpaRepository.findCategoriesByRestaurantId(restaurantId);
     }
 
     @Override
@@ -86,7 +83,6 @@ public class CategoryServiceImpl implements CategoryService{
             return  category;
         }
     }
-
     @Override
     public Category addDish(AddDish request) {
         Category category = categoryJpaRepository.findById(request.getCategoryId()).orElseThrow(()-> new EntityNotFoundException("not found category"));

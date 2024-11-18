@@ -1,34 +1,49 @@
 package com.foodapp.foodorderingapp.controller;
-import com.foodapp.foodorderingapp.dto.dish.DishRequest;
-import com.foodapp.foodorderingapp.dto.dishType.DishTypeCreate;
+import com.foodapp.foodorderingapp.dto.dish.DishResponse;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeRequest;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeWithDishResponse;
+import com.foodapp.foodorderingapp.service.dish.DishService;
+import com.foodapp.foodorderingapp.dto.dish_type.DishTypeOverview;
+
 import jakarta.validation.Valid;
-import org.springframework.http.MediaType;
+
 import org.springframework.web.bind.annotation.*;
+
 import com.foodapp.foodorderingapp.entity.DishType;
-import com.foodapp.foodorderingapp.service.dishType.DishTypeService;
+import com.foodapp.foodorderingapp.service.dish_type.DishTypeService;
 
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 @RestController
-@RequestMapping("/api/dishType")
+@RequestMapping("/api/dish_types")
 @RequiredArgsConstructor
 public class DishTypeController {
     private final DishTypeService dishTypeService;
-    @GetMapping()
-    public ResponseEntity<List<DishType>> getAll() {
-        // List<DishType> dishTypes = dishTypeService.getAllDishTypes();
+    private final DishService dishService;
+     @GetMapping("/dishes/{id}")
+    public ResponseEntity<List<DishResponse>> getDishesByDishType(@PathVariable long id, int limit, int page) {
+        return ResponseEntity.ok(dishService.getDishesByDishType(id, limit, page));
+    }
+    @GetMapping("/overview")
+    public ResponseEntity<List<DishTypeOverview>> getDishTypesOverview() {
         
+        return ResponseEntity.ok(dishTypeService.getAllDishTypesWithTopThreeDishes());
+    }
+    @GetMapping()
+    public ResponseEntity<List<DishTypeWithDishResponse>> getAll() {
         return ResponseEntity.ok(dishTypeService.getAllDishTypes());
     }
+   
+
     @PostMapping("/seed")
     public ResponseEntity<List<DishType>> seed() {
         return ResponseEntity.ok(dishTypeService.seed());
     }
 
     @PostMapping()
-    public ResponseEntity<DishType> create(@Valid  @RequestBody DishTypeCreate dishTypeCreate) {
-        return ResponseEntity.ok(dishTypeService.create(dishTypeCreate));
+    public ResponseEntity<DishType> create(@Valid  @RequestBody DishTypeRequest dishTypeRequest) {
+        return ResponseEntity.ok(dishTypeService.create(dishTypeRequest));
     }
 }

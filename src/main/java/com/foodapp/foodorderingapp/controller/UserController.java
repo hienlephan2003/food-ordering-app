@@ -3,6 +3,7 @@ package com.foodapp.foodorderingapp.controller;
 import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
+import com.foodapp.foodorderingapp.dto.auth.UserResponse;
 import com.foodapp.foodorderingapp.entity.Address;
 import com.foodapp.foodorderingapp.entity.User;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
@@ -29,16 +30,23 @@ public class UserController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-
-    @PostMapping("/sign-up")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> signUp(@RequestBody CreateUserRequest createUserRequest){
-        System.out.println("Sign up controller is fired");
-        User user = userService.createNewUser(createUserRequest);
+    @GetMapping("/profile")
+    public ResponseEntity<User> getCurrentUser(){
+        User user = userService.findCurrentUser();
         return ResponseEntity.ok(user);
     }
-
-
+    @PostMapping("/sign-up")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<UserResponse> signUp(@RequestBody CreateUserRequest createUserRequest){
+        System.out.println("Sign up controller is fired");
+        UserResponse user = userService.createNewUser(createUserRequest);
+        return ResponseEntity.ok(user);
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest createUserRequest) throws DataNotFoundException {
+        User result = userService.updateUser(id, createUserRequest);
+        return ResponseEntity.ok(result);
+    }
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public  ResponseEntity<Map<String, Object>> signIn(@RequestBody SignInRequest signInRequest) throws DataNotFoundException {
