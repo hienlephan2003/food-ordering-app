@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.foodapp.foodorderingapp.dto.order.*;
 import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.enumeration.DeliveryStatus;
+import com.foodapp.foodorderingapp.enumeration.DiscountType;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.mapper.OrderMapper;
@@ -37,21 +38,22 @@ public class OrderServiceIml implements OrderService {
         private final VoucherJpaRepository voucherJpaRepository;
         private final RestaurantJpaRepository restaurantJpaRepository;
         private final VoucherApplicationJpaRepository voucherApplicationJpaRepository;
+        private final CartJpaRepository cartJpaRepository;
 
     private Pair<List<OrderLineItem_OptionItem>, BigDecimal> getItemOptions(
-            OrderLineItem_GroupOptionRequest group,
+            CartItem_GroupOption cartItem_groupOption,
                     GroupOption groupOption) {
             AtomicReference<BigDecimal> subTotal = new AtomicReference<>(BigDecimal.ZERO);
-            List<OrderLineItem_OptionItem> lineOptions = group.getOrderLineItem_optionItems().stream()
+            List<OrderLineItem_OptionItem> lineOptions = cartItem_groupOption.getSelectedOptions().stream()
                 .map(option -> {
                         OptionItem optionItem = optionItemJpaRepository
-                                        .findById(option.getOptionItemId()).orElseThrow(
+                                        .findById(option).orElseThrow(
                                                         () -> new DataNotFoundException(
                                                                         "Not found option item with "
-                                                                                        + option.getOptionItemId()));
+                                                                                        + option));
                         if (!Objects.equals(optionItem.getGroupOption().getId(), groupOption.getId())) {
                                 throw new IllegalArgumentException("Option item not valid"
-                                                + option.getOptionItemId());
+                                                + option);
                         }
                     subTotal.updateAndGet(v -> v.add(optionItem.getPrice()));
                     return OrderLineItem_OptionItem.builder()
@@ -63,10 +65,10 @@ public class OrderServiceIml implements OrderService {
             return Pair.of(lineOptions, subTotal.get());
     }
 
-    private OrderLineItem_GroupOptionList getItemGroups(OrderLineItemRequest itemRequest,
+    private OrderLineItem_GroupOptionList getItemGroups(CartItem_GroupOptionList cart_groups,
                                                                                 OrderLineItem item) {
             AtomicReference<BigDecimal> price = new AtomicReference<>(BigDecimal.ZERO);
-            List<OrderLineItem_GroupOption> groups = itemRequest.getOrderLineItemGroupOptionRequests().stream()
+            List<OrderLineItem_GroupOption> groups = cart_groups.getSelectedOptions().stream()
                 .map(group -> {
                         GroupOption groupOption = groupOptionJpaRepository
                             .findById(group.getGroupOptionId())
@@ -132,46 +134,41 @@ public class OrderServiceIml implements OrderService {
                     voucherApplicationJpaRepository.save(voucherApplication);
             });
             AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
-            List<OrderLineItem> orderLineItems = orderRequest.getOrderItemRequests().stream().map(itemRequest -> {
-                    Dish dish = dishJpaRepository.findById(itemRequest.getDishId())
-                                    .orElseThrow(() -> new DataNotFoundException(
-                                                    "Not found dish with id " + itemRequest.getDishId()));
+            List<OrderLineItem> orderLineItems = orderRequest.getCartItemIds().stream().map(id -> {
+                    CartItem cartItem = cartJpaRepository.findById(id).orElseThrow(
+                            () -> new DataNotFoundException("Not found cart with id" + id)
+                    );
                     OrderLineItem orderLineItem = OrderLineItem
                                     .builder()
-                                    .dish(dish)
-                                    .quantity(itemRequest.getQuantity())
+                                    .dish(cartItem.getDish())
+                                    .quantity(cartItem.getQuantity())
                                     .order(orderData)
                                     .build();
                     OrderLineItem item = orderLineItemJpaRepository.save(orderLineItem);
-                    OrderLineItem_GroupOptionList itemGroups = getItemGroups(itemRequest, item);
+                    OrderLineItem_GroupOptionList itemGroups = getItemGroups(cartItem.getOptions(), item);
                      orderLineItem.setOptions(itemGroups);
                     BigDecimal subTotal = (itemGroups.getPrice())
-                                    .multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+                                    .multiply(BigDecimal.valueOf(cartItem.getQuantity())).add(cartItem.getDish().getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
                     totalPrice.updateAndGet(x -> x.add(subTotal)
-                                    .add(dish.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()))));
+                                    );
                     item.setSubTotal(subTotal);
-                    return orderLineItem;
-            }).toList();
+                    return orderLineItemJpaRepository.save(item);
+            }).collect(Collectors.toList());;
+            vouchers.forEach(voucher -> {
+                    ProductDiscount discount = voucher.getProductDiscount();
+                    BigDecimal discountValue = BigDecimal.valueOf(discount.getDiscountValue());
+                    if (discount.getDiscountType() == DiscountType.PERCENTAGE) {
+                            totalPrice.updateAndGet(x -> x.multiply(BigDecimal.valueOf(1)
+                                            .subtract(discountValue.divide(BigDecimal.valueOf(100), 2,
+                                                            RoundingMode.HALF_UP))));
+                    } else {
+                            totalPrice.updateAndGet(x -> x.subtract(discountValue));
+                    }
+            });
+            orderData.setItems(orderLineItems);
+            orderData.setPrice(totalPrice.get());
 
-            if (orderRequest.getTotalPrice().compareTo(totalPrice.get()) != 0) {
-                    throw new IllegalArgumentException("total_price field is not an accurate value"
-                                    + orderRequest.getTotalPrice().toString() + ",," + totalPrice.get());
-            } else {
-                    vouchers.forEach(voucher -> {
-                            ProductDiscount discount = voucher.getProductDiscount();
-                            BigDecimal discountValue = BigDecimal.valueOf(discount.getDiscountValue());
-                            if (discount.getDiscountType().equals("PERCENTAGE")) {
-                                    totalPrice.updateAndGet(x -> x.multiply(BigDecimal.valueOf(1)
-                                                    .subtract(discountValue.divide(BigDecimal.valueOf(100), 2,
-                                                                    RoundingMode.HALF_UP))));
-                            } else {
-                                    totalPrice.updateAndGet(x -> x.subtract(discountValue));
-                            }
-                    });
-                    orderData.setPrice(totalPrice.get());
-
-            }
-            return orderJpaRepository.save(orderData);
+                return orderJpaRepository.save(orderData);
     }
 
     @Override

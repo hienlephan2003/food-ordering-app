@@ -2,6 +2,7 @@ package com.foodapp.foodorderingapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.foodapp.foodorderingapp.converter.CartOptionConverter;
+import com.foodapp.foodorderingapp.converter.OrderLineItemOptionConverter;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -26,7 +27,7 @@ public class OrderLineItem {
     @JoinColumn(name = "ORDER_ID")
     @JsonBackReference
     private Order order;
-    @Convert(converter = CartOptionConverter.class)
+    @Convert(converter = OrderLineItemOptionConverter.class)
     @Column(length = 500)
     private OrderLineItem_GroupOptionList options;
 
