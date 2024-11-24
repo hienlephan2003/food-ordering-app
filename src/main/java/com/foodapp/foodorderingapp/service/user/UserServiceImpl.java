@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
             user.setWeight(updateUserRequest.getWeight());
             user.setHeight(updateUserRequest.getHeight());
             user.setWeightLoss(updateUserRequest.getWeightLoss());
-
+            user.setGender(updateUserRequest.getGender());
             return userJpaRepository.save(user);
         } else {
             throw new RuntimeException("User not found with id " + id);

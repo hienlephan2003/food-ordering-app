@@ -14,7 +14,7 @@ public interface DishService {
     Dish updateDish(long id, DishRequest dishRequest) throws Exception;
     Dish deleteDish(long id) throws Exception;
     Dish_GroupOption addGroupOptionToDish(long dishId, long optionId) throws Exception;
-    List<DishResponse> getDishesByCategory(long categoryId, int page, int limit);
+    List<DishResponse> getDishesByCategory(long restaurantId, long categoryId, int page, int limit);
     List<DishSearch> search(String keyword);
     List<Dish> findAll();
     List<DishResponse> findDishesByRestaurant(long restaurantId, int limit, int page);

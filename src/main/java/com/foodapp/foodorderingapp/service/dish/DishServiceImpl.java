@@ -10,16 +10,22 @@ import com.foodapp.foodorderingapp.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.jsoup.Jsoup;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class DishServiceImpl implements DishService {
@@ -30,13 +36,37 @@ public class DishServiceImpl implements DishService {
     private final GroupOptionJpaRepository groupOptionJpaRepository;
     private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
     private final ModelMapper modelMapper;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Override
     public DishResponse getDishById(long dishId) throws Exception {
         Optional<Dish> dish = dishJpaRepository.findById(dishId);
         if (dish.isPresent()) {
+            List<String> imageUrls = fetchImageUrls(dish.get().getName());
+            if (imageUrls.size() >= 3) {
+                dish.get().setImageUrl(String.join(", ", imageUrls.subList(0, 3)));
+            } else {
+                dish.get().setImageUrl("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg, https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg, https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
+            }
             return modelMapper.map(dish.get(), DishResponse.class);
         } else
             throw new DataNotFoundException("Can't not find dish with id" + dishId);
+    }
+
+    public List<String> fetchImageUrls(String query) {
+        String searchUrl = "https://www.google.com/search?q=" + query + "&site=webhp&tbm=isch";
+        String response = restTemplate.getForObject(searchUrl, String.class);
+        List<String> imageUrls = new ArrayList<>();  
+            Document doc = Jsoup.parse(response);
+            for (Element img : doc.select("img")) {
+                String src = img.attr("src");
+                if (src.startsWith("http")) {
+                    imageUrls.add(src);
+                }
+            }
+        return imageUrls;
     }
 
     @Override
@@ -116,12 +146,28 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<DishResponse> getDishesByCategory(long categoryId, int page, int limit) {
+    public List<DishResponse> getDishesByCategory(long restaurantId, long categoryId, int page, int limit) {
         Category existingCategory = categoryJpaRepository
                 .findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Cannot find category with id: " + String.valueOf(categoryId)));
-        return dishJpaRepository.findDishesByCategory(existingCategory, PageRequest.of(page, limit));
+        Restaurant restaurant = restaurantJpaRepository
+        .findById(restaurantId)
+        .orElseThrow(() -> new IllegalArgumentException(
+                "Cannot find restaurant with id: " + String.valueOf(restaurantId)));
+        List<Dish> dishesResponse = dishJpaRepository.findDishesByRestaurantAndCategory(restaurantId, categoryId, PageRequest.of(page, limit));
+        for (Dish dishResponse : dishesResponse) {
+            List<String> imageUrls = fetchImageUrls(dishResponse.getName());
+            if (imageUrls.size() >= 3) {
+                dishResponse.setImageUrl(String.join(", ", imageUrls.subList(0, 3)));
+            } else {
+                dishResponse.setImageUrl("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg, https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg, https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
+            }
+        }
+        return dishesResponse.stream()
+                .map(item -> modelMapper.map(item, DishResponse.class))
+                .collect(Collectors.toList());
+        
     }
 
     @Override
@@ -142,8 +188,20 @@ public class DishServiceImpl implements DishService {
                 .findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Cannot find restaurant with id: " + String.valueOf(restaurantId)));
+        System.out.println(restaurant);
+        
         Pageable request = PageRequest.of(page, limit);
         List<Dish> dishes = dishJpaRepository.findDishesByRestaurant(restaurant, request);
+
+        for (Dish dishResponse : dishes) {
+            List<String> imageUrls = fetchImageUrls(dishResponse.getName());
+            if (imageUrls.size() >= 3) {
+                dishResponse.setImageUrl(String.join(", ", imageUrls.subList(0, 3)));
+            } else {
+                dishResponse.setImageUrl("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg, https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg, https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
+            }
+        }
+        System.out.println(dishes.size());
         return dishes.stream()
         .map(item -> modelMapper.map(item, DishResponse.class))
         .collect(Collectors.toList());
@@ -166,9 +224,16 @@ public class DishServiceImpl implements DishService {
     public List<DishResponse> getRecommendedDishes(List<Long> ids) {
         List<Dish> dishes = new ArrayList<>();
         ids.forEach(id -> {
-            Dish dish = dishJpaRepository.findById(id).orElseThrow(() -> new DataNotFoundException("not found dish"));
-            dishes.add(dish);
+            dishJpaRepository.findById(id).ifPresent(dishes::add);
         });
+        for (Dish dishResponse : dishes) {
+            List<String> imageUrls = fetchImageUrls(dishResponse.getName());
+            if (imageUrls.size() >= 3) {
+                dishResponse.setImageUrl(String.join(", ", imageUrls.subList(0, 3)));
+            } else {
+                dishResponse.setImageUrl("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg, https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg, https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
+            }
+        }
         return dishes.stream()
                 .map(item -> modelMapper.map(item, DishResponse.class))
                 .collect(Collectors.toList());

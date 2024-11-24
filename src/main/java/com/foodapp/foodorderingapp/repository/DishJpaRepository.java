@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface DishJpaRepository extends JpaRepository<Dish, Long> {
-    List<DishResponse> findDishesByCategory(Category category, Pageable pageable);
+    List<Dish> findDishesByCategory(Category category, Pageable pageable);
 
     @Query("select new com.foodapp.foodorderingapp.dto.dish.DishSearch(d.id, d.name) from Dish d where d.name LIKE %?1%")
     List<DishSearch> search(String keyword, Pageable pageable);
@@ -29,5 +29,7 @@ public interface DishJpaRepository extends JpaRepository<Dish, Long> {
 //    List<DishResponse> findDishesByDishType(DishType dishType, Pageable pageable);
     List<Dish> findDishesByDishType(DishType dishType, Pageable pageable);
     List<Dish> findDishesByRestaurant(Restaurant restaurant, Pageable pageable);
+    @Query("select d from Dish d where d.restaurant.id = ?1 and d.category.id = ?2")
+    List<Dish> findDishesByRestaurantAndCategory(long restaurantId, long categoryId, Pageable pageable);
 
 }

@@ -25,7 +25,7 @@ public class User {
 
     @JsonIgnore
     private String password;
-
+    private String gender;
     private String fullname;
     private Integer age;
     private Integer weight;

@@ -2,14 +2,20 @@ package com.foodapp.foodorderingapp;
 
 import com.foodapp.foodorderingapp.entity.Role;
 import com.foodapp.foodorderingapp.repository.RoleJpaRepository;
+
+import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.WebApplicationInitializer;
 
 @SpringBootApplication
-public class FoodOrderingAppApplication {
+public class FoodOrderingAppApplication extends SpringBootServletInitializer  {	
 
+	
 	public static void main(String[] args) {
 		SpringApplication.run(FoodOrderingAppApplication.class, args);
 		System.out.println("Application run on http://localhost:8086/swagger-ui/index.html");
@@ -31,5 +37,13 @@ public class FoodOrderingAppApplication {
 				roleJpaRepository.save(sellerRole);
 			}
 		};
+	}
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(FoodOrderingAppApplication.class);
+	}
+
+	private static SpringApplicationBuilder customizerBuilder(SpringApplicationBuilder builder) {
+		return builder.sources(FoodOrderingAppApplication.class).bannerMode(Banner.Mode.OFF);
 	}
 }

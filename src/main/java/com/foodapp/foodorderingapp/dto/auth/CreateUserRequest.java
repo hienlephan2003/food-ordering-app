@@ -24,4 +24,6 @@ public class CreateUserRequest {
     private Integer mealPerDay = 3;
     @Builder.Default
     private String weightLoss = "";
+    @Builder.Default
+    private String gender = "male";
 }
