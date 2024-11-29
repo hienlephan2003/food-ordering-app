@@ -20,4 +20,5 @@ public interface DishService {
     List<DishResponse> findDishesByRestaurant(long restaurantId, int limit, int page);
     List<DishResponse> getDishesByDishType(long dishTypeId, int limit, int page);
     List<DishResponse> getRecommendedDishes(List<Long> ids);
+    List<String> fetchImageUrls(String query);
 }

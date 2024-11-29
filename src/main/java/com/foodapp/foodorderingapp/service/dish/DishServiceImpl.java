@@ -54,7 +54,7 @@ public class DishServiceImpl implements DishService {
         } else
             throw new DataNotFoundException("Can't not find dish with id" + dishId);
     }
-
+    @Override
     public List<String> fetchImageUrls(String query) {
         String searchUrl = "https://www.google.com/search?q=" + query + "&site=webhp&tbm=isch";
         String response = restTemplate.getForObject(searchUrl, String.class);

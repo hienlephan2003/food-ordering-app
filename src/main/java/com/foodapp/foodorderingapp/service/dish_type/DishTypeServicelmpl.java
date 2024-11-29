@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.foodapp.foodorderingapp.entity.DishType;
 import com.foodapp.foodorderingapp.repository.DishTypeJpaRepository;
+import com.foodapp.foodorderingapp.service.dish.DishService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ import com.github.javafaker.Faker;
 public class DishTypeServicelmpl implements DishTypeService {
     private final DishTypeJpaRepository dishTypeJpaRepository;
     private final DishJpaRepository dishJpaRepository;
+    private final DishService dishService;
     private final ModelMapper modelMapper;
     @Override
     public List<DishTypeWithDishResponse> getAllDishTypes() {
@@ -57,11 +59,16 @@ public class DishTypeServicelmpl implements DishTypeService {
         .limit(3)
         .map(dish -> {
             FeaturedDish newDish = new FeaturedDish();
+            List<String> imageUrls = dishService.fetchImageUrls(dish.getName());
+            if (imageUrls.size() >= 3) {
+                newDish.setImageUrl(String.join(", ", imageUrls.subList(0, 3)));
+            } else {
+                newDish.setImageUrl("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg, https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg, https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
+            }
             newDish.setId(dish.getId());
             newDish.setName(dish.getName());
             newDish.setDescription(dish.getDescription());
             newDish.setPrice(dish.getPrice());
-            newDish.setImageUrl(dish.getImageUrl());
             return newDish;
         })
         .collect(Collectors.toList());
