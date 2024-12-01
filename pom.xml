@@ -17,13 +17,13 @@
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 	</properties>
-	<packaging>war</packaging>
+<!--	<packaging>war</packaging>-->
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-tomcat</artifactId>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -38,11 +38,11 @@
 			<artifactId>javafaker</artifactId>
 			<version>1.0.2</version> <!-- hoặc phiên bản mới nhất -->
 		</dependency>
-		<dependency>
-    		<groupId>io.springfox</groupId>
-    		<artifactId>springfox-boot-starter</artifactId>
-    		<version>3.0.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--    		<groupId>io.springfox</groupId>-->
+<!--    		<artifactId>springfox-boot-starter</artifactId>-->
+<!--    		<version>3.0.0</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
@@ -103,11 +103,11 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.0.2</version>
 		</dependency>
-		<dependency>
-			<groupId>io.hypersistence</groupId>
-			<artifactId>hypersistence-utils-hibernate-60</artifactId>
-			<version>3.9.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>io.hypersistence</groupId>-->
+<!--			<artifactId>hypersistence-utils-hibernate-60</artifactId>-->
+<!--			<version>3.9.0</version>-->
+<!--		</dependency>-->
 
 	</dependencies>
 
