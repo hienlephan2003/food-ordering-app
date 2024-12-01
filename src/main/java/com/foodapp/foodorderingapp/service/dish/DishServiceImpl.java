@@ -42,7 +42,7 @@ public class DishServiceImpl implements DishService {
     private RestTemplate restTemplate;
 
     @Override
-    public DishResponse getDishById(long dishId) throws Exception {
+    public DishResponse getDishById(long dishId) throws DataNotFoundException {
         Optional<Dish> dish = dishJpaRepository.findById(dishId);
         if (dish.isPresent()) {
             List<String> imageUrls = fetchImageUrls(dish.get().getName());
