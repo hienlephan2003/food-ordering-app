@@ -15,9 +15,12 @@ import com.foodapp.foodorderingapp.exception.UserExistException;
 import com.foodapp.foodorderingapp.repository.AddressJpaRepository;
 import com.foodapp.foodorderingapp.repository.RoleJpaRepository;
 import com.foodapp.foodorderingapp.repository.UserJpaRepository;
+import com.foodapp.foodorderingapp.security.UserPrinciple;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -81,9 +84,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long userId) {
-        User user = userJpaRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Not found user"));
-        return user;
+    public User findCurrentUser() {
+        Long userId = ((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        return userJpaRepository.findById(userId).orElseThrow(
+                () -> new UsernameNotFoundException("Not found user")
+        );
     }
 
     @Override

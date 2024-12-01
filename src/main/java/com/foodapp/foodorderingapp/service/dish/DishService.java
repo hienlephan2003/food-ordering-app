@@ -9,7 +9,7 @@ import com.foodapp.foodorderingapp.entity.Dish_GroupOption;
 import java.util.List;
 
 public interface DishService {
-    DishResponse getDishById(long dishId) throws Exception;
+    DishResponse getDishById(long dishId) ;
     Dish addDish(DishRequest dishRequest);
     Dish updateDish(long id, DishRequest dishRequest) throws Exception;
     Dish deleteDish(long id) throws Exception;

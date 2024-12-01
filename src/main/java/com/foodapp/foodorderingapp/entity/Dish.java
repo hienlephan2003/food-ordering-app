@@ -4,10 +4,6 @@ import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import lombok.*;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.DialectOverride;
-import org.hibernate.boot.model.internal.XMLContext;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;

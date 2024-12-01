@@ -1,19 +1,12 @@
 package com.foodapp.foodorderingapp.controller;
-
 import com.foodapp.foodorderingapp.dto.category.AddDish;
 import com.foodapp.foodorderingapp.dto.category.CategoryRequest;
-import com.foodapp.foodorderingapp.dto.restaurant.RestaurantRequest;
 import com.foodapp.foodorderingapp.entity.Category;
-import com.foodapp.foodorderingapp.entity.Restaurant;
-import com.foodapp.foodorderingapp.enumeration.RestaurantStatus;
-import com.foodapp.foodorderingapp.security.UserPrinciple;
 import com.foodapp.foodorderingapp.service.category.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

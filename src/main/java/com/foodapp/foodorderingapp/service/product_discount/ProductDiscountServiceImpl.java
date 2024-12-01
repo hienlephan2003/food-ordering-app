@@ -51,4 +51,5 @@ public class ProductDiscountServiceImpl implements ProductDiscountService{
                     .map(productDiscountMapper::toDiscountResponse)
                     .collect(Collectors.toList());
         }
+
 }
