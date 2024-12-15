@@ -51,7 +51,15 @@ public class DishServiceImpl implements DishService {
             } else {
                 dish.get().setImageUrl("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg, https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg, https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
             }
-            return modelMapper.map(dish.get(), DishResponse.class);
+            List<Dish_GroupOption> dishGroupOptions = dish_groupOptionJpaRepository.findByDishId(dishId);
+            List<GroupOptionResponse> groupOptions = dishGroupOptions.stream()
+                    .map(dishGroupOption -> {
+                        return modelMapper.map( dishGroupOption.getDish_groupOptionId().getGroupOption(), GroupOptionResponse.class);
+                    })
+                    .toList();
+            DishResponse dishResponse = modelMapper.map(dish, DishResponse.class);
+            dishResponse.setOptions(groupOptions);
+            return dishResponse;
         } else
             throw new DataNotFoundException("Can't not find dish with id" + dishId);
     }

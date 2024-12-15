@@ -28,22 +28,15 @@ public class ProductDiscount {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "dish_id")
-    private Dish dish;
-    @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
     private String name;
     private String description;
-    private String conditions;
     private double discountValue;
-    private int discountUnit;
-    private int maxUsed;
     private ZonedDateTime createdTime;
     private Timestamp validFrom;
     private Timestamp validTo;
     private String couponCode;
-    private BigDecimal minimumOrderValue;
     private BigDecimal maximumDiscountValue;
     @Enumerated(EnumType.STRING)
     private DiscountType discountType;

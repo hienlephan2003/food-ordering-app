@@ -35,7 +35,6 @@ public class UserVoucherServiceImpl implements UserVoucherService   {
         //create new voucher
         Voucher voucher = new Voucher();
         voucher.setProductDiscount(productDiscount);
-        voucher.setRemainingUsage(productDiscount.getMaxUsed());
         voucher.setStatus(VoucherStatus.ACTIVE);
         //find current user
         User user = userHelper.findCurrentUser().orElseThrow(() -> new RuntimeException("User not found")   );

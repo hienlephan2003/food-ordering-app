@@ -16,16 +16,16 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class UpdateProductDiscountRequest {
     private Long id;
+    private Long restaurantId;
     private String name;
-    private String conditions;
     private double discountValue;
     private DiscountType discountType;
-    private int discountUnit;
     private Timestamp validFrom;
     private Timestamp validTo;
     private String couponCode;
-    @Min(value = 0, message = "Minimum order value should be greater than 0")
-    private BigDecimal minimumOrderValue;
     @Min(value = 0, message = "Maximum discount value should be greater than 0")
     private BigDecimal maximumDiscountValue;
+    private String description;
+    private String image;
+    private int exchangeRate;
 }
