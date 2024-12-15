@@ -67,7 +67,7 @@ public class SecurityConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000") // Adjust according to your needs
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("token", "Content-Type", "Accept") // Include necessary headers
+                        .allowedHeaders("Authorization", "Content-Type", "Accept") // Include necessary headers
                         .allowCredentials(true);
             }
         };
