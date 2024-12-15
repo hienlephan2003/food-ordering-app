@@ -30,9 +30,9 @@ public class UserController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserByUserId(@PathVariable long id){
-        User user = userService.findById(id);
+    @GetMapping("/profile")
+    public ResponseEntity<User> getCurrentUser(){
+        User user = userService.findCurrentUser();
         return ResponseEntity.ok(user);
     }
     @PostMapping("/sign-up")

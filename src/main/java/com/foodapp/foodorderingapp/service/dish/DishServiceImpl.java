@@ -3,6 +3,7 @@ package com.foodapp.foodorderingapp.service.dish;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishResponse;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
+import com.foodapp.foodorderingapp.dto.group_option.GroupOptionResponse;
 import com.foodapp.foodorderingapp.entity.*;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
@@ -41,7 +42,7 @@ public class DishServiceImpl implements DishService {
     private RestTemplate restTemplate;
 
     @Override
-    public DishResponse getDishById(long dishId) throws Exception {
+    public DishResponse getDishById(long dishId) throws DataNotFoundException {
         Optional<Dish> dish = dishJpaRepository.findById(dishId);
         if (dish.isPresent()) {
             List<String> imageUrls = fetchImageUrls(dish.get().getName());
