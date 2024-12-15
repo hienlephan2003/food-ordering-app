@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/restaurants")
@@ -64,4 +67,10 @@ public class RestaurantController {
         restaurantService.changeStatus(restaurantId, RestaurantStatus.DELETED);
         return ResponseEntity.ok(true);
     }
+
+    @GetMapping("/distance")
+    public ResponseEntity<List<Restaurant>> getRestaurantByDistance(@RequestParam double latitude, @RequestParam double longitude, @RequestParam double distance, @RequestParam String keyword) {
+        return ResponseEntity.ok(restaurantService.getRestaurantByDistance(latitude, longitude, distance, keyword));
+    }
+    
 }
