@@ -15,9 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequest {
-    private BigDecimal totalPrice;
     private String address;
-    List<OrderLineItemRequest> orderItemRequests;
+    List<Long> cartItemIds;
     private OrderStatus orderStatus;
     private List<Long> voucherIds;
 }

@@ -20,6 +20,6 @@ public interface UserService {
     UserResponse createNewUser(CreateUserRequest createUserRequest) throws UserExistException;
     SignInResponse signIn(SignInRequest signInRequest) throws AuthException;
     User getUserByUsername(String username) throws DataNotFoundException;
-    User findById(Long userId);
+    User findCurrentUser();
     User updateUser(Long id, CreateUserRequest createUserRequest) throws UserExistException;
 }

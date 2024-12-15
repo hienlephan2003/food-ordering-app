@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CartItem_GroupOptionRequest {
-    private long groupOptionId;
-    List<CartItem_OptionItemRequest> cartItem_optionItems;
-    private BigDecimal subOptionPrice;
+    private Long groupOptionId;
+    private List<Long> selectedOptions;
 }

@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ public class OptionItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_OPTION_ID")
     @JsonBackReference
+    @JsonIgnore
     private GroupOption groupOption;
     
     private String name;
