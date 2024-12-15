@@ -108,5 +108,34 @@ public class RestaurantServiceImpl implements RestaurantService{
     public List<Restaurant> getByOwnerId(long ownerId) {
         return restaurantJpaRepository.findByOwnerId(ownerId);
     }
+    @Override
+    public List<Restaurant> getRestaurantByDistance(double latitude, double longitude, double distance, String keyword) {
+        final double R = 6371;
+        List<Restaurant> res = new ArrayList<>();
+        
+        restaurantJpaRepository.findByNameContainingIgnoreCase(keyword).forEach(restaurant -> {
+            if(restaurant.getLongitude() != null && restaurant.getLatitude() != null) {
+                double lat2 = Double.parseDouble(restaurant.getLatitude()) ;
+                double lon2 = Double.parseDouble(restaurant.getLongitude());
+            
+                double lat1Rad = Math.toRadians(latitude);
+                double lon1Rad = Math.toRadians(longitude);
+                double lat2Rad = Math.toRadians(lat2);
+                double lon2Rad = Math.toRadians(lon2);
+                double dlon = lon2Rad - lon1Rad;
+                double dlat = lat2Rad - lat1Rad;
+                double a = Math.pow(Math.sin(dlat / 2), 2)
+                        + Math.cos(lat1Rad) * Math.cos(lat2Rad)
+                        * Math.pow(Math.sin(dlon / 2),2);
+                double c = 2 * Math.asin(Math.sqrt(a));
+                double distanceInKm = R * c;
+                if(distanceInKm <= distance) {
+                    res.add(restaurant);
+                }
+            }   
+           
+        });
+        return res;
+    }
 
 }
