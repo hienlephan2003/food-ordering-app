@@ -65,7 +65,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // Adjust according to your needs
+                        .allowedOrigins("http://localhost:3000", "https://food-delivery-web-beryl.vercel.app") // Adjust according to your needs
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization", "Content-Type", "Accept") // Include necessary headers
                         .allowCredentials(true);

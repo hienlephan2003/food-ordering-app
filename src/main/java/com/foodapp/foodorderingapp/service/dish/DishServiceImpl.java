@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.service.dish;
 
+import com.foodapp.foodorderingapp.dto.dish.DishNotIncludeType;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishResponse;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
@@ -223,7 +224,7 @@ public class DishServiceImpl implements DishService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Cannot find restaurant with id: " + String.valueOf(dishTypeId)));
         Pageable request = PageRequest.of(page, limit);
-        List<Dish> dishes = dishJpaRepository.findDishesByDishType(dishType, request);
+        List<DishNotIncludeType> dishes = dishJpaRepository.findDishesByDishType(dishType.getId(), request);
         return dishes.stream()
                 .map(item -> modelMapper.map(item, DishResponse.class))
                 .collect(Collectors.toList());
