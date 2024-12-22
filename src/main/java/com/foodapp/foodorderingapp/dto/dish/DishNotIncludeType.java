@@ -1,6 +1,8 @@
 package com.foodapp.foodorderingapp.dto.dish;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,4 +28,5 @@ public class DishNotIncludeType {
     private BigDecimal price;
     private String description;
     private String imageUrl;
+    private LocalDateTime createdAt;
 }

@@ -11,6 +11,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -30,4 +32,5 @@ public class DishResponse {
     private DishTypeResponse dishType;
     private List<GroupOptionResponse> options;
     private RestaurantResponseForDish restaurant;
+    private LocalDateTime createdAt;
 }
