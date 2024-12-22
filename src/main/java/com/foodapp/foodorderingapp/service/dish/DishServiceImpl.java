@@ -29,6 +29,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.io.IOException;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.json.JSONObject;
+import org.json.JSONArray;
 @Service
 @RequiredArgsConstructor
 public class DishServiceImpl implements DishService {
@@ -39,6 +42,7 @@ public class DishServiceImpl implements DishService {
     private final GroupOptionJpaRepository groupOptionJpaRepository;
     private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
     private final ModelMapper modelMapper;
+    private final Dotenv dotenv = Dotenv.load();
 
     @Autowired
     private RestTemplate restTemplate;
@@ -67,16 +71,18 @@ public class DishServiceImpl implements DishService {
     }
     @Override
     public List<String> fetchImageUrls(String query) {
-        String searchUrl = "https://www.google.com/search?q=" + query + "&site=webhp&tbm=isch";
+        String ACCESS_TOKEN = dotenv.get("UNSPLASH_API_KEY");
+        String searchUrl = "https://api.unsplash.com/search/photos?query= food plate about" + query + "&client_id="+ ACCESS_TOKEN;
         String response = restTemplate.getForObject(searchUrl, String.class);
         List<String> imageUrls = new ArrayList<>();  
-            Document doc = Jsoup.parse(response);
-            for (Element img : doc.select("img")) {
-                String src = img.attr("src");
-                if (src.startsWith("http")) {
-                    imageUrls.add(src);
-                }
+        
+            JSONObject jsonResponse = new JSONObject(response);
+            JSONArray results = jsonResponse.getJSONArray("results");
+            for (int i = 0; i < Math.min(3, results.length()); i++) {
+                String url = results.getJSONObject(i).getJSONObject("urls").getString("regular");
+                imageUrls.add(url);
             }
+        
         return imageUrls;
     }
 
