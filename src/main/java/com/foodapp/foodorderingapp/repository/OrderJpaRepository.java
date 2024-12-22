@@ -14,5 +14,5 @@ import org.springframework.data.jpa.repository.Query;;
 public interface OrderJpaRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o WHERE o.user.id = :userId")
     List<Order> findByUser(Long userId);
-    List<Order> findOrdersByRestaurantIdAndOrderStatus(Long restaurantId, OrderStatus orderStatus);
+    List<Order> findOrdersByRestaurantId(Long restaurantId);
 }

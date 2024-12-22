@@ -92,6 +92,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findCurrentUser(Long id) {
+        return userJpaRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("Not found user")
+        );
+    }
+
+    @Override
     public User updateUser(Long id, CreateUserRequest updateUserRequest) throws UserExistException {
         Optional<User> userOptional = userJpaRepository.findById(id);
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
@@ -16,15 +17,14 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class UpdateProductDiscountRequest {
     private Long id;
-    private Long restaurantId;
     private String name;
     private double discountValue;
-    private DiscountType discountType;
+    private ZonedDateTime createdTime;
     private Timestamp validFrom;
     private Timestamp validTo;
     private String couponCode;
-    @Min(value = 0, message = "Maximum discount value should be greater than 0")
     private BigDecimal maximumDiscountValue;
+    private DiscountType discountType;
     private String description;
     private String image;
     private int exchangeRate;

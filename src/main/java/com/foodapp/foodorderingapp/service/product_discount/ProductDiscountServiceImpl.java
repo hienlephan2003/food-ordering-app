@@ -31,7 +31,11 @@ public class ProductDiscountServiceImpl implements ProductDiscountService{
     }
     @Override
     public DiscountResponse updateProductDiscount(UpdateProductDiscountRequest productDiscountRequest) {
-        return null;
+        ProductDiscount discount = productDiscountJpaRepository.findById(productDiscountRequest.getId()).orElseThrow(
+                () ->  new RuntimeException("Not found discount")
+        );
+        mapper.map(productDiscountRequest, discount);
+        return mapper.map( productDiscountJpaRepository.save(discount), DiscountResponse.class);
     }
 
     @Override

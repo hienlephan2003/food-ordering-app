@@ -39,9 +39,10 @@ public class RestaurantController {
     public ResponseEntity<Restaurant> getRestaurantById(@PathVariable long id) {
         return ResponseEntity.ok(restaurantService.getRestaurantById(id));
     }
-    @GetMapping("/owner/{id}")
-    public ResponseEntity<List<Restaurant>> getByOwner(@PathVariable long id) {
-        return ResponseEntity.ok(restaurantService.getByOwnerId(id));
+    @GetMapping("/owner")
+    public ResponseEntity<List<Restaurant>> getByOwner() {
+        UserPrinciple userPrinciple = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(restaurantService.getByOwnerId(userPrinciple.getUserId()));
     }
     @PostMapping("/addCategory")
     public ResponseEntity<Restaurant> addCategory(@RequestBody AddCategory restaurantRequest) {
@@ -72,5 +73,4 @@ public class RestaurantController {
     public ResponseEntity<List<Restaurant>> getRestaurantByDistance(@RequestParam double latitude, @RequestParam double longitude, @RequestParam double distance, @RequestParam String keyword) {
         return ResponseEntity.ok(restaurantService.getRestaurantByDistance(latitude, longitude, distance, keyword));
     }
-    
 }

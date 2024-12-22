@@ -36,8 +36,9 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
-                    .requestMatchers("api/restaurants/*").permitAll()
+                    .requestMatchers("api/restaurants", "api/restaurants/*").permitAll()
                     .requestMatchers("api/auth/*").permitAll()
+                    .requestMatchers("api/dish_types").permitAll()
                     .requestMatchers("/v3/api-docs/**", "/v3/api-docs.yaml","/swagger-ui/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/ms-food-ordering").permitAll()
                     .anyRequest().authenticated();
@@ -72,5 +73,4 @@ public class SecurityConfig {
             }
         };
     }
-
 }
