@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Table(name = "dish_types")
 @AllArgsConstructor

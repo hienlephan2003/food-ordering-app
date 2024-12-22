@@ -5,8 +5,11 @@ import lombok.*;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
+import org.hibernate.annotations.UpdateTimestamp;
 
 
 @Data
@@ -41,6 +44,11 @@ public class Dish {
     @JoinColumn(name = "dish_type_id")
     @JsonIgnore
     private DishType dishType;
+     @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,10 +1,12 @@
 package com.foodapp.foodorderingapp.service.dish;
 
+import com.foodapp.foodorderingapp.dto.dish.DishNotIncludeType;
 import com.foodapp.foodorderingapp.dto.dish.DishRequest;
 import com.foodapp.foodorderingapp.dto.dish.DishResponse;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.dto.group_option.GroupOptionResponse;
 import com.foodapp.foodorderingapp.entity.*;
+import com.foodapp.foodorderingapp.enumeration.DishClassification;
 import com.foodapp.foodorderingapp.enumeration.DishStatus;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.repository.*;
@@ -27,6 +29,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.io.IOException;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.json.JSONObject;
+import org.json.JSONArray;
 @Service
 @RequiredArgsConstructor
 public class DishServiceImpl implements DishService {
@@ -37,12 +42,13 @@ public class DishServiceImpl implements DishService {
     private final GroupOptionJpaRepository groupOptionJpaRepository;
     private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
     private final ModelMapper modelMapper;
+    private final Dotenv dotenv = Dotenv.load();
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Override
-    public DishResponse getDishById(long dishId) throws DataNotFoundException {
+    public DishResponse getDishById(long dishId) {
         Optional<Dish> dish = dishJpaRepository.findById(dishId);
         if (dish.isPresent()) {
             List<String> imageUrls = fetchImageUrls(dish.get().getName());
@@ -65,16 +71,18 @@ public class DishServiceImpl implements DishService {
     }
     @Override
     public List<String> fetchImageUrls(String query) {
-        String searchUrl = "https://www.google.com/search?q=" + query + "&site=webhp&tbm=isch";
+        String ACCESS_TOKEN = dotenv.get("UNSPLASH_API_KEY");
+        String searchUrl = "https://api.unsplash.com/search/photos?query= food plate about" + query + "&client_id="+ ACCESS_TOKEN;
         String response = restTemplate.getForObject(searchUrl, String.class);
         List<String> imageUrls = new ArrayList<>();  
-            Document doc = Jsoup.parse(response);
-            for (Element img : doc.select("img")) {
-                String src = img.attr("src");
-                if (src.startsWith("http")) {
-                    imageUrls.add(src);
-                }
+        
+            JSONObject jsonResponse = new JSONObject(response);
+            JSONArray results = jsonResponse.getJSONArray("results");
+            for (int i = 0; i < Math.min(3, results.length()); i++) {
+                String url = results.getJSONObject(i).getJSONObject("urls").getString("regular");
+                imageUrls.add(url);
             }
+        
         return imageUrls;
     }
 
@@ -217,16 +225,51 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<DishResponse> getDishesByDishType(long dishTypeId, int limit, int page) {
+    public List<DishResponse> getDishesByDishType(long dishTypeId, int limit, int page, String priceSort, DishClassification dishClassification) {
         DishType dishType = dishTypeJpaRepository
                 .findById(dishTypeId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Cannot find restaurant with id: " + String.valueOf(dishTypeId)));
         Pageable request = PageRequest.of(page, limit);
-        List<Dish> dishes = dishJpaRepository.findDishesByDishType(dishType, request);
-        return dishes.stream()
-                .map(item -> modelMapper.map(item, DishResponse.class))
-                .collect(Collectors.toList());
+        List<DishNotIncludeType> dishes = dishJpaRepository.findDishesByDishType(dishType.getId(), request);
+        List<DishResponse> dishResponses = dishes.stream()
+                    .map(dish -> {
+                        DishResponse newDish = new DishResponse();
+                        List<String> imageUrls = fetchImageUrls(dish.getName());
+            if (imageUrls.size() >= 3) {
+                newDish.setImageUrl(String.join(", ", imageUrls.subList(0, 3)));
+            } else {
+                newDish.setImageUrl("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg, https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg, https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
+            }
+            newDish.setId(dish.getId());
+            newDish.setName(dish.getName());
+            newDish.setDescription(dish.getDescription());
+            newDish.setPrice(dish.getPrice());
+            newDish.setCreatedAt(dish.getCreatedAt());
+            return newDish;
+                    })
+                    .collect(Collectors.toList());
+        if(dishClassification != null) {
+            switch (dishClassification) {
+                case RELATED:
+                    break;
+                case LATEST:
+                dishResponses.sort((dish1, dish2) -> dish2.getCreatedAt().compareTo(dish1.getCreatedAt()));
+                    break;
+                case BEST_SELLER:
+                    break;
+                default:
+                    break;
+            }
+            return dishResponses;
+        }
+        if(priceSort != null) {
+            if(priceSort.equals("asc")) {
+                dishResponses.sort((dish1, dish2) -> dish1.getPrice().compareTo(dish2.getPrice()));
+            }
+            else dishResponses.sort((dish1, dish2) -> dish2.getPrice().compareTo(dish1.getPrice()));
+        }
+        return dishResponses;
     }
 
     @Override

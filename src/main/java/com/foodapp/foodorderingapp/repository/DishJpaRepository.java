@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.repository;
 
+import com.foodapp.foodorderingapp.dto.dish.DishNotIncludeType;
 import com.foodapp.foodorderingapp.dto.dish.DishResponse;
 import com.foodapp.foodorderingapp.dto.dish.DishSearch;
 import com.foodapp.foodorderingapp.entity.Category;
@@ -27,7 +28,8 @@ public interface DishJpaRepository extends JpaRepository<Dish, Long> {
 //            "d.imageUrl," +
 //            "d.status) from Dish d where d.dishType = :dishType")
 //    List<DishResponse> findDishesByDishType(DishType dishType, Pageable pageable);
-    List<Dish> findDishesByDishType(DishType dishType, Pageable pageable);
+    @Query("select new com.foodapp.foodorderingapp.dto.dish.DishNotIncludeType(d.id, d.name, d.price, d.imageUrl, d.description, d.createdAt) from Dish d where d.dishType.id = ?1")
+    List<DishNotIncludeType> findDishesByDishType(long dishTypeId, Pageable pageable);
     List<Dish> findDishesByRestaurant(Restaurant restaurant, Pageable pageable);
     @Query("select d from Dish d where d.restaurant.id = ?1 and d.category.id = ?2")
     List<Dish> findDishesByRestaurantAndCategory(long restaurantId, long categoryId, Pageable pageable);

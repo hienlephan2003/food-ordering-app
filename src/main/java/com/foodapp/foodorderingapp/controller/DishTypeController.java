@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import com.foodapp.foodorderingapp.entity.DishType;
+import com.foodapp.foodorderingapp.enumeration.DishClassification;
 import com.foodapp.foodorderingapp.service.dish_type.DishTypeService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,14 @@ public class DishTypeController {
     private final DishTypeService dishTypeService;
     private final DishService dishService;
      @GetMapping("/dishes/{id}")
-    public ResponseEntity<List<DishResponse>> getDishesByDishType(@PathVariable long id, int limit, int page) {
-        return ResponseEntity.ok(dishService.getDishesByDishType(id, limit, page));
+    public ResponseEntity<List<DishResponse>> getDishesByDishType(
+        @PathVariable long id,
+        @RequestParam(defaultValue = "10") int limit, 
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(required = false) String priceSort,
+        @RequestParam(required = false) DishClassification dishClassification
+    ) {
+        return ResponseEntity.ok(dishService.getDishesByDishType(id, limit, page, priceSort, dishClassification));
     }
     @GetMapping("/overview")
     public ResponseEntity<List<DishTypeOverview>> getDishTypesOverview() {
