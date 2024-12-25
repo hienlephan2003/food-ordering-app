@@ -31,7 +31,7 @@ public class DishController {
 
     @GetMapping("/recommend")
     public ResponseEntity<List<DishResponse>> getRecommendedDishes(@RequestParam List<Long> ids) throws Exception {
-        return ResponseEntity.ok(dishService.getRecommendedDishes(ids));
+            return ResponseEntity.ok(dishService.getRecommendedDishes(ids));
     }
 
     @GetMapping("/{id}")
