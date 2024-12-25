@@ -21,5 +21,5 @@ public interface UserService {
     SignInResponse signIn(SignInRequest signInRequest) throws AuthException;
     User getUserByUsername(String username) throws DataNotFoundException;
     User findCurrentUser();
-    User updateUser(Long id, CreateUserRequest createUserRequest) throws UserExistException;
+    User updateUser(CreateUserRequest createUserRequest) throws UserExistException;
 }

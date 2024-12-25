@@ -21,7 +21,7 @@ class SwaggerConfig{
         Server devServer = new io.swagger.v3.oas.models.servers.Server();
         devServer.setUrl(devServerUrl);
         SecurityScheme securityScheme = new SecurityScheme()
-                .name("token")
+                .name("Authorization")
                 .type(SecurityScheme.Type.APIKEY)
                 .in(SecurityScheme.In.HEADER)
                 .scheme("bearer")
@@ -29,12 +29,12 @@ class SwaggerConfig{
 
         // Define the security requirement
         SecurityRequirement securityRequirement = new SecurityRequirement()
-                .addList("token");
+                .addList("Authorization");
 
         return new OpenAPI().info(new Info().title("Food Ordering App API").version("1.0")).
                 servers(List.of(devServer))
                 .components(new io.swagger.v3.oas.models.Components()
-                        .addSecuritySchemes("token", securityScheme))
+                        .addSecuritySchemes("Authorization", securityScheme))
                 .addSecurityItem(securityRequirement);
     }
 }

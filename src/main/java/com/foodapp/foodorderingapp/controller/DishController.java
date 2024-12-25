@@ -24,9 +24,9 @@ import java.util.Objects;
 public class DishController {
     private final DishService dishService;
     
-    @GetMapping("category/{categoryId}")
-    public ResponseEntity<List<DishResponse>> getDishByCategoryId(@PathVariable long id){
-        return ResponseEntity.ok(dishService.getDishesByCategory(id, 0, 20));
+    @GetMapping("category/{restaurantId}/{categoryId}")
+    public ResponseEntity<List<DishResponse>> getDishByCategoryId(@PathVariable long restaurantId, @PathVariable long categoryId,  @RequestParam(defaultValue = "10") Integer limit, @RequestParam(defaultValue = "0") int page){
+        return ResponseEntity.ok(dishService.getDishesByCategory(restaurantId, categoryId, page, limit));
     }
 
     @GetMapping("/recommend")

@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findCurrentUser() {
+        System.out.println("Current user: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Long userId = ((UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
         return userJpaRepository.findById(userId).orElseThrow(
                 () -> new UsernameNotFoundException("Not found user")
@@ -92,22 +93,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, CreateUserRequest updateUserRequest) throws UserExistException {
-        Optional<User> userOptional = userJpaRepository.findById(id);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setAge(updateUserRequest.getAge());
-            user.setActivity(updateUserRequest.getActivity());
-            user.setMealPerDay(updateUserRequest.getMealPerDay());
-            user.setWeight(updateUserRequest.getWeight());
-            user.setHeight(updateUserRequest.getHeight());
-            user.setWeightLoss(updateUserRequest.getWeightLoss());
-
-            return userJpaRepository.save(user);
-        } else {
-            throw new RuntimeException("User not found with id " + id);
-        }
+    public User updateUser(CreateUserRequest updateUserRequest) throws UserExistException {
+        Long userId = ((UserPrinciple)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+        User user = userJpaRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setAge(updateUserRequest.getAge());
+        user.setActivity(updateUserRequest.getActivity());
+        user.setMealPerDay(updateUserRequest.getMealPerDay());
+        user.setWeight(updateUserRequest.getWeight());
+        user.setHeight(updateUserRequest.getHeight());
+        user.setWeightLoss(updateUserRequest.getWeightLoss());
+        user.setGender(updateUserRequest.getGender());
+        user.setAvatarUrl(updateUserRequest.getAvatarUrl());
+        return userJpaRepository.save(user);
     }
 
 }

@@ -17,5 +17,6 @@ public interface RestaurantService {
     Restaurant changeStatus(long id, RestaurantStatus status) throws Exception;
     List<RestaurantSearch> search(String keyword);
     List<Restaurant> getByOwnerId(long ownerId);
+    List<Restaurant> getRestaurantByDistance(double latitude, double longitude, double distance, String keyword);
 
 }
