@@ -35,6 +35,11 @@ public class UserController {
         User user = userService.findCurrentUser();
         return ResponseEntity.ok(user);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getCurrentUser(@PathVariable Long id){
+        User user = userService.findCurrentUser(id);
+        return ResponseEntity.ok(user);
+    }
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponse> signUp(@RequestBody CreateUserRequest createUserRequest){

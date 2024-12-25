@@ -9,24 +9,21 @@ import com.foodapp.foodorderingapp.enumeration.DeliveryStatus;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-@Builder
-@Getter
-@Setter
+@Data
 public class OrderResponse {
     private Long id;
     private User user;
-    private Long restaurantId;
     private OrderStatus orderStatus;
     private DeliveryStatus deliveryStatus;
     private String failureMessages;
     private BigDecimal price;
     private String address;
-    private List<OrderLineItem> items;
-
+    private List<OrderLineItemResponse> items;
 }

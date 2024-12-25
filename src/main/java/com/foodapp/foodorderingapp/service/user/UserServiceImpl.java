@@ -93,6 +93,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findCurrentUser(Long id) {
+        return userJpaRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("Not found user")
+        );
+    }
+
+    @Override
     public User updateUser(CreateUserRequest updateUserRequest) throws UserExistException {
         Long userId = ((UserPrinciple)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
         User user = userJpaRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));

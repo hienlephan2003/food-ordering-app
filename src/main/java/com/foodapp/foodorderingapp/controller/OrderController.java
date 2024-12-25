@@ -37,10 +37,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getHotOrders(restaurantId));
     }
 
-    @GetMapping("/restaurant")
-    public ResponseEntity<List<OrderResponse>> getOrderByRestaurantId(@RequestParam Long restaurantId,
-                                                                      @RequestParam OrderStatus orderStatus) {
-        return ResponseEntity.ok(orderService.getByRestaurantAndOrderStatus(restaurantId, orderStatus));
+    @GetMapping("/restaurant/{id}")
+    public ResponseEntity<List<OrderResponse>> getOrderByRestaurantId(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getByRestaurant(id));
     }
 
     @PostMapping

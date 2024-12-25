@@ -16,12 +16,13 @@ import com.foodapp.foodorderingapp.enumeration.DeliveryStatus;
 import com.foodapp.foodorderingapp.enumeration.DiscountType;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
-import com.foodapp.foodorderingapp.mapper.OrderMapper;
 import com.foodapp.foodorderingapp.repository.*;
 import com.foodapp.foodorderingapp.security.UserPrinciple;
 
+import com.foodapp.foodorderingapp.service.cart.CartService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,8 @@ public class OrderServiceIml implements OrderService {
         private final RestaurantJpaRepository restaurantJpaRepository;
         private final VoucherApplicationJpaRepository voucherApplicationJpaRepository;
         private final CartJpaRepository cartJpaRepository;
+        private final ModelMapper modelMapper;
+        private final CartService cartService;
 
     private Pair<List<OrderLineItem_OptionItem>, BigDecimal> getItemOptions(
             CartItem_GroupOption cartItem_groupOption,
@@ -167,8 +170,8 @@ public class OrderServiceIml implements OrderService {
             });
             orderData.setItems(orderLineItems);
             orderData.setPrice(totalPrice.get());
-
-                return orderJpaRepository.save(orderData);
+            orderRequest.getCartItemIds().forEach(id -> cartService.updateCart(0, id));
+            return orderJpaRepository.save(orderData);
     }
 
     @Override
@@ -189,8 +192,10 @@ public class OrderServiceIml implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getByRestaurantAndOrderStatus (Long restaurantId, OrderStatus orderStatus) {
-            return orderJpaRepository.findOrdersByRestaurantIdAndOrderStatus(restaurantId, orderStatus).stream().map(OrderMapper::toOrderResponse).toList();
+    public List<OrderResponse> getByRestaurant (Long restaurantId) {
+            return orderJpaRepository.findOrdersByRestaurantId(restaurantId).stream().map(
+                    item -> modelMapper.map(item, OrderResponse.class)
+            ).toList();
     }
 
     @Override

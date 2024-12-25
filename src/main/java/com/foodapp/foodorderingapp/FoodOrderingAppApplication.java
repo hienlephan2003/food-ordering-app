@@ -18,7 +18,7 @@ public class FoodOrderingAppApplication extends SpringBootServletInitializer  {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(FoodOrderingAppApplication.class, args);
-		System.out.println("Application run on 	");
+		System.out.println("Application ready");
 	}
 	@Bean
 	public CommandLineRunner initialData(RoleJpaRepository roleJpaRepository){
