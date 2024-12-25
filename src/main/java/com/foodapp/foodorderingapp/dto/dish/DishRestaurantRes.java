@@ -25,4 +25,12 @@ public class DishRestaurantRes {
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private DishStatus status;
+    public DishRestaurantRes(Long id, BigDecimal price, String name, String description, String imageUrl, DishStatus status) {
+        this.id = id;
+        this.price = price;
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.status = status;
+    }
 }
