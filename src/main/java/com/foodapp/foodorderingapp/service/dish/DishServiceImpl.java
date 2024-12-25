@@ -75,28 +75,35 @@ public class DishServiceImpl implements DishService {
     }
     @Override
     public List<String> fetchImageUrls(String query) {
+        Dish dish = dishJpaRepository.findByName(query).get(0);
         String ACCESS_TOKEN = dotenv.get("UNSPLASH_API_KEY");
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", ACCESS_TOKEN);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        String searchUrl = "https://api.pexels.com/v1/search?query=" + query + "&per_page=3";
-        List<String> imageUrls = new ArrayList<>();  
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, String.class);
-            JSONObject jsonResponse = new JSONObject(response.getBody());
-            JSONArray results = jsonResponse.getJSONArray("photos");
-            for (int i = 0; i < results.length(); i++) {
-                String url = results.getJSONObject(i).getJSONObject("src").getString("original");
-                imageUrls.add(url);
+        if(!dish.getImageUrl().startsWith("https://images.pexels.com")) {
+            String searchUrl = "https://api.pexels.com/v1/search?query=" + dish.getName() + "&per_page=3";
+            List<String> imageUrls = new ArrayList<>();  
+            try {
+                ResponseEntity<String> response = restTemplate.exchange(searchUrl, HttpMethod.GET, entity, String.class);
+                JSONObject jsonResponse = new JSONObject(response.getBody());
+                JSONArray results = jsonResponse.getJSONArray("photos");
+                for (int i = 0; i < results.length(); i++) {
+                    String url = results.getJSONObject(i).getJSONObject("src").getString("original");
+                    imageUrls.add(url);
+                }
+            
+            } catch (Exception e) {
+                imageUrls = new ArrayList<>();
+                imageUrls.add("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg");
+                imageUrls.add("https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg");
+                imageUrls.add("https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
             }
-        
-        } catch (Exception e) {
-            imageUrls = new ArrayList<>();
-            imageUrls.add("https://ik.imagekit.io/munchery/blog/tr:w-768/the-10-dishes-that-define-moroccan-cuisine.jpeg");
-            imageUrls.add("https://giavivietan.com/wp-content/uploads/2020/01/VIANCO-Hinh-CHUP-T%C3%94-CA-RI-1-scaled.jpg");
-            imageUrls.add("https://cms-prod.s3-sgn09.fptcloud.com/cach_nau_ca_ri_ga_tai_nha_bao_ngon_va_chuan_vi_an_hoai_khong_chan_1_c47c7657bc.jpg");
+            dish.setImageUrl(String.join(", ", imageUrls));
+            dishJpaRepository.save(dish);
+            return imageUrls;
         }
-        return imageUrls;
+        return dish.getImageUrl().contains(",") ? List.of(dish.getImageUrl().split(", ")) : List.of(dish.getImageUrl());
+       
     }
 
     @Override
