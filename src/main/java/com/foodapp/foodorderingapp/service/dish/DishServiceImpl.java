@@ -16,6 +16,7 @@ import org.hibernate.Hibernate;
 import org.jsoup.Jsoup;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -46,7 +47,8 @@ public class DishServiceImpl implements DishService {
     private final GroupOptionJpaRepository groupOptionJpaRepository;
     private final Dish_GroupOptionJpaRepository dish_groupOptionJpaRepository;
     private final ModelMapper modelMapper;
-    private final Dotenv dotenv = Dotenv.load();
+    @Value("${foodapp.app.unsplashApiKey}")
+    private String unsplashApiKey;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -76,7 +78,7 @@ public class DishServiceImpl implements DishService {
     @Override
     public List<String> fetchImageUrls(String query) {
         Dish dish = dishJpaRepository.findByName(query).get(0);
-        String ACCESS_TOKEN = dotenv.get("UNSPLASH_API_KEY");
+        String ACCESS_TOKEN = unsplashApiKey;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", ACCESS_TOKEN);
         HttpEntity<String> entity = new HttpEntity<>(headers);
