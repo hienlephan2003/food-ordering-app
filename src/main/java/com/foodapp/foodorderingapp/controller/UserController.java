@@ -42,7 +42,7 @@ public class UserController {
         UserResponse user = userService.createNewUser(createUserRequest);
         return ResponseEntity.ok(user);
     }
-    @PutMapping("/update")
+    @PutMapping("/")
     public ResponseEntity<User> updateUser(@RequestBody CreateUserRequest createUserRequest) throws DataNotFoundException {
         User result = userService.updateUser(createUserRequest);
         return ResponseEntity.ok(result);

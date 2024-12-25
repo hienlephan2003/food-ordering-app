@@ -103,6 +103,7 @@ public class UserServiceImpl implements UserService {
         user.setHeight(updateUserRequest.getHeight());
         user.setWeightLoss(updateUserRequest.getWeightLoss());
         user.setGender(updateUserRequest.getGender());
+        user.setAvatarUrl(updateUserRequest.getAvatarUrl());
         return userJpaRepository.save(user);
     }
 

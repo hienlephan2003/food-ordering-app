@@ -26,4 +26,5 @@ public class CreateUserRequest {
     private String weightLoss = "";
     @Builder.Default
     private String gender = "male";
+    private String avatarUrl;
 }
