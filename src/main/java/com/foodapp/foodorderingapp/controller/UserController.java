@@ -3,6 +3,7 @@ package com.foodapp.foodorderingapp.controller;
 import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
+import com.foodapp.foodorderingapp.dto.auth.SignUpResponse;
 import com.foodapp.foodorderingapp.dto.auth.UserResponse;
 import com.foodapp.foodorderingapp.entity.Address;
 import com.foodapp.foodorderingapp.entity.User;
@@ -42,10 +43,12 @@ public class UserController {
     }
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserResponse> signUp(@RequestBody CreateUserRequest createUserRequest){
+    public ResponseEntity<SignUpResponse> signUp(@RequestBody CreateUserRequest createUserRequest){
         System.out.println("Sign up controller is fired");
         UserResponse user = userService.createNewUser(createUserRequest);
-        return ResponseEntity.ok(user);
+        String token = jwtService.generateToken(createUserRequest.getUsername());
+        SignUpResponse signUpResponse = new SignUpResponse(user.getUsername(), token);
+        return ResponseEntity.ok(signUpResponse);
     }
     @PutMapping("/")
     public ResponseEntity<User> updateUser(@RequestBody CreateUserRequest createUserRequest) throws DataNotFoundException {
