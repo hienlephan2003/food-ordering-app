@@ -77,7 +77,7 @@ public class DishServiceImpl implements DishService {
     }
     @Override
     public List<String> fetchImageUrls(String query) {
-        Dish dish = dishJpaRepository.findByName(query).get(0);
+    Dish dish = dishJpaRepository.findByName(query).get(0);
         String ACCESS_TOKEN = unsplashApiKey;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", ACCESS_TOKEN);
@@ -295,10 +295,12 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<DishResponse> getRecommendedDishes(List<Long> ids) {
+    public List<DishResponse> getRecommendedDishes(List<String> names) {
         List<Dish> dishes = new ArrayList<>();
-        ids.forEach(id -> {
-            dishJpaRepository.findById(id).ifPresent(dishes::add);
+        names.forEach(id -> {
+            List<Dish> res = dishJpaRepository.findByName(id);
+            if(!res.isEmpty())
+            dishes.add(res.get(0));
         });
         for (Dish dishResponse : dishes) {
             List<String> imageUrls = fetchImageUrls(dishResponse.getName());

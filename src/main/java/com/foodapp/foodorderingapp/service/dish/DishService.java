@@ -20,6 +20,6 @@ public interface DishService {
     List<Dish> findAll();
     List<DishResponse> findDishesByRestaurant(long restaurantId, int limit, int page);
     List<DishResponse> getDishesByDishType(long dishTypeId, int limit, int page, String priceSort, DishClassification dishClassification );
-    List<DishResponse> getRecommendedDishes(List<Long> ids);
+    List<DishResponse> getRecommendedDishes(List<String> names);
     List<String> fetchImageUrls(String query);
 }
