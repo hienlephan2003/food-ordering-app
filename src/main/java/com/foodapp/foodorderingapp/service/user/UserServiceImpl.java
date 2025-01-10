@@ -2,6 +2,7 @@ package com.foodapp.foodorderingapp.service.user;
 
 import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
+import com.foodapp.foodorderingapp.dto.auth.NewUser;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
 import com.foodapp.foodorderingapp.dto.auth.UserResponse;
 import com.foodapp.foodorderingapp.dto.auth.response.SignInResponse;
@@ -38,12 +39,13 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse createNewUser(CreateUserRequest createUserRequest) throws UserExistException {
+    public UserResponse createNewUser(NewUser createUserRequest) throws UserExistException {
         if (!userJpaRepository.existsUserByUsername(createUserRequest.getUsername())) {
             User newUser = User.builder()
                     .fullname(createUserRequest.getFullname())
                     .password(passwordEncoder.encode(createUserRequest.getPassword()))
                     .username(createUserRequest.getUsername())
+                    .connectedAccountId(createUserRequest.getConnectedAccountId())
                     .build();
             UserRole userRole = UserRole.builder().role(roleJpaRepository.findByName("ROLE_USER")).user(newUser)
                     .build();

@@ -34,6 +34,7 @@ public class User {
     private Integer mealPerDay;
     private String weightLoss;
     private String avatarUrl;
+    private String connectedAccountId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<UserRole> roles;
