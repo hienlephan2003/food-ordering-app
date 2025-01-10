@@ -2,6 +2,7 @@ package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.address.CreateAddress;
 import com.foodapp.foodorderingapp.dto.auth.CreateUserRequest;
+import com.foodapp.foodorderingapp.dto.auth.NewUser;
 import com.foodapp.foodorderingapp.dto.auth.SignInRequest;
 import com.foodapp.foodorderingapp.dto.auth.SignUpResponse;
 import com.foodapp.foodorderingapp.dto.auth.UserResponse;
@@ -9,7 +10,9 @@ import com.foodapp.foodorderingapp.entity.Address;
 import com.foodapp.foodorderingapp.entity.User;
 import com.foodapp.foodorderingapp.exception.DataNotFoundException;
 import com.foodapp.foodorderingapp.security.JwtService;
+import com.foodapp.foodorderingapp.service.stripeService.StripeService;
 import com.foodapp.foodorderingapp.service.user.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
+    private final StripeService stripeService;
     private final AuthenticationManager authenticationManager;
 
     @GetMapping("/profile")
@@ -43,11 +47,19 @@ public class UserController {
     }
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody CreateUserRequest createUserRequest){
+    public ResponseEntity<SignUpResponse> signUp(@RequestBody CreateUserRequest createUserRequest) throws Exception{
         System.out.println("Sign up controller is fired");
-        UserResponse user = userService.createNewUser(createUserRequest);
+        String email = createUserRequest.getUsername();
         String token = jwtService.generateToken(createUserRequest.getUsername());
-        SignUpResponse signUpResponse = new SignUpResponse(user.getUsername(), token);
+        String account_id = stripeService.createConnectedAccount(email);
+        String accountLink = stripeService.generateAccountLink(account_id);
+        NewUser newUser = NewUser.builder()
+        .fullname(createUserRequest.getFullname())
+        .username(createUserRequest.getUsername())
+        .password(createUserRequest.getPassword())
+        .connectedAccountId(account_id).build();
+        UserResponse user = userService.createNewUser(newUser);
+        SignUpResponse signUpResponse = new SignUpResponse(email, token, account_id, accountLink);
         return ResponseEntity.ok(signUpResponse);
     }
     @PutMapping("/")

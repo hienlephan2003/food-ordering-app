@@ -14,4 +14,6 @@ import lombok.Setter;
 public class SignUpResponse {
     String username;
     String token;
+    String connectedAccountId;
+    String accountLink;
 }

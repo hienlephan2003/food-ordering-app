@@ -1,17 +1,18 @@
 package com.foodapp.foodorderingapp.dto.auth;
 
-import lombok.*;
-import lombok.Builder.Default;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateUserRequest {
+public class NewUser {
     private String username;
     private String password;
     private String fullname;
-    private String avatarUrl;
     private String phoneNumber;
     @Builder.Default
     private Integer age = 0;
@@ -27,4 +28,6 @@ public class CreateUserRequest {
     private String weightLoss = "";
     @Builder.Default
     private String gender = "male";
+    private String avatarUrl;
+    private String connectedAccountId;
 }
