@@ -32,15 +32,25 @@ public class UserVoucherServiceImpl implements UserVoucherService   {
         else{
             productDiscount = productDiscountJpaRepository.findById(createUserVoucherRequest.getProductDiscountId()).orElseThrow(() -> new RuntimeException("Product discount not found"));
         }
-        //create new voucher
-        Voucher voucher = new Voucher();
-        voucher.setProductDiscount(productDiscount);
-        voucher.setStatus(VoucherStatus.ACTIVE);
-        //find current user
         User user = userHelper.findCurrentUser().orElseThrow(() -> new RuntimeException("User not found")   );
-        voucher.setUser(user);
-        //save voucher
-        return voucherJpaRepository.save(voucher);
+        Optional<Voucher> voucher = voucherJpaRepository.findFirstByProductDiscountAndUser(productDiscount, user);
+        if(voucher.isPresent()){
+            Voucher existingVoucher = voucher.get();
+            int remainingUsed = existingVoucher.getRemainingUsage();
+            existingVoucher.setRemainingUsage(remainingUsed + 1);
+            return voucherJpaRepository.save(existingVoucher);
+        }
+        else{
+            Voucher newVoucher = new Voucher();
+            newVoucher.setProductDiscount(productDiscount);
+            newVoucher.setStatus(VoucherStatus.ACTIVE);
+            //find current user
+            newVoucher.setUser(user);
+            newVoucher.setRemainingUsage(1);
+            //save voucher
+            return voucherJpaRepository.save(newVoucher);
+        }
+        //create new voucher
     }
 
     @Override

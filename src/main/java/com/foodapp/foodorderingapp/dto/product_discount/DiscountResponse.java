@@ -1,6 +1,7 @@
 package com.foodapp.foodorderingapp.dto.product_discount;
 
 import com.foodapp.foodorderingapp.dto.dish.DishResponse;
+import com.foodapp.foodorderingapp.dto.user_voucher.UserVoucherResponse;
 import com.foodapp.foodorderingapp.entity.Dish;
 import com.foodapp.foodorderingapp.entity.DishType;
 import com.foodapp.foodorderingapp.entity.Restaurant;
@@ -30,4 +31,5 @@ public class DiscountResponse {
     private String description;
     private String image;
     private int exchangeRate;
+    private Integer remainingUsed;
 }

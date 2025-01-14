@@ -130,6 +130,8 @@ public class OrderServiceIml implements OrderService {
                     Voucher voucher = voucherJpaRepository.findById(voucherId)
                                     .orElseThrow(() -> new DataNotFoundException(
                                                     "Not found voucher with id " + voucherId));
+                    voucher.setRemainingUsage(Math.max(voucher.getRemainingUsage() - 1, 0));
+                    voucherJpaRepository.save(voucher);
                     vouchers.add(voucher);
                     VoucherApplication voucherApplication = new VoucherApplication();
                     voucherApplication.setOrder(order);
