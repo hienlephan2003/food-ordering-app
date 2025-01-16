@@ -8,6 +8,7 @@ import com.foodapp.foodorderingapp.entity.Category;
 import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.entity.User;
 import com.foodapp.foodorderingapp.enumeration.RestaurantStatus;
+import com.foodapp.foodorderingapp.helper.UserHelper;
 import com.foodapp.foodorderingapp.repository.CategoryJpaRepository;
 import com.foodapp.foodorderingapp.repository.RestaurantJpaRepository;
 import com.foodapp.foodorderingapp.repository.UserJpaRepository;
@@ -35,13 +36,6 @@ public class RestaurantServiceImpl implements RestaurantService{
     public Restaurant createRestaurant(RestaurantRequest restaurantRequest) {
         Optional<User> user = userJpaRepository.findById(restaurantRequest.getOwnerId());
         if(user.isEmpty()) throw new IllegalArgumentException("Not found user");
-        Address address = Address.builder()
-                .provinceCode(restaurantRequest.getCreateAddress().getProvinceCode())
-                .districtCode(restaurantRequest.getCreateAddress().getDistrictCode())
-                .wardCode(restaurantRequest.getCreateAddress().getWardCode())
-                .address(restaurantRequest.getCreateAddress().getAddress())
-                .build();
-
         Restaurant restaurant = Restaurant.builder().name(restaurantRequest.getName())
                 .imageUrl(restaurantRequest.getImageUrl())
                 .name(restaurantRequest.getName())
@@ -49,12 +43,25 @@ public class RestaurantServiceImpl implements RestaurantService{
                 .mainDish(restaurantRequest.getMainDish())
                 .owner(user.get())
                 .status(RestaurantStatus.CREATED)
-                .addressEntity(address)
+                .address(restaurantRequest.getAddress())
                 .description(restaurantRequest.getDescription())
                 .menuImageUrl(restaurantRequest.getMenuImageUrl())
                 .photoUrls(restaurantRequest.getPhotoUrls())
                 .categories(new ArrayList<>()).build();
-        return restaurantJpaRepository.save(restaurant);
+
+        Restaurant restaurantData = restaurantJpaRepository.save(restaurant);
+        List<Category> categories = restaurantRequest.getCategories().stream().map(item -> {
+           Category category = Category.builder()
+                   .restaurant(restaurantData)
+                   .name(item.getName())
+                   .dishQuantity(0)
+                   .isActive(true)
+                   .dishes(new ArrayList<>())
+                   .build();
+            return categoryJpaRepository.save(category);
+        }).toList();
+        restaurantData.setCategories(categories);
+        return restaurantData;
     }
     @Override
     public Restaurant getRestaurantById(long id) throws IllegalArgumentException {
