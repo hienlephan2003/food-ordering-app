@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
