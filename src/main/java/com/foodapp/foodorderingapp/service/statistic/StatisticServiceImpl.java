@@ -1,5 +1,6 @@
 package com.foodapp.foodorderingapp.service.statistic;
 
+import com.foodapp.foodorderingapp.controller.RestaurantDateRangeRequest;
 import com.foodapp.foodorderingapp.dto.statistic.StatisticModelRes;
 import com.foodapp.foodorderingapp.entity.Category;
 import com.foodapp.foodorderingapp.entity.Order;
@@ -12,11 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -149,7 +148,91 @@ public class StatisticServiceImpl implements StatisticService {
         }
     }
 
+    public List<ChartData> generateChartData(RestaurantDateRangeRequest request) {
+        List<ChartData> chartData = new ArrayList<>();
+        Restaurant restaurant = restaurantJpaRepository.findById(request.getRestaurantId())
+                .orElseThrow(() -> new IllegalArgumentException("Not found restaurant with id " + request.getRestaurantId()));
 
+        // Initialize calendar instances for iteration
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(request.getStartDate());
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(request.getEndDate());
+
+        while (!startCalendar.after(endCalendar)) {
+            // Get the start and end of the current day
+            LocalDateTime startLocalDatetime = startCalendar.toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime endLocalDatetime = startLocalDatetime.plusDays(1).minusNanos(1);
+
+            // Fetch inbound and outbound report details for the day
+            List<Order> inboundDetails = orderJpaRepository.findByRestaurantAndCreatedAtBetween(
+                    restaurant, startLocalDatetime, endLocalDatetime);
+
+            List<Order> outboundDetails = orderJpaRepository.findByRestaurantAndCreatedAtBetween(
+                    restaurant, startLocalDatetime, endLocalDatetime);
+
+            // Calculate inbound and outbound quantities
+            double inboundQuantity = inboundDetails.stream()
+                    .mapToDouble(order -> order.getPrice().doubleValue())
+                    .sum();
+
+
+            // Get the day of the week as a label
+            String dayOfWeek = getDayOfWeek(startCalendar.getTime());
+
+            // Add the data to the chart
+            chartData.add(new ChartData(dayOfWeek, inboundQuantity));
+
+            // Move to the next day
+            startCalendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        return chartData;
+    }
+    private String getDayOfWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        switch (dayOfWeek) {
+            case Calendar.MONDAY:
+                return "Mon";
+            case Calendar.TUESDAY:
+                return "Tue";
+            case Calendar.WEDNESDAY:
+                return "Wed";
+            case Calendar.THURSDAY:
+                return "Thu";
+            case Calendar.FRIDAY:
+                return "Fri";
+            case Calendar.SATURDAY:
+                return "Sat";
+            case Calendar.SUNDAY:
+                return "Sun";
+            default:
+                return "";
+        }
+    }
+
+    private Date getStartOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    private Date getEndOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime();
+    }
 }
 
 

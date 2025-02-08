@@ -1,8 +1,10 @@
 package com.foodapp.foodorderingapp.controller;
 
 import com.foodapp.foodorderingapp.dto.statistic.StatisticModelRes;
+import com.foodapp.foodorderingapp.service.statistic.ChartData;
 import com.foodapp.foodorderingapp.service.statistic.StatisticService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,5 +23,9 @@ public class StatisticController {
     @GetMapping("/order/{restaurantId}")
     public StatisticModelRes getOrderStatistic(@PathVariable Long restaurantId){
         return statisticService.getOrderStatistic(restaurantId);
+    }
+    @PostMapping("/dateRange")
+    ResponseEntity<List<ChartData>> getStockReportDateRange(@RequestBody RestaurantDateRangeRequest model){
+        return ResponseEntity.ok(statisticService.generateChartData(model));
     }
 }
