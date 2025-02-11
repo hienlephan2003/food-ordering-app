@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5439/fooddb?user=fooduser&password=foodpassword
-#    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=IbrvrxBg6KQ5qvxS
+#    url: jdbc:postgresql://localhost:5439/fooddb?user=fooduser&password=foodpassword
+    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?user=postgres.cbpdizdmebasivufwuer&password=IbrvrxBg6KQ5qvxS
   jpa:
     hibernate:
       ddl-auto: update
