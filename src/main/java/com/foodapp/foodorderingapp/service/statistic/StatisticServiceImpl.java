@@ -1,12 +1,14 @@
 package com.foodapp.foodorderingapp.service.statistic;
 
 import com.foodapp.foodorderingapp.controller.RestaurantDateRangeRequest;
+import com.foodapp.foodorderingapp.dto.dish.TopDishDTO;
 import com.foodapp.foodorderingapp.dto.statistic.StatisticModelRes;
 import com.foodapp.foodorderingapp.entity.Category;
 import com.foodapp.foodorderingapp.entity.Order;
 import com.foodapp.foodorderingapp.entity.Restaurant;
 import com.foodapp.foodorderingapp.enumeration.OrderStatus;
 import com.foodapp.foodorderingapp.repository.OrderJpaRepository;
+import com.foodapp.foodorderingapp.repository.OrderLineItemJpaRepository;
 import com.foodapp.foodorderingapp.repository.RestaurantJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class StatisticServiceImpl implements StatisticService {
     private final RestaurantJpaRepository restaurantJpaRepository;
     private final OrderJpaRepository orderJpaRepository;
+    private final OrderLineItemJpaRepository orderLineItemJpaRepository;
+
     public List<Map<String, Object>> getCategoryPercentages(Long restaurantId) {
         Restaurant restaurant = restaurantJpaRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("Not found restaurant with id "));
         List<Category> categories = restaurant.getCategories();
@@ -117,7 +121,12 @@ public class StatisticServiceImpl implements StatisticService {
                 firstDayOfThisMonth,
                 lastDayOfThisMonth
         );
-
+    }
+    public List<TopDishDTO> getTopDish(Long restaurantId){
+        Restaurant restaurant = restaurantJpaRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("Not found restaurant with id "));
+        LocalDateTime currentDate = LocalDateTime.now();
+        LocalDateTime firstDayOfThisMonth = currentDate.withDayOfMonth(1);
+        return orderLineItemJpaRepository.findTop5PopularProducts(restaurant,firstDayOfThisMonth.getMonthValue(), firstDayOfThisMonth.getYear());
     }
     private List<Order> getLastMonthOrderList(Restaurant restaurant){
         LocalDateTime currentDate = LocalDateTime.now();
